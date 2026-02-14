@@ -168,8 +168,9 @@ export function BlogGrid({ posts, locale }: BlogGridProps) {
                 src={getImageForPost(featured.slug, 0)}
                 alt={featured.imageAlt}
                 fill
-                className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
                 sizes="(max-width: 768px) 100vw, 50vw"
+                quality={70}
+                className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
               />
             </div>
             <div className="p-6 md:p-8 flex flex-col justify-center">
@@ -220,8 +221,9 @@ export function BlogGrid({ posts, locale }: BlogGridProps) {
                 src={getImageForPost(post.slug, i + 1)}
                 alt={post.imageAlt}
                 fill
-                className="object-cover group-hover:scale-[1.04] transition-transform duration-400"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                quality={65}
+                className="object-cover group-hover:scale-[1.04] transition-transform duration-400"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-negro/30 to-transparent" />
               <div className="absolute bottom-3 left-3">

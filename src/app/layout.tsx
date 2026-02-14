@@ -1,6 +1,21 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
+import { Archivo, Archivo_Narrow } from 'next/font/google'
 import './globals.css'
+
+const archivo = Archivo({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-archivo',
+  display: 'swap',
+})
+
+const archivoNarrow = Archivo_Narrow({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-archivo-narrow',
+  display: 'swap',
+})
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
@@ -35,17 +50,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html>
-      <head>
-        {/* Archivo & Archivo Narrow — Google Fonts (reemplazar por self-hosted en producción) */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Narrow:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="antialiased">
+    <html className={`${archivo.variable} ${archivoNarrow.variable}`}>
+      <body className={`${archivo.className} antialiased`}>
         {GA_ID && (
           <>
             <Script

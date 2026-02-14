@@ -47,6 +47,8 @@ export function Footer({ locale, dict }: FooterProps) {
               alt="Tricholand"
               width={64}
               height={64}
+              sizes="64px"
+              quality={65}
               className="w-16 h-16 object-contain shrink-0"
             />
             <div className="flex flex-col">

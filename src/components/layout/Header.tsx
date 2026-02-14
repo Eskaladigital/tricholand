@@ -82,6 +82,8 @@ export function Header({ locale, dict }: HeaderProps) {
             alt="Tricholand"
             width={44}
             height={44}
+            sizes="44px"
+            quality={65}
             className="h-11 w-auto"
           />
           <div className="flex flex-col">

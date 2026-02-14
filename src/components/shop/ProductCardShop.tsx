@@ -50,6 +50,8 @@ export function ProductCardShop({ product, locale, t }: ProductCardShopProps) {
           alt={product.images[0]?.alt || product.name}
           width={600}
           height={240}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+          quality={65}
           className="w-full h-[220px] object-cover group-hover:scale-[1.04] transition-transform duration-400"
         />
         <span className="absolute top-3 left-3 bg-negro text-blanco px-2.5 py-1 font-[family-name:var(--font-archivo-narrow)] text-[0.72rem] font-semibold tracking-wide">

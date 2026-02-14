@@ -54,6 +54,8 @@ export default function SobreNosotrosPage() {
               alt="Tricholand kwekerij"
               width={500}
               height={350}
+              sizes="(max-width: 1024px) 50vw, 25vw"
+              quality={65}
               className="w-full h-[200px] lg:h-full object-cover"
             />
             <Image
@@ -61,6 +63,8 @@ export default function SobreNosotrosPage() {
               alt="Trichocereus teelt"
               width={500}
               height={350}
+              sizes="(max-width: 1024px) 50vw, 25vw"
+              quality={65}
               className="w-full h-[200px] lg:h-full object-cover"
             />
           </div>

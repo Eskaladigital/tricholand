@@ -14,9 +14,7 @@
   --color-naranja: #c4652a;
   --color-linea: #d4cfc3;
 
-  /* Fuentes */
-  --font-archivo: 'Archivo', sans-serif;
-  --font-archivo-narrow: 'Archivo Narrow', sans-serif;
+  /* Fuentes: inyectadas por next/font en layout.tsx (--font-archivo, --font-archivo-narrow) */
 }
 
 /* Base styles */
