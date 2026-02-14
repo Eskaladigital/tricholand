@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { getBlogPosts } from '@/lib/actions/blog'
+import Image from 'next/image'
+import { getBlogPosts, setBlogPostStatusFromForm } from '@/lib/actions/blog'
 
 const STATUS_LABEL: Record<string, { text: string; cls: string }> = {
   published: { text: 'Publicado', cls: 'bg-green-100 text-green-700' },
@@ -38,6 +39,9 @@ export default async function BlogListPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-crudo border-b border-linea">
+                <th className="text-left px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro w-16">
+                  Imagen
+                </th>
                 <th className="text-left px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">
                   Título
                 </th>
@@ -46,6 +50,15 @@ export default async function BlogListPage() {
                 </th>
                 <th className="text-center px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">
                   Fecha
+                </th>
+                <th className="text-center px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">
+                  Lectura
+                </th>
+                <th className="text-left px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro max-w-[200px]">
+                  Descripción
+                </th>
+                <th className="text-left px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">
+                  Tags
                 </th>
                 <th className="text-center px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">
                   Estado
@@ -58,7 +71,7 @@ export default async function BlogListPage() {
             <tbody>
               {posts.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-marron-claro">
+                  <td colSpan={9} className="px-4 py-8 text-center text-marron-claro">
                     No hay artículos. Crea el primero para empezar.
                   </td>
                 </tr>
@@ -67,6 +80,23 @@ export default async function BlogListPage() {
                   const st = STATUS_LABEL[post.status] ?? STATUS_LABEL.draft
                   return (
                     <tr key={post.id} className="border-b border-linea/50 hover:bg-crudo/50 transition-colors">
+                      <td className="px-4 py-3">
+                        {post.image ? (
+                          <div className="relative w-12 h-12 rounded overflow-hidden bg-crudo flex-shrink-0">
+                            <Image
+                              src={post.image}
+                              alt={post.image_alt || post.title}
+                              width={48}
+                              height={48}
+                              className="object-cover w-full h-full"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-12 h-12 rounded bg-linea/30 flex items-center justify-center text-marron-claro text-xs">
+                            —
+                          </div>
+                        )}
+                      </td>
                       <td className="px-4 py-3">
                         <div>
                           <span className="font-bold block">{post.title}</span>
@@ -79,18 +109,63 @@ export default async function BlogListPage() {
                       <td className="px-4 py-3 text-center text-xs text-marron-claro">
                         {post.date}
                       </td>
+                      <td className="px-4 py-3 text-center text-xs text-marron-claro">
+                        {post.reading_time} min
+                      </td>
+                      <td className="px-4 py-3 text-xs text-marron-claro max-w-[200px] truncate" title={post.description || undefined}>
+                        {post.description || '—'}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex flex-wrap gap-1">
+                          {(post.tags || []).slice(0, 3).map((t) => (
+                            <span key={t} className="px-1.5 py-0.5 bg-crudo text-marron-claro text-xs rounded">
+                              {t}
+                            </span>
+                          ))}
+                          {(post.tags?.length ?? 0) > 3 && (
+                            <span className="text-marron-claro text-xs">+{(post.tags?.length ?? 0) - 3}</span>
+                          )}
+                          {(!post.tags || post.tags.length === 0) && <span className="text-marron-claro text-xs">—</span>}
+                        </div>
+                      </td>
                       <td className="px-4 py-3 text-center">
                         <span className={`px-2 py-0.5 text-xs font-bold uppercase ${st.cls}`}>
                           {st.text}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-center">
-                        <Link
-                          href={`/administrator/blog/${post.id}`}
-                          className="text-naranja font-semibold hover:underline text-xs"
-                        >
-                          Editar
-                        </Link>
+                      <td className="px-4 py-3">
+                        <div className="flex flex-wrap items-center justify-center gap-2">
+                          {post.status !== 'published' && (
+                            <form action={setBlogPostStatusFromForm} className="inline">
+                              <input type="hidden" name="id" value={post.id} />
+                              <input type="hidden" name="status" value="published" />
+                              <button
+                                type="submit"
+                                className="px-2 py-1 bg-green-600 text-white text-xs font-bold uppercase hover:bg-green-700 transition-colors"
+                              >
+                                Publicar
+                              </button>
+                            </form>
+                          )}
+                          {post.status === 'published' && (
+                            <form action={setBlogPostStatusFromForm} className="inline">
+                              <input type="hidden" name="id" value={post.id} />
+                              <input type="hidden" name="status" value="draft" />
+                              <button
+                                type="submit"
+                                className="px-2 py-1 bg-amber-600 text-white text-xs font-bold uppercase hover:bg-amber-700 transition-colors"
+                              >
+                                Despublicar
+                              </button>
+                            </form>
+                          )}
+                          <Link
+                            href={`/administrator/blog/${post.id}`}
+                            className="text-naranja font-semibold hover:underline text-xs"
+                          >
+                            Editar
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   )

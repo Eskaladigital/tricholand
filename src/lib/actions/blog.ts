@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 
 export interface AdminBlogPost {
@@ -102,4 +103,22 @@ export async function deleteBlogPost(id: string): Promise<{ error?: string }> {
   const { error } = await supabase.from('blog_posts').delete().eq('id', id)
   if (error) return { error: error.message }
   return {}
+}
+
+export async function updateBlogPostStatus(
+  id: string,
+  status: 'published' | 'draft' | 'archived'
+): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { error } = await supabase.from('blog_posts').update({ status }).eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath('/administrator/blog')
+  return {}
+}
+
+export async function setBlogPostStatusFromForm(formData: FormData): Promise<{ error?: string }> {
+  const id = formData.get('id') as string
+  const status = formData.get('status') as 'published' | 'draft' | 'archived'
+  if (!id || !['published', 'draft', 'archived'].includes(status)) return { error: 'Datos inválidos' }
+  return updateBlogPostStatus(id, status)
 }
