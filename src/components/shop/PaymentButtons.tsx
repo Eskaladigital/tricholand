@@ -1,21 +1,24 @@
 'use client'
 
 import { useState } from 'react'
+import { getDictionary } from '@/lib/i18n'
 
 interface PaymentButtonsProps {
   orderId: string
   orderNumber: string
   totalCents: number
+  locale: string
 }
 
-function formatCents(cents: number): string {
-  return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(cents / 100)
-}
-
-export function PaymentButtons({ orderId, orderNumber, totalCents }: PaymentButtonsProps) {
+export function PaymentButtons({ orderId, orderNumber, totalCents, locale }: PaymentButtonsProps) {
+  const t = getDictionary(locale).paymentButtons
   const [loading, setLoading] = useState<'stripe' | 'redsys' | 'transfer' | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [transferSent, setTransferSent] = useState(false)
+
+  const intlLocale = { es: 'es-ES', en: 'en-GB', fr: 'fr-FR', de: 'de-DE', it: 'it-IT', nl: 'nl-NL', pt: 'pt-PT' }[locale] || 'es-ES'
+  const formatCents = (cents: number) =>
+    new Intl.NumberFormat(intlLocale, { style: 'currency', currency: 'EUR' }).format(cents / 100)
 
   const handleStripe = async () => {
     setLoading('stripe')
@@ -28,14 +31,13 @@ export function PaymentButtons({ orderId, orderNumber, totalCents }: PaymentButt
       })
       const data = await res.json()
       if (!res.ok || data.error) {
-        setError(data.error || 'Error iniciando el pago con Stripe')
+        setError(data.error || t.errorStripe)
         setLoading(null)
         return
       }
-      // Redirigir a Stripe Checkout
       window.location.href = data.url
     } catch {
-      setError('Error de conexión. Inténtalo de nuevo.')
+      setError(t.errorConnection)
       setLoading(null)
     }
   }
@@ -51,12 +53,11 @@ export function PaymentButtons({ orderId, orderNumber, totalCents }: PaymentButt
       })
       const data = await res.json()
       if (!res.ok || data.error) {
-        setError(data.error || 'Error iniciando el pago con Redsys')
+        setError(data.error || t.errorRedsys)
         setLoading(null)
         return
       }
 
-      // Crear y enviar formulario POST a Redsys
       const form = document.createElement('form')
       form.method = 'POST'
       form.action = data.url
@@ -77,7 +78,7 @@ export function PaymentButtons({ orderId, orderNumber, totalCents }: PaymentButt
       document.body.appendChild(form)
       form.submit()
     } catch {
-      setError('Error de conexión. Inténtalo de nuevo.')
+      setError(t.errorConnection)
       setLoading(null)
     }
   }
@@ -93,14 +94,14 @@ export function PaymentButtons({ orderId, orderNumber, totalCents }: PaymentButt
       })
       const data = await res.json()
       if (!res.ok || data.error) {
-        setError(data.error || 'Error solicitando datos bancarios')
+        setError(data.error || t.errorTransfer)
         setLoading(null)
         return
       }
       setTransferSent(true)
       setLoading(null)
     } catch {
-      setError('Error de conexión. Inténtalo de nuevo.')
+      setError(t.errorConnection)
       setLoading(null)
     }
   }
@@ -108,16 +109,16 @@ export function PaymentButtons({ orderId, orderNumber, totalCents }: PaymentButt
   return (
     <div className="bg-blanco border border-linea p-6 mb-6">
       <h2 className="text-sm font-bold font-[family-name:var(--font-archivo-narrow)] uppercase tracking-wide mb-4">
-        Realizar pago &mdash; {formatCents(totalCents)}
+        {t.title} &mdash; {formatCents(totalCents)}
       </h2>
-      <p className="text-sm text-marron-claro mb-4">
-        Tu pedido <strong>{orderNumber}</strong> ha sido validado y está listo para el pago.
-        Selecciona un método de pago:
-      </p>
+      <p
+        className="text-sm text-marron-claro mb-4"
+        dangerouslySetInnerHTML={{ __html: t.orderValidated.replace('{orderNumber}', orderNumber) }}
+      />
 
       {transferSent && (
         <div className="bg-green-50 border border-green-200 text-green-800 text-sm px-4 py-3 mb-4">
-          Te hemos enviado un email a tu correo con los datos bancarios para la transferencia. Revisa tu bandeja de entrada (y la carpeta de spam). Indica el número de pedido como concepto.
+          {t.transferSent}
         </div>
       )}
 
@@ -133,7 +134,7 @@ export function PaymentButtons({ orderId, orderNumber, totalCents }: PaymentButt
           disabled={loading !== null || transferSent}
           className="w-full py-4 bg-verde text-white text-sm font-bold uppercase tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading === 'transfer' ? 'Enviando...' : transferSent ? 'Email enviado' : 'Pagar por transferencia bancaria'}
+          {loading === 'transfer' ? t.transferSending : transferSent ? t.transferDone : t.transferBtn}
         </button>
 
         <button
@@ -141,7 +142,7 @@ export function PaymentButtons({ orderId, orderNumber, totalCents }: PaymentButt
           disabled={loading !== null}
           className="w-full py-4 bg-naranja text-white text-sm font-bold uppercase tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading === 'redsys' ? 'Redirigiendo al TPV...' : 'Pagar con tarjeta (TPV virtual)'}
+          {loading === 'redsys' ? t.redsysRedirecting : t.redsysBtn}
         </button>
 
         <button
@@ -149,11 +150,11 @@ export function PaymentButtons({ orderId, orderNumber, totalCents }: PaymentButt
           disabled={loading !== null}
           className="w-full py-4 bg-negro text-crudo text-sm font-bold uppercase tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading === 'stripe' ? 'Redirigiendo a Stripe...' : 'Pagar con Stripe'}
+          {loading === 'stripe' ? t.stripeRedirecting : t.stripeBtn}
         </button>
 
         <p className="text-xs text-marron-claro text-center mt-2">
-          Transferencia: recibirás los datos bancarios por email. TPV y Stripe: pago seguro en línea.
+          {t.methodsNote}
         </p>
       </div>
     </div>

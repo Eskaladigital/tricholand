@@ -302,6 +302,24 @@ export interface Dictionary {
     // Header
     headerSubtitle: string
   }
+  paymentButtons: {
+    title: string
+    orderValidated: string
+    selectMethod: string
+    transferSent: string
+    transferBtn: string
+    transferSending: string
+    transferDone: string
+    redsysBtn: string
+    redsysRedirecting: string
+    stripeBtn: string
+    stripeRedirecting: string
+    methodsNote: string
+    errorStripe: string
+    errorRedsys: string
+    errorTransfer: string
+    errorConnection: string
+  }
   common: {
     loading: string
     error: string

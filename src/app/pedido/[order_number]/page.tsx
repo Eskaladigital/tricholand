@@ -198,6 +198,7 @@ export default async function OrderPublicPage({ params }: Props) {
             orderId={order.id}
             orderNumber={order.order_number}
             totalCents={order.total_cents}
+            locale={locale}
           />
         )}
 
