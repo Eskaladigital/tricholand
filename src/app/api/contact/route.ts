@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-// TODO: En producción, conectar con Supabase y Resend
-// Por ahora, valida y devuelve OK (para testear el formulario)
+import { createApiClient } from '@/lib/supabase/api'
 
 interface ContactPayload {
   contact_type: string
@@ -47,27 +45,30 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // TODO: Guardar en Supabase
-    // const { data, error } = await supabase
-    //   .from('contacts')
-    //   .insert({
-    //     contact_type: body.contact_type,
-    //     professional_subtype: body.professional_subtype || null,
-    //     inquiry_type: body.inquiry_type,
-    //     name: body.name,
-    //     company: body.company || null,
-    //     email: body.email,
-    //     phone: body.phone || null,
-    //     country: body.country,
-    //     city: body.city || null,
-    //     message: body.message,
-    //     referral_source: body.referral_source || null,
-    //     locale: body.locale,
-    //     status: 'new',
-    //     priority: body.contact_type === 'professional' ? 'high' : 'normal',
-    //     gdpr_consent: body.gdpr_consent,
-    //     gdpr_consent_date: new Date().toISOString(),
-    //   })
+    const supabase = createApiClient()
+    const { error } = await supabase.from('contacts').insert({
+      contact_type: body.contact_type || 'particular',
+      professional_subtype: body.professional_subtype || null,
+      inquiry_type: body.inquiry_type || null,
+      name: body.name,
+      company: body.company || null,
+      email: body.email,
+      phone: body.phone || null,
+      country: body.country,
+      city: body.city || null,
+      message: body.message,
+      referral_source: body.referral_source || null,
+      locale: body.locale || 'es',
+      status: 'new',
+      priority: body.contact_type === 'professional' ? 'high' : 'normal',
+      gdpr_consent: body.gdpr_consent,
+      gdpr_consent_date: new Date().toISOString(),
+    })
+
+    if (error) {
+      console.error('Error guardando contacto:', error)
+      return NextResponse.json({ error: 'Error al guardar el contacto' }, { status: 500 })
+    }
 
     // TODO: Enviar email de notificación con Resend
     // await resend.emails.send({

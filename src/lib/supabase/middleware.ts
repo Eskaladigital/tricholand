@@ -33,6 +33,7 @@ export async function updateSession(request: NextRequest) {
     '/administrator/dashboard',
     '/administrator/products',
     '/administrator/orders',
+    '/administrator/customers',
     '/administrator/contacts',
     '/administrator/settings',
   ].some((path) => pathname.startsWith(path))

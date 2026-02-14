@@ -9,6 +9,7 @@ const navItems = [
   { label: 'Dashboard', href: '/administrator/dashboard', icon: '📊' },
   { label: 'Productos', href: '/administrator/products', icon: '🌵' },
   { label: 'Pedidos', href: '/administrator/orders', icon: '📦' },
+  { label: 'Clientes', href: '/administrator/customers', icon: '👥' },
   { label: 'Contactos', href: '/administrator/contacts', icon: '📨' },
   { label: 'Configuración', href: '/administrator/settings', icon: '⚙️' },
 ]

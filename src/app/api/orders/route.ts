@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-// TODO: En producción, conectar con Supabase y Resend
-// Por ahora, valida y devuelve OK
+import { createApiClient } from '@/lib/supabase/api'
 
 interface OrderItem {
   product_id: string
@@ -48,44 +46,55 @@ export async function POST(request: NextRequest) {
       (sum, item) => sum + item.unit_price_cents * item.quantity, 0
     )
 
-    // Generar número de pedido (en producción: secuencia de Supabase)
-    const order_number = `TRI-${new Date().getFullYear()}-${String(Date.now()).slice(-4)}`
+    const supabase = createApiClient()
 
-    // TODO: Guardar en Supabase
-    // const { data, error } = await supabase.from('orders').insert({
-    //   order_number,
-    //   status: 'pending',
-    //   customer_name: body.customer_name,
-    //   customer_company: body.customer_company,
-    //   customer_email: body.customer_email,
-    //   customer_phone: body.customer_phone,
-    //   customer_country: body.customer_country,
-    //   customer_city: body.customer_city,
-    //   customer_vat_id: body.customer_vat_id,
-    //   customer_address: body.customer_address,
-    //   customer_notes: body.customer_notes,
-    //   subtotal_cents,
-    //   discount_cents: 0,
-    //   shipping_cents: 0,
-    //   tax_cents: 0,
-    //   total_cents: subtotal_cents,
-    //   currency: 'EUR',
-    //   locale: body.locale,
-    // })
-    //
-    // // Insertar líneas del pedido
-    // for (const item of body.items) {
-    //   await supabase.from('order_items').insert({
-    //     order_id: data.id,
-    //     product_id: item.product_id,
-    //     product_name: item.product_name,
-    //     product_sku: item.product_sku,
-    //     quantity: item.quantity,
-    //     unit_price_cents: item.unit_price_cents,
-    //     total_cents: item.unit_price_cents * item.quantity,
-    //     notes: item.notes,
-    //   })
-    // }
+    // Número de pedido: RPC si existe, sino timestamp
+    let order_number: string
+    const { data: rpcNum } = await supabase.rpc('get_next_order_number')
+    order_number = rpcNum ?? `TRI-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`
+
+    const { data: order, error: orderError } = await supabase
+      .from('orders')
+      .insert({
+        order_number,
+        status: 'pending',
+        customer_name: body.customer_name,
+        customer_company: body.customer_company,
+        customer_email: body.customer_email,
+        customer_phone: body.customer_phone,
+        customer_country: body.customer_country,
+        customer_city: body.customer_city,
+        customer_vat_id: body.customer_vat_id,
+        customer_address: body.customer_address,
+        customer_notes: body.customer_notes,
+        subtotal_cents,
+        discount_cents: 0,
+        shipping_cents: 0,
+        tax_cents: 0,
+        total_cents: subtotal_cents,
+        currency: 'EUR',
+        locale: body.locale || 'es',
+      })
+      .select('id')
+      .single()
+
+    if (orderError || !order) {
+      console.error('Error guardando pedido:', orderError)
+      return NextResponse.json({ error: 'Error al guardar el pedido' }, { status: 500 })
+    }
+
+    for (const item of body.items) {
+      await supabase.from('order_items').insert({
+        order_id: order.id,
+        product_id: item.product_id || null,
+        product_name: item.product_name,
+        product_sku: item.product_sku,
+        quantity: item.quantity,
+        unit_price_cents: item.unit_price_cents,
+        total_cents: item.unit_price_cents * item.quantity,
+        notes: item.notes,
+      })
+    }
 
     // TODO: Email de notificación al admin
     // await resend.emails.send({

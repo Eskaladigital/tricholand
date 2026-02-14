@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getDashboardStats } from '@/lib/actions/dashboard'
 import { formatPrice } from '@/types/shop'
+import { getCustomers } from '@/lib/actions/customers'
 
 const statusLabels: Record<string, string> = {
   pending: 'Pendiente',
@@ -11,7 +12,10 @@ const statusLabels: Record<string, string> = {
 }
 
 export default async function DashboardPage() {
-  const { stats, recentOrders, recentContacts } = await getDashboardStats()
+  const [{ stats, recentOrders, recentContacts }, customers] = await Promise.all([
+    getDashboardStats(),
+    getCustomers(),
+  ])
 
   return (
     <>
@@ -24,21 +28,35 @@ export default async function DashboardPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 mb-8">
           {[
             { label: 'Productos activos', value: stats.products_active, color: 'text-verde' },
             { label: 'Pedidos pendientes', value: stats.orders_pending, color: 'text-naranja' },
             { label: 'Pedidos este mes', value: stats.orders_this_month, color: 'text-negro' },
+            { label: 'Clientes', value: customers.length, color: 'text-negro', href: '/administrator/customers' },
             { label: 'Contactos nuevos', value: stats.contacts_new, color: 'text-terracota' },
             { label: 'Ingresos este mes', value: formatPrice(stats.revenue_this_month_cents), color: 'text-verde' },
           ].map((stat, i) => (
             <div key={i} className="bg-blanco border border-linea p-5">
-              <p className="font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">
-                {stat.label}
-              </p>
-              <p className={`font-[family-name:var(--font-archivo-narrow)] text-2xl font-bold ${stat.color}`}>
-                {stat.value}
-              </p>
+              {'href' in stat && stat.href ? (
+                <Link href={stat.href} className="block hover:bg-crudo/30 transition-colors -m-5 p-5 rounded">
+                  <p className="font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">
+                    {stat.label}
+                  </p>
+                  <p className={`font-[family-name:var(--font-archivo-narrow)] text-2xl font-bold ${stat.color}`}>
+                    {stat.value}
+                  </p>
+                </Link>
+              ) : (
+                <>
+                  <p className="font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">
+                    {stat.label}
+                  </p>
+                  <p className={`font-[family-name:var(--font-archivo-narrow)] text-2xl font-bold ${stat.color}`}>
+                    {stat.value}
+                  </p>
+                </>
+              )}
             </div>
           ))}
         </div>
