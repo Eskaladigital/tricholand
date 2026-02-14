@@ -84,9 +84,23 @@ export async function getPostBySlug(slug: string, locale: string): Promise<BlogP
     .eq('status', 'published')
     .single()
 
-  if (error || !data) return null
-  return rowToPost(data)
+  if (!error && data) return rowToPost(data)
+
+  // URL antigua: slug en español en idioma no-ES. Buscar por source_slug y redirigir al slug correcto.
+  if (effectiveLocale !== 'es') {
+    const { data: bySource } = await supabase
+      .from('blog_posts')
+      .select('slug, title, description, date, image, image_alt, tags, reading_time, content')
+      .eq('source_slug', slug)
+      .eq('locale', effectiveLocale)
+      .eq('status', 'published')
+      .single()
+    if (bySource) return rowToPost(bySource)
+  }
+
+  return null
 }
+
 
 export async function getAllPostSlugs(locale: string): Promise<string[]> {
   const effectiveLocale = getEffectiveLocale(locale)

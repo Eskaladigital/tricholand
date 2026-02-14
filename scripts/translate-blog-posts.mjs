@@ -6,6 +6,7 @@
  *   node scripts/translate-blog-posts.mjs              (todos los idiomas)
  *   node scripts/translate-blog-posts.mjs --locale en  (solo inglés)
  *   node scripts/translate-blog-posts.mjs --dry-run
+ *   node scripts/translate-blog-posts.mjs --update-slugs (actualizar slugs de traducciones existentes)
  *
  * Requiere: OPENAI_API_KEY, NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
  */
@@ -60,6 +61,15 @@ const TAGS_BY_LOCALE = {
   de: ['trichocereus', 'anbau', 'leitfaden'],
   it: ['trichocereus', 'coltivazione', 'guida'],
   pt: ['trichocereus', 'cultivo', 'guia'],
+}
+
+/** Genera slug URL-friendly desde el título traducido */
+function slugify(title) {
+  const accents = { á: 'a', é: 'e', í: 'i', ó: 'o', ú: 'u', ñ: 'n', ü: 'u', ä: 'a', ö: 'o', ß: 'ss', à: 'a', è: 'e', ì: 'i', ò: 'o', ù: 'u', â: 'a', ê: 'e', î: 'i', ô: 'o', û: 'u', ç: 'c' }
+  let s = title.toLowerCase().trim()
+  for (const [accent, plain] of Object.entries(accents)) s = s.replace(new RegExp(accent, 'g'), plain)
+  s = s.replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+  return s || 'post'
 }
 
 const MAX_OUTPUT_TOKENS = 16384
@@ -136,11 +146,13 @@ RULES:
 
 async function main() {
   const dryRun = process.argv.includes('--dry-run')
+  const updateSlugs = process.argv.includes('--update-slugs')
   const localeArg = process.argv.includes('--locale') ? process.argv[process.argv.indexOf('--locale') + 1] : null
   const targetLocales = localeArg && TARGET_LOCALES.includes(localeArg) ? [localeArg] : TARGET_LOCALES
 
   console.log('\n🌍 Traducción de artículos del blog (ES → ' + targetLocales.map((l) => l.toUpperCase()).join(', ') + ')\n')
   if (dryRun) console.log('   Modo: DRY RUN (sin escribir)\n')
+  if (updateSlugs) console.log('   Modo: Actualizar slugs de traducciones existentes\n')
 
   const { data: postsEs, error: errEs } = await supabase
     .from('blog_posts')
@@ -157,18 +169,20 @@ async function main() {
   let totalErrors = 0
 
   for (const locale of targetLocales) {
-    const { data: slugsExisting } = await supabase
+    const { data: existingRows } = await supabase
       .from('blog_posts')
-      .select('slug')
+      .select('source_slug, slug, title')
       .eq('locale', locale)
 
-    const existing = new Set((slugsExisting || []).map((p) => p.slug))
-    const toTranslate = (postsEs || []).filter((p) => !existing.has(p.slug))
+    const existingSourceSlugs = new Set((existingRows || []).map((p) => p.source_slug))
+    const toTranslate = updateSlugs
+      ? (postsEs || []).filter((p) => existingSourceSlugs.has(p.slug))
+      : (postsEs || []).filter((p) => !existingSourceSlugs.has(p.slug))
 
-    console.log(`\n📌 ${LOCALE_NAMES[locale]} (${locale}): ${existing.size} ya traducidos, ${toTranslate.length} por traducir`)
+    console.log(`\n📌 ${LOCALE_NAMES[locale]} (${locale}): ${existingSourceSlugs.size} ya traducidos, ${toTranslate.length} ${updateSlugs ? 'a actualizar slug' : 'por traducir'}`)
 
     if (toTranslate.length === 0) {
-      console.log(`   ✅ Todos los artículos tienen versión en ${locale}.`)
+      console.log(`   ✅ ${updateSlugs ? 'Nada que actualizar.' : 'Todos los artículos tienen versión.'}`)
       continue
     }
 
@@ -181,38 +195,58 @@ async function main() {
 
     for (const post of toTranslate) {
       try {
-        console.log(`\n   🔄 ${post.slug} — "${post.title.substring(0, 45)}..."`)
+        if (updateSlugs) {
+          const existing = (existingRows || []).find((r) => r.source_slug === post.slug)
+          if (!existing || existing.slug === slugify(existing.title)) {
+            console.log(`   ⏭️ ${post.slug} — slug ya correcto`)
+            continue
+          }
+          const slugTr = slugify(existing.title)
+          console.log(`   🔄 ${post.slug} → ${slugTr}`)
+          const { error } = await supabase
+            .from('blog_posts')
+            .update({ slug: slugTr })
+            .eq('source_slug', post.slug)
+            .eq('locale', locale)
+          if (error) throw error
+          totalDone++
+        } else {
+          console.log(`\n   🔄 ${post.slug} — "${post.title.substring(0, 45)}..."`)
 
-        const [titleTr, descriptionTr, contentTr] = await Promise.all([
-          translateText(post.title, 'title', locale),
-          translateText(post.description || post.title, 'description', locale),
-          translateText(post.content, 'content', locale),
-        ])
+          const [titleTr, descriptionTr, contentTr] = await Promise.all([
+            translateText(post.title, 'title', locale),
+            translateText(post.description || post.title, 'description', locale),
+            translateText(post.content, 'content', locale),
+          ])
 
-        const row = {
-          slug: post.slug,
-          title: titleTr,
-          description: descriptionTr,
-          date: post.date,
-          image: post.image,
-          image_alt: titleTr,
-          tags,
-          reading_time: post.reading_time,
-          content: contentTr,
-          locale,
-          status: 'published',
+          const slugTr = slugify(titleTr)
+
+          const row = {
+            source_slug: post.slug,
+            slug: slugTr,
+            title: titleTr,
+            description: descriptionTr,
+            date: post.date,
+            image: post.image,
+            image_alt: titleTr,
+            tags,
+            reading_time: post.reading_time,
+            content: contentTr,
+            locale,
+            status: 'published',
+          }
+
+          const { error } = await supabase.from('blog_posts').upsert(row, {
+            onConflict: 'source_slug,locale',
+          })
+
+          if (error) throw error
+
+          totalDone++
+          console.log(`      ✓ ${titleTr.substring(0, 45)}...`)
+
+          await new Promise((r) => setTimeout(r, 600))
         }
-
-        const { error } = await supabase.from('blog_posts').upsert(row, {
-          onConflict: 'slug,locale',
-        })
-
-        if (error) throw error
-
-        totalDone++
-        console.log(`      ✓ ${titleTr.substring(0, 45)}...`)
-
-        await new Promise((r) => setTimeout(r, 600))
       } catch (err) {
         totalErrors++
         console.error(`      ❌ ${err.message}`)

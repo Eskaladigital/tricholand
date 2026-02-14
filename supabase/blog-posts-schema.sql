@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   updated_at TIMESTAMPTZ DEFAULT now(),
 
   slug TEXT NOT NULL,
+  source_slug TEXT NOT NULL,  -- slug en español, vincula traducciones del mismo artículo
   title TEXT NOT NULL,
   description TEXT,
   date DATE NOT NULL,
@@ -24,7 +25,8 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   meta_title TEXT,
   meta_description TEXT,
 
-  UNIQUE(slug, locale)
+  UNIQUE(slug, locale),
+  UNIQUE(source_slug, locale)
 );
 
 CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug);

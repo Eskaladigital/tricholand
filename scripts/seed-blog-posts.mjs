@@ -159,6 +159,7 @@ async function main() {
     const { error } = await supabase.from('blog_posts').upsert(
       {
         slug: p.slug,
+        source_slug: p.slug,
         locale: p.locale,
         title: p.title,
         description: p.description,
@@ -170,7 +171,7 @@ async function main() {
         content: p.content,
         status: p.status,
       },
-      { onConflict: 'slug,locale' }
+      { onConflict: 'source_slug,locale' }
     )
 
     if (error) {

@@ -149,6 +149,7 @@ async function main() {
 
     const row = {
       slug,
+      source_slug: slug,
       title,
       description,
       date: dateStr,
@@ -162,7 +163,7 @@ async function main() {
     }
 
     const { error } = await supabase.from('blog_posts').upsert(row, {
-      onConflict: 'slug,locale',
+      onConflict: 'source_slug,locale',
     })
 
     if (error) {
@@ -180,8 +181,10 @@ async function main() {
       const descriptionEn = extractDescription(ingles)
       const readingTimeEn = estimateReadingTime(contentEn)
 
+      const slugEn = titleEn.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || slug
       const rowEn = {
-        slug,
+        source_slug: slug,
+        slug: slugEn,
         title: titleEn,
         description: descriptionEn,
         date: dateStr,
@@ -195,7 +198,7 @@ async function main() {
       }
 
       const { error: errEn } = await supabase.from('blog_posts').upsert(rowEn, {
-        onConflict: 'slug,locale',
+        onConflict: 'source_slug,locale',
       })
 
       if (errEn) {
