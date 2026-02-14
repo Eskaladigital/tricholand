@@ -19,6 +19,7 @@ Web corporativa de **Tricholand** — vivero productor de Trichocereus y cactác
 - **Panel de administración** (productos, pedidos, contactos)
 - **Sistema de traducciones** con Supabase + OpenAI
 - **SEO**: sitemap, robots, meta alternates por idioma
+- **Google Analytics** (GA4)
 - **Redirecciones** desde rutas legacy (Joomla)
 
 ---
@@ -73,6 +74,9 @@ SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
 
 # OpenAI (para scripts translate:ui y translate:content)
 OPENAI_API_KEY=sk-...
+
+# Google Analytics (opcional)
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
 
 # Admin (opcional, valores por defecto en desarrollo)
 ADMIN_EMAIL=admin@tricholand.com
@@ -141,14 +145,34 @@ Ejecuta los schemas en el SQL Editor de Supabase:
 
 ## Despliegue
 
-Compatible con **Vercel**, **Netlify** o cualquier plataforma que soporte Next.js.
+### Vercel (recomendado, con GitHub)
+
+1. Conecta tu repositorio GitHub en [vercel.com](https://vercel.com) → New Project → Import
+2. Vercel detecta Next.js automáticamente
+3. **Variables de entorno** — en Project Settings → Environment Variables añade:
+
+| Variable | Valor | Entorno |
+|----------|-------|---------|
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://xxx.supabase.co` | Production, Preview |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | tu anon key | Production, Preview |
+| `SUPABASE_SERVICE_ROLE_KEY` | tu service_role key | Production, Preview |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | `G-NG0PKMVECG` | Production |
+| `OPENAI_API_KEY` | sk-... | Production (si usas translate) |
+| `ADMIN_EMAIL` | admin@tricholand.com | Production |
+| `ADMIN_PASSWORD` | tu contraseña | Production |
+
+4. Cada push a `main` despliega automáticamente
+
+### Otras plataformas
+
+Compatible con **Netlify** o cualquier plataforma que soporte Next.js:
 
 ```bash
 npm run build
 npm start
 ```
 
-Configura las variables de entorno en el panel de tu proveedor.
+Configura las mismas variables de entorno en el panel de tu proveedor.
 
 ---
 

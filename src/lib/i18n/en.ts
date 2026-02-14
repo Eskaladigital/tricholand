@@ -4,7 +4,7 @@ export const en: Dictionary = {
   meta: {
     locale: 'en',
     siteName: 'Tricholand',
-    siteDescription: 'Trichocereus and columnar cacti nursery. B2B wholesale for professionals. Shipping across Europe.',
+    siteDescription: 'Producer nursery of Trichocereus and columnar cacti. B2B wholesale for professionals. Shipping across Europe.',
   },
   nav: {
     home: 'Home',
@@ -12,13 +12,13 @@ export const en: Dictionary = {
     catalog: 'Catalog',
     shop: 'B2B Shop',
     services: 'Services',
-    about: 'About us',
+    about: 'About Us',
     contact: 'Contact',
     certifications: 'Certifications',
     blog: 'Blog',
   },
   header: {
-    band_left: 'Murcia, Spain · Nursery producer · B2B exclusive sales',
+    band_left: 'Murcia, Spain · Producer nursery · Exclusive B2B sales',
     band_right: 'Minimum order 100 units · EU phytosanitary passport',
   },
   hero: {
@@ -26,8 +26,8 @@ export const en: Dictionary = {
     title_line1: 'Wholesale',
     title_highlight: 'production',
     title_line2: 'of Trichocereus',
-    description: 'We grow and distribute cacti of the Trichocereus genus to nurseries, garden centers and distributors across Europe from our facilities in Murcia.',
-    cta: 'Request quote →',
+    description: 'We cultivate and distribute cacti of the Trichocereus genus to nurseries, garden centers, and distributors across Europe from our facilities in Murcia.',
+    cta: 'Request a quote →',
     image_tag: 'Own facilities · 2,500 m²',
     tags: ['Own production', 'EU certification', '18 countries', '50+ varieties'],
   },
@@ -39,12 +39,12 @@ export const en: Dictionary = {
     delivery: { value: '99%', label: 'Delivery OK' },
   },
   catalog: {
-    title: 'Production catalog',
+    title: 'Production Catalog',
     viewAll: 'View all varieties →',
     available: 'Available',
     limited: 'Limited',
-    outOfStock: 'Out of stock',
-    viewSheet: 'Data sheet →',
+    outOfStock: 'Out of Stock',
+    viewSheet: 'Sheet →',
   },
   services: {
     title: 'Services',
@@ -52,7 +52,7 @@ export const en: Dictionary = {
     items: [
       {
         title: 'Wholesale sales',
-        description: 'Orders from 100 units. Special volume conditions. Bank transfer or 30 days payment.',
+        description: 'Orders from 100 units. Special conditions for volume. Payment by transfer or 30 days.',
       },
       {
         title: 'Europe shipping',
@@ -60,7 +60,7 @@ export const en: Dictionary = {
       },
       {
         title: 'Documentation',
-        description: 'EU phytosanitary passport included. Customs documentation for UK export.',
+        description: 'EU phytosanitary passport included. Customs documentation for export to the United Kingdom.',
       },
       {
         title: 'Custom cultivation',
@@ -69,33 +69,33 @@ export const en: Dictionary = {
     ],
   },
   certifications: {
-    title: 'EU phytosanitary certification',
-    description: 'All our specimens comply with European regulations. Phytosanitary passport included with each shipment.',
+    title: 'EU Phytosanitary Certification',
+    description: 'All our specimens comply with European regulations. Phytosanitary passport included in each shipment.',
     badges: [
-      { value: 'EU', label: 'Phyto passport' },
+      { value: 'EU', label: 'Phytosanitary passport' },
       { value: 'UK', label: 'Export docs' },
       { value: '99%', label: 'Delivery OK' },
     ],
   },
   cta: {
     title: 'Shall we prepare your order?',
-    description: 'Tell us varieties, sizes and quantities. We send you a quote in less than 24 working hours.',
+    description: 'Tell us the varieties, sizes, and quantities. We will send you a quote in less than 24 business hours.',
     email: 'info@tricholand.com',
     location: 'Murcia, Spain',
     button: 'Send email →',
   },
   footer: {
-    description: 'Nursery specialized in Trichocereus and columnar cacti. Exclusive B2B sales for sector professionals.',
+    description: 'Producer nursery specialized in Trichocereus and columnar cacti. Exclusive B2B sales for industry professionals.',
     catalog_title: 'Catalog',
     company_title: 'Company',
     company_links: [
       { label: 'Services', href: '/en/servicios' },
       { label: 'Certifications', href: '/en/certificaciones' },
-      { label: 'About us', href: '/en/sobre-nosotros' },
+      { label: 'About Us', href: '/en/sobre-nosotros' },
       { label: 'Blog', href: '/en/blog' },
     ],
     contact_title: 'Contact',
-    copyright: '© 2025 Tricholand · Nursery producer',
+    copyright: '© 2025 Tricholand · Producer nursery',
     b2b_note: 'Exclusive B2B sales',
   },
   contact_form: {
@@ -118,7 +118,7 @@ export const en: Dictionary = {
   },
   common: {
     loading: 'Loading...',
-    error: 'An error occurred',
+    error: 'An error has occurred',
     success: 'Success!',
     back: 'Back',
     next: 'Next',

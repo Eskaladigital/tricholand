@@ -10,7 +10,8 @@
     "translate:ui": "node scripts/translate-ui.mjs",
     "translate:content": "node scripts/translate-content.mjs",
     "translate:all": "node scripts/translate-ui.mjs && node scripts/translate-content.mjs",
-    "translate:dry": "node scripts/translate-content.mjs --dry-run"
+    "translate:dry": "node scripts/translate-content.mjs --dry-run",
+    "favicon": "node scripts/generate-favicon.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.95.3",
@@ -25,6 +26,7 @@
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.16.0",
     "eslint-config-next": "^15.1.0",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4.0.0",
     "typescript": "5.9.3"
   }

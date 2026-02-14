@@ -162,12 +162,16 @@ CREATE TABLE contacts (
   message TEXT,
 
   contact_type TEXT DEFAULT 'particular' CHECK (contact_type IN ('particular', 'professional')),
-  professional_type TEXT,
+  professional_subtype TEXT,
   inquiry_type TEXT,
   referral_source TEXT,
 
-  status TEXT DEFAULT 'new' CHECK (status IN ('new', 'replied', 'archived')),
+  status TEXT DEFAULT 'new' CHECK (status IN ('new', 'read', 'replied', 'archived', 'spam')),
+  priority TEXT DEFAULT 'normal' CHECK (priority IN ('low', 'normal', 'high', 'urgent')),
   admin_notes TEXT,
+
+  gdpr_consent BOOLEAN NOT NULL DEFAULT false,
+  gdpr_consent_date TIMESTAMPTZ,
 
   locale TEXT DEFAULT 'es'
 );
@@ -229,3 +233,10 @@ CREATE POLICY "Admin manages contacts" ON contacts FOR ALL USING (
 CREATE POLICY "Public can create orders" ON orders FOR INSERT WITH CHECK (true);
 CREATE POLICY "Public can create order items" ON order_items FOR INSERT WITH CHECK (true);
 CREATE POLICY "Public can create contacts" ON contacts FOR INSERT WITH CHECK (true);
+
+-- Settings: public read (company name, min order, etc.), admin write
+ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Settings readable by all" ON settings FOR SELECT USING (true);
+CREATE POLICY "Admin manages settings" ON settings FOR ALL USING (
+  auth.role() = 'authenticated'
+);

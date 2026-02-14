@@ -4,7 +4,7 @@ export const fr: Dictionary = {
   meta: {
     locale: 'fr',
     siteName: 'Tricholand',
-    siteDescription: 'Pépinière de Trichocereus et cactus colonnaires. Vente B2B pour professionnels. Livraison dans toute l\'Europe.',
+    siteDescription: 'Pépinière productrice de Trichocereus et cactacées colonnaires. Vente en gros B2B pour professionnels. Expéditions dans toute l\'Europe.',
   },
   nav: {
     home: 'Accueil',
@@ -12,13 +12,13 @@ export const fr: Dictionary = {
     catalog: 'Catalogue',
     shop: 'Boutique B2B',
     services: 'Services',
-    about: 'À propos',
+    about: 'À propos de nous',
     contact: 'Contact',
     certifications: 'Certifications',
     blog: 'Blog',
   },
   header: {
-    band_left: 'Murcie, Espagne · Pépinière · Vente B2B exclusive',
+    band_left: 'Murcie, Espagne · Pépinière productrice · Vente B2B exclusive',
     band_right: 'Commande minimum 100 unités · Passeport phytosanitaire UE',
   },
   hero: {
@@ -28,18 +28,18 @@ export const fr: Dictionary = {
     title_line2: 'de Trichocereus',
     description: 'Nous cultivons et distribuons des cactus du genre Trichocereus aux pépinières, jardineries et distributeurs de toute l\'Europe depuis nos installations à Murcie.',
     cta: 'Demander un devis →',
-    image_tag: 'Installations propres · 2 500 m²',
+    image_tag: 'Installations propres · 2.500 m²',
     tags: ['Production propre', 'Certification UE', '18 pays', '50+ variétés'],
   },
   stats: {
-    units: { value: '25K+', label: 'Uds / an' },
-    area: { value: '2 500', label: 'm² culture' },
+    units: { value: '25K+', label: 'Unités / an' },
+    area: { value: '2.500', label: 'm² de culture' },
     varieties: { value: '50+', label: 'Variétés' },
     countries: { value: '18', label: 'Pays UE' },
     delivery: { value: '99%', label: 'Livraison OK' },
   },
   catalog: {
-    title: 'Catalogue production',
+    title: 'Catalogue de production',
     viewAll: 'Voir toutes les variétés →',
     available: 'Disponible',
     limited: 'Limité',
@@ -52,15 +52,15 @@ export const fr: Dictionary = {
     items: [
       {
         title: 'Vente en gros',
-        description: 'Commandes à partir de 100 unités. Conditions spéciales par volume. Paiement virement ou 30 jours.',
+        description: 'Commandes à partir de 100 unités. Conditions spéciales par volume. Paiement par virement ou 30 jours.',
       },
       {
-        title: 'Livraisons Europe',
-        description: 'Espagne 48–72h, UE 72–96h, UK 5–7 jours. Logistique et emballage spécialisés pour cactus.',
+        title: 'Expéditions Europe',
+        description: 'Espagne 48–72h, UE 72–96h, UK 5–7 jours. Logistique et emballage spécialisé pour cactacées.',
       },
       {
         title: 'Documentation',
-        description: 'Passeport phytosanitaire UE inclus. Documentation douanière pour export UK.',
+        description: 'Passeport phytosanitaire UE inclus. Documentation douanière pour exportation vers le Royaume-Uni.',
       },
       {
         title: 'Culture sur commande',
@@ -70,7 +70,7 @@ export const fr: Dictionary = {
   },
   certifications: {
     title: 'Certification phytosanitaire UE',
-    description: 'Tous nos spécimens respectent la réglementation européenne. Passeport phytosanitaire inclus à chaque envoi.',
+    description: 'Tous nos spécimens respectent la réglementation européenne. Passeport phytosanitaire inclus dans chaque envoi.',
     badges: [
       { value: 'UE', label: 'Passeport phyto' },
       { value: 'UK', label: 'Docs export' },
@@ -78,25 +78,25 @@ export const fr: Dictionary = {
     ],
   },
   cta: {
-    title: 'Préparons-nous votre commande ?',
-    description: 'Indiquez-nous variétés, tailles et quantités. Nous vous envoyons un devis en moins de 24h ouvrées.',
+    title: 'Préparons votre commande ?',
+    description: 'Indiquez-nous les variétés, tailles et quantités. Nous vous envoyons un devis en moins de 24h ouvrables.',
     email: 'info@tricholand.com',
     location: 'Murcie, Espagne',
-    button: 'Envoyer email →',
+    button: 'Envoyer un email →',
   },
   footer: {
-    description: 'Pépinière spécialisée en Trichocereus et cactus colonnaires. Vente B2B exclusive pour professionnels du secteur.',
+    description: 'Pépinière productrice spécialisée en Trichocereus et cactacées colonnaires. Vente exclusive B2B pour les professionnels du secteur.',
     catalog_title: 'Catalogue',
     company_title: 'Entreprise',
     company_links: [
-      { label: 'Services', href: '/fr/servicios' },
-      { label: 'Certifications', href: '/fr/certificaciones' },
-      { label: 'À propos', href: '/fr/sobre-nosotros' },
+      { label: 'Services', href: '/fr/services' },
+      { label: 'Certifications', href: '/fr/certifications' },
+      { label: 'À propos de nous', href: '/fr/sobre-nosotros' },
       { label: 'Blog', href: '/fr/blog' },
     ],
     contact_title: 'Contact',
-    copyright: '© 2025 Tricholand · Pépinière',
-    b2b_note: 'Vente B2B exclusive',
+    copyright: '© 2025 Tricholand · Pépinière productrice',
+    b2b_note: 'Vente exclusive B2B',
   },
   contact_form: {
     step1_title: 'Qui êtes-vous ?',
@@ -106,11 +106,11 @@ export const fr: Dictionary = {
     pro_distributor: 'Distributeur / Grossiste',
     pro_landscaper: 'Paysagiste / Architecte',
     pro_other: 'Autre professionnel',
-    step2_title: 'De quoi avez-vous besoin ?',
+    step2_title: 'Que recherchez-vous ?',
   },
   blog: {
     title: 'Blog',
-    readMore: 'Lire la suite →',
+    readMore: 'Lire plus →',
     readingTime: 'min de lecture',
     publishedOn: 'Publié le',
     backToList: '← Retour au blog',
@@ -118,7 +118,7 @@ export const fr: Dictionary = {
   },
   common: {
     loading: 'Chargement...',
-    error: 'Une erreur s\'est produite',
+    error: 'Une erreur est survenue',
     success: 'Succès !',
     back: 'Retour',
     next: 'Suivant',
