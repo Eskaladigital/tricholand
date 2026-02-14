@@ -43,6 +43,26 @@ export interface Dictionary {
     limited: string
     outOfStock: string
     viewSheet: string
+    searchVariety: string
+    filterAll: string
+    varietyCount: string
+    noVarietiesFound: string
+    tryOtherFilters: string
+  }
+  shop: {
+    searchProduct: string
+    filterAll: string
+    filterTrichocereus: string
+    filterPacks: string
+    productCount: string
+    addToOrder: string
+    inYourOrderAddAnother: string
+    featured: string
+    onlyXLotsLeft: string
+    lotsLeft: string
+    lotsAvailable: string
+    noProductsFound: string
+    tryOtherFilters: string
   }
   services: {
     title: string
@@ -158,6 +178,22 @@ export interface Dictionary {
     publishedOn: string
     backToList: string
     relatedPosts: string
+  }
+  variety: {
+    home: string
+    sizes: string
+    requestQuote: string
+    description: string
+    highlightedFeatures: string
+    careGuide: string
+    light: string
+    water: string
+    temperature: string
+    soil: string
+    checkAvailability: string
+    stockAvailable: string
+    stockLimited: string
+    stockOutOfStock: string
   }
   common: {
     loading: string

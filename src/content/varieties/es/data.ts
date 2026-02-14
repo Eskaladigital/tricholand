@@ -232,12 +232,161 @@ export const SCIENTIFIC_NAME_EN: Record<string, string> = {
   'otros-cactus': 'Various species',
 }
 
+/** Traducciones de contenido por locale. Fallback a es si no existe. */
+type VarietyTranslation = Partial<Pick<Variety, 'commonName' | 'name' | 'description' | 'highlights' | 'care'>>
+const VARIETY_TRANSLATIONS: Record<string, Record<string, VarietyTranslation>> = {
+  it: {
+    'trichocereus-macrogonus': {
+      commonName: 'San Pedro Azzurro',
+      description: 'Il Trichocereus macrogonus, spesso chiamato San Pedro Azzurro per la sua distintiva tonalità verde-bluastra, è un cactus colonnare originario di Bolivia e Perù. Si caratterizza per le coste pronunciate e angolose (generalmente 6-7), le spine corte e l\'epidermide cerosa che gli conferisce quel caratteristico brillante azzurro. È una specie a crescita moderata o rapida che può raggiungere i 4-5 metri di altezza. Nel mercato vivaistico europeo è molto apprezzato per il suo colore unico, che offre un interessante contrasto visivo quando combinato con altre varietà di Trichocereus dai toni più verdi. Produce fiori bianchi di grandi dimensioni.',
+      highlights: [
+        'Colore verde-bluastro unico e molto decorativo',
+        'Epidermide cerosa con brillantezza caratteristica',
+        'Eccellente per combinare con altre varietà',
+        'Crescita moderata o rapida',
+        'Coste pronunciate e angolose molto estetiche',
+        'Buon adattamento al clima europeo',
+      ],
+      care: {
+        light: 'Sole pieno a leggera mezz\'ombra. Il colore azzurro si accentua con una buona illuminazione.',
+        water: 'Irrigazione moderata. Simile al pachanoi in frequenza.',
+        temperature: 'Tollera fino a -2°C con substrato asciutto. Proteggere da gelate prolungate.',
+        soil: 'Substrato drenante standard per cactus colonnari.',
+      },
+    },
+  },
+  en: {
+    'trichocereus-macrogonus': {
+      commonName: 'Blue San Pedro',
+      description: 'Trichocereus macrogonus, often called Blue San Pedro for its distinctive blue-green hue, is a columnar cactus native to Bolivia and Peru. It is characterized by pronounced angular ribs (usually 6-7), short spines, and a waxy epidermis that gives it that prized bluish sheen. It is a moderate to fast-growing species that can reach 4-5 metres in height. In the European nursery market it is highly valued for its unique colour, which provides an interesting visual contrast when combined with other Trichocereus varieties in greener tones. It produces large white flowers.',
+      highlights: [
+        'Unique blue-green colour, very decorative',
+        'Waxy epidermis with characteristic sheen',
+        'Excellent for combining with other varieties',
+        'Moderate to fast growth',
+        'Pronounced angular ribs, very aesthetic',
+        'Good adaptation to European climate',
+      ],
+      care: {
+        light: 'Full sun to light partial shade. The blue colour is enhanced with good light.',
+        water: 'Moderate watering. Similar to pachanoi in frequency.',
+        temperature: 'Tolerates down to -2°C with dry substrate. Protect from prolonged frost.',
+        soil: 'Standard draining substrate for columnar cacti.',
+      },
+    },
+  },
+  de: {
+    'trichocereus-macrogonus': {
+      commonName: 'Blauer San Pedro',
+      description: 'Der Trichocereus macrogonus, oft Blauer San Pedro genannt wegen seiner markanten blaugrünen Färbung, ist ein säulenförmiger Kaktus aus Bolivien und Peru. Er zeichnet sich durch ausgeprägte, kantige Rippen (meist 6-7), kurze Dornen und eine wachsartige Epidermis aus, die ihm diesen geschätzten bläulichen Glanz verleiht. Es ist eine mäßig bis schnell wachsende Art, die 4-5 Meter Höhe erreichen kann. Im europäischen Gartenbaumarkt wird er wegen seiner einzigartigen Farbe sehr geschätzt, die einen interessanten visuellen Kontrast bietet, wenn er mit anderen Trichocereus-Sorten in grüneren Tönen kombiniert wird. Er bildet große weiße Blüten.',
+      highlights: [
+        'Einzigartige blaugrüne Farbe, sehr dekorativ',
+        'Wachsartige Epidermis mit charakteristischem Glanz',
+        'Ausgezeichnet zur Kombination mit anderen Sorten',
+        'Mäßiges bis schnelles Wachstum',
+        'Ausgeprägte kantige Rippen, sehr ästhetisch',
+        'Gute Anpassung an das europäische Klima',
+      ],
+      care: {
+        light: 'Volle Sonne bis leichter Halbschatten. Die blaue Färbung verstärkt sich bei gutem Licht.',
+        water: 'Mäßige Bewässerung. Ähnlich wie Pachanoi in der Häufigkeit.',
+        temperature: 'Verträgt bis -2°C bei trockenem Substrat. Vor längerem Frost schützen.',
+        soil: 'Standard-Drainagesubstrat für säulenförmige Kakteen.',
+      },
+    },
+  },
+  fr: {
+    'trichocereus-macrogonus': {
+      commonName: 'San Pedro Bleu',
+      description: 'Le Trichocereus macrogonus, souvent appelé San Pedro Bleu pour sa teinte vert-bleuté distinctive, est un cactus colonnaire originaire de Bolivie et du Pérou. Il se caractérise par ses côtes prononcées et anguleuses (généralement 6-7), ses épines courtes et son épiderme cireux qui lui confère cet éclat bleuté tant apprécié. C\'est une espèce à croissance modérée à rapide qui peut atteindre 4-5 mètres de hauteur. Sur le marché horticole européen, il est très apprécié pour sa couleur unique, qui apporte un contraste visuel intéressant lorsqu\'il est combiné avec d\'autres variétés de Trichocereus aux tons plus verts. Il produit de grandes fleurs blanches.',
+      highlights: [
+        'Couleur vert-bleuté unique et très décorative',
+        'Épiderme cireux avec éclat caractéristique',
+        'Excellent pour combiner avec d\'autres variétés',
+        'Croissance modérée à rapide',
+        'Côtes prononcées et anguleuses très esthétiques',
+        'Bonne adaptation au climat européen',
+      ],
+      care: {
+        light: 'Plein soleil à mi-ombre légère. La couleur bleutée s\'accentue avec une bonne lumière.',
+        water: 'Arrosage modéré. Similaire au pachanoi en fréquence.',
+        temperature: 'Tolère jusqu\'à -2°C avec substrat sec. Protéger des gelées prolongées.',
+        soil: 'Substrat drainant standard pour cactus colonnaires.',
+      },
+    },
+  },
+  nl: {
+    'trichocereus-macrogonus': {
+      commonName: 'Blauwe San Pedro',
+      description: 'De Trichocereus macrogonus, vaak Blauwe San Pedro genoemd vanwege zijn onderscheidende blauwgroene tint, is een zuilvormige cactus afkomstig uit Bolivia en Peru. Hij kenmerkt zich door uitgesproken hoekige ribben (meestal 6-7), korte stekels en een wasachtige epidermis die hem die gewaardeerde blauwachtige glans geeft. Het is een matig tot snel groeiende soort die 4-5 meter hoog kan worden. Op de Europese kwekersmarkt wordt hij zeer gewaardeerd om zijn unieke kleur, die een interessant visueel contrast biedt wanneer gecombineerd met andere Trichocereus-variëteiten in groenere tinten. Hij produceert grote witte bloemen.',
+      highlights: [
+        'Unieke blauwgroene kleur, zeer decoratief',
+        'Wasachtige epidermis met karakteristieke glans',
+        'Uitstekend om te combineren met andere variëteiten',
+        'Matige tot snelle groei',
+        'Uitgesproken hoekige ribben, zeer esthetisch',
+        'Goede aanpassing aan het Europese klimaat',
+      ],
+      care: {
+        light: 'Volle zon tot lichte halfschaduw. De blauwe kleur wordt versterkt bij goed licht.',
+        water: 'Matige bewatering. Vergelijkbaar met pachanoi in frequentie.',
+        temperature: 'Verdraagt tot -2°C met droog substraat. Beschermen tegen langdurige vorst.',
+        soil: 'Standaard drainerend substraat voor zuilvormige cactussen.',
+      },
+    },
+  },
+  pt: {
+    'trichocereus-macrogonus': {
+      commonName: 'San Pedro Azul',
+      description: 'O Trichocereus macrogonus, frequentemente chamado San Pedro Azul pela sua tonalidade verde-azulada distintiva, é um cato columnar originário da Bolívia e do Peru. Caracteriza-se pelas costelas pronunciadas e angulosas (geralmente 6-7), espinhos curtos e epiderme cerosa que lhe confere esse brilho azulado tão apreciado. É uma espécie de crescimento moderado a rápido que pode atingir 4-5 metros de altura. No mercado viveirista europeu é muito apreciado pela sua cor única, que aporta um contraste visual interessante quando combinado com outras variedades de Trichocereus de tons mais verdes. Produz flores brancas de grande tamanho.',
+      highlights: [
+        'Cor verde-azulada única e muito decorativa',
+        'Epiderme cerosa com brilho característico',
+        'Excelente para combinar com outras variedades',
+        'Crescimento moderado a rápido',
+        'Costelas pronunciadas e angulosas muito estéticas',
+        'Boa adaptação ao clima europeu',
+      ],
+      care: {
+        light: 'Sol pleno a meia-sombra ligeira. A cor azulada acentua-se com boa luz.',
+        water: 'Rega moderada. Semelhante ao pachanoi em frequência.',
+        temperature: 'Tolera até -2°C com substrato seco. Proteger de geadas prolongadas.',
+        soil: 'Substrato drenante padrão para cactos colunares.',
+      },
+    },
+  },
+}
+
 export function getVarietyBySlug(slug: string): Variety | undefined {
   return varietiesES.find((v) => v.slug === slug)
 }
 
 export function getAllVarietySlugs(): string[] {
   return varietiesES.map((v) => v.slug)
+}
+
+/** Devuelve la variedad con contenido traducido según locale. Fallback a español. */
+export function getVarietyForLocale(slug: string, locale: string): Variety | undefined {
+  const base = getVarietyBySlug(slug)
+  if (!base) return undefined
+  if (locale === 'es') return base
+
+  const trans = VARIETY_TRANSLATIONS[locale]?.[slug]
+  if (!trans) return base
+
+  return {
+    ...base,
+    ...(trans.commonName && { commonName: trans.commonName }),
+    ...(trans.name && { name: trans.name }),
+    ...(trans.description && { description: trans.description }),
+    ...(trans.highlights && { highlights: trans.highlights }),
+    ...(trans.care && { care: { ...base.care, ...trans.care } }),
+  }
+}
+
+/** Todas las variedades con contenido traducido según locale */
+export function getAllVarietiesForLocale(locale: string): Variety[] {
+  return getAllVarietySlugs().map((slug) => getVarietyForLocale(slug, locale)!).filter(Boolean)
 }
 
 export function getVarietyDisplayEn(slug: string): { name: string; commonName: string; scientificName: string } {

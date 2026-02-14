@@ -2,14 +2,21 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getFullPath, getAlternatesMetadata } from '@/lib/i18n/paths'
 import { CatalogGrid } from '@/components/varieties/CatalogGrid'
+import { getAllVarietiesForLocale } from '@/content/varieties/es/data'
+import { getDictionary } from '@/lib/i18n'
+
+const LOCALE = 'fr'
 
 export const metadata: Metadata = {
   title: 'Catalogue cactus en gros',
   description: 'Catalogue complet de Trichocereus et cactacées colonnaires pour vente en gros. Filtrez par variété, taille et disponibilité.',
-  alternates: getAlternatesMetadata('fr', 'catalog'),
+  alternates: getAlternatesMetadata(LOCALE, 'catalog'),
 }
 
 export default function CatalogoPage() {
+  const varieties = getAllVarietiesForLocale(LOCALE)
+  const t = getDictionary(LOCALE)
+
   return (
     <section className="px-5 lg:px-8 py-16">
       <div className="mb-8 pb-4 border-b-2 border-negro flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -29,7 +36,7 @@ export default function CatalogoPage() {
         </Link>
       </div>
 
-      <CatalogGrid locale="fr" />
+      <CatalogGrid locale={LOCALE} varieties={varieties} t={t.catalog} />
     </section>
   )
 }

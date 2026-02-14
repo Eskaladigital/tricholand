@@ -1,17 +1,21 @@
 import type { Metadata } from 'next'
-import { getActiveProducts } from '@/content/shop/products-demo'
+import { getActiveProductsForLocale } from '@/content/shop/products-demo'
 import { ShopGrid } from '@/components/shop/ShopGrid'
 import { CartButton } from '@/components/shop/CartButton'
 import { getAlternatesMetadata } from '@/lib/i18n/paths'
+import { getDictionary } from '@/lib/i18n'
+
+const LOCALE = 'pt'
 
 export const metadata: Metadata = {
   title: 'Loja B2B — Lotes por atacado',
   description: 'Loja online B2B Tricholand. Compre lotes de Trichocereus por atacado com preços visíveis. Envie o seu pedido e receba orçamento em 24h.',
-  alternates: getAlternatesMetadata('pt', 'shop'),
+  alternates: getAlternatesMetadata(LOCALE, 'shop'),
 }
 
-export default function TiendaPage() {
-  const products = getActiveProducts()
+export default async function TiendaPage() {
+  const products = await getActiveProductsForLocale(LOCALE)
+  const t = getDictionary(LOCALE)
 
   return (
     <>
@@ -46,7 +50,7 @@ export default function TiendaPage() {
           ))}
         </div>
 
-        <ShopGrid products={products} locale="pt" />
+        <ShopGrid products={products} locale={LOCALE} t={t.shop} />
       </section>
 
       <CartButton locale="pt" />

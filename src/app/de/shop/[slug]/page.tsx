@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getProductBySlug, getActiveProducts } from '@/content/shop/products-demo'
+import { getProductForLocale, getActiveProducts } from '@/content/shop/products-demo'
 import { formatPrice } from '@/types/shop'
 import { ProductDetailActions } from '@/components/shop/ProductDetailActions'
 import { CartButton } from '@/components/shop/CartButton'
@@ -12,20 +12,22 @@ export async function generateStaticParams() {
   return getActiveProducts().map((p) => ({ slug: p.slug }))
 }
 
+const LOCALE = 'de'
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const product = getProductBySlug(slug)
+  const product = await getProductForLocale(slug, LOCALE)
   if (!product) return { title: 'Produkt nicht gefunden' }
   return {
     title: `${product.name} — B2B-Shop`,
     description: product.description.slice(0, 160),
-    alternates: getAlternatesMetadata('de', 'shop', slug),
+    alternates: getAlternatesMetadata(LOCALE, 'shop', slug),
   }
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const product = getProductBySlug(slug)
+  const product = await getProductForLocale(slug, LOCALE)
   if (!product) notFound()
 
   const isLowStock = product.stock_qty !== null && product.stock_qty <= 5
@@ -34,9 +36,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     <>
       <article className="px-5 lg:px-8 py-16 max-w-6xl mx-auto">
         <nav className="text-sm text-marron-claro mb-6">
-          <Link href="/de" className="hover:text-naranja transition-colors">Startseite</Link>
+          <Link href={`/${LOCALE}`} className="hover:text-naranja transition-colors">Startseite</Link>
           <span className="mx-2">›</span>
-          <Link href={getFullPath('de', 'shop')} className="hover:text-naranja transition-colors">B2B-Shop</Link>
+          <Link href={getFullPath(LOCALE, 'shop')} className="hover:text-naranja transition-colors">B2B-Shop</Link>
           <span className="mx-2">›</span>
           <span className="text-negro font-medium">{product.name}</span>
         </nav>
@@ -68,7 +70,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
             {product.variety_slug && (
               <Link
-                href={getFullPath('de', 'varieties', product.variety_slug)}
+                href={getFullPath(LOCALE, 'varieties', product.variety_slug)}
                 className="text-sm text-naranja font-semibold hover:underline"
               >
                 Sorten-Datenblatt anzeigen →
@@ -119,7 +121,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </div>
       </article>
 
-      <CartButton locale="de" />
+      <CartButton locale={LOCALE} />
     </>
   )
 }

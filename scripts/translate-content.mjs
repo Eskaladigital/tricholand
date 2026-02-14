@@ -1,28 +1,24 @@
 /**
  * Script para traducir contenido largo (variedades, productos, blog, páginas)
- * usando OpenAI API y almacenando en Supabase.
+ * usando OpenAI API.
  * 
- * Flujo:
- * 1. Lee contenido fuente en español (de archivos TS o Supabase)
- * 2. Calcula hash MD5 para detectar cambios
- * 3. Sincroniza a tabla "content" en Supabase
- * 4. Para cada locale destino, traduce solo lo nuevo/outdated
- * 5. Guarda traducciones en tabla "translations"
+ * Modos:
+ * 1. Supabase (por defecto): Sincroniza a content/translations en Supabase
+ * 2. --output-files: Escribe traducciones a archivos TS para que la app las use
+ *    (no requiere Supabase, ideal para productos/variedades)
  * 
  * Uso:
- *   node scripts/translate-content.mjs                    (todo)
- *   node scripts/translate-content.mjs --type variety     (solo variedades)
- *   node scripts/translate-content.mjs --locale en        (solo inglés)
- *   node scripts/translate-content.mjs --type blog --locale fr
- *   node scripts/translate-content.mjs --dry-run          (sin escribir)
+ *   node scripts/translate-content.mjs                    (todo, Supabase)
+ *   node scripts/translate-content.mjs --output-files     (productos → product-translations.ts)
+ *   node scripts/translate-content.mjs --output-files --type product
+ *   node scripts/translate-content.mjs --type product --locale it
+ *   node scripts/translate-content.mjs --dry-run
  * 
- * Requiere en .env.local:
- *   OPENAI_API_KEY
- *   NEXT_PUBLIC_SUPABASE_URL
- *   SUPABASE_SERVICE_ROLE_KEY
+ * Requiere: OPENAI_API_KEY
+ * Con Supabase: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
  */
 
-import { readFileSync, existsSync } from 'fs'
+import { readFileSync, existsSync, writeFileSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { createHash } from 'crypto'
@@ -56,18 +52,22 @@ loadEnv()
 const { OPENAI_API_KEY, NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env
 
 if (!OPENAI_API_KEY) { console.error('❌ OPENAI_API_KEY not set'); process.exit(1) }
-if (!NEXT_PUBLIC_SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  console.error('❌ Supabase credentials not set in .env.local')
-  process.exit(1)
-}
 
 // ─── Parse args ──────────────────────────────────────
 const args = process.argv.slice(2)
 const dryRun = args.includes('--dry-run')
+const outputFiles = args.includes('--output-files')
 const typeFilter = args.includes('--type') ? args[args.indexOf('--type') + 1] : null
 const localeFilter = args.includes('--locale') ? args[args.indexOf('--locale') + 1] : null
 
 const targetLocales = localeFilter ? [localeFilter] : TARGET_LOCALES
+
+// Con --output-files no necesitamos Supabase
+if (outputFiles && !dryRun) {
+  if (!NEXT_PUBLIC_SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+    console.log('ℹ️  Modo --output-files: Supabase no requerido')
+  }
+}
 
 // ─── Helpers ─────────────────────────────────────────
 function md5(text) {
@@ -189,8 +189,9 @@ function extractProductContent() {
   const content = readFileSync(filePath, 'utf-8')
   const items = []
 
+  // Solo slug de producto (no variety_slug)
+  const slugMatches = [...content.matchAll(/(?<!variety_)slug:\s*'([^']+)'/g)]
   const nameMatches = [...content.matchAll(/name:\s*'([^']+)'/g)]
-  const slugMatches = [...content.matchAll(/slug:\s*'([^']+)'/g)]
   const descMatches = [...content.matchAll(/description:\s*'([\s\S]*?)(?<!\\)'/g)]
   const shortDescMatches = [...content.matchAll(/short_description:\s*'([^']+)'/g)]
   const unitMatches = [...content.matchAll(/unit_label:\s*'([^']+)'/g)]
@@ -228,11 +229,32 @@ function extractBlogContent() {
 
 function extractPageContent() {
   // Static page content — servicios, sobre nosotros, certificaciones
-  // These are in the dictionary (es.ts) for short items,
-  // but the long page content is in the page.tsx files themselves
-  // For now, we only extract what's translatable from the dictionary
-  // The actual page content will come from Supabase once migrated
   return []
+}
+
+/** Escribe product-translations.ts con las traducciones generadas */
+function writeProductTranslationsFile(translations) {
+  const outPath = join(ROOT, 'src/content/shop/product-translations.ts')
+  const lines = [
+    '/** Traducciones de productos. Generado por: node scripts/translate-content.mjs --output-files --type product */',
+    '',
+    'export const PRODUCT_TRANSLATIONS: Record<string, Record<string, { name?: string; short_description?: string; description?: string; unit_label?: string }>> = {',
+  ]
+  for (const [locale, bySlug] of Object.entries(translations)) {
+    lines.push(`  ${locale}: {`)
+    for (const [slug, fields] of Object.entries(bySlug)) {
+      const parts = []
+      if (fields.name) parts.push(`name: ${JSON.stringify(fields.name)}`)
+      if (fields.short_description) parts.push(`short_description: ${JSON.stringify(fields.short_description)}`)
+      if (fields.description) parts.push(`description: ${JSON.stringify(fields.description)}`)
+      if (fields.unit_label) parts.push(`unit_label: ${JSON.stringify(fields.unit_label)}`)
+      lines.push(`    '${slug}': { ${parts.join(', ')} },`)
+    }
+    lines.push('  },')
+  }
+  lines.push('}')
+  writeFileSync(outPath, lines.join('\n') + '\n', 'utf-8')
+  console.log(`\n  ✅ Escrito: src/content/shop/product-translations.ts`)
 }
 
 // ─── Main workflow ───────────────────────────────────
@@ -283,6 +305,47 @@ async function main() {
     }
     console.log(`\n  → Se generarían ${allItems.length * targetLocales.length} traducciones`)
     return
+  }
+
+  // ─── Modo --output-files: traducir y escribir a archivos TS ───
+  if (outputFiles && (!typeFilter || typeFilter === 'product')) {
+    const productItems = allItems.filter((i) => i.type === 'product')
+    if (productItems.length === 0) {
+      console.log('⚠️  No hay productos para traducir')
+    } else {
+      const productTranslations = {}
+      for (const loc of targetLocales) productTranslations[loc] = {}
+
+      console.log(`\n🔄 Traduciendo ${productItems.length} campos de productos a ${targetLocales.length} idiomas...\n`)
+      for (const locale of targetLocales) {
+        console.log(`  ${LOCALE_NAMES[locale]} (${locale})...`)
+        for (const item of productItems) {
+          if (!productTranslations[locale][item.id]) productTranslations[locale][item.id] = {}
+          try {
+            const translated = await translateText(item.text, item.field, item.type, item.id, locale)
+            productTranslations[locale][item.id][item.field] = translated
+            await new Promise((r) => setTimeout(r, 300))
+          } catch (err) {
+            console.error(`    ❌ ${item.id}.${item.field}: ${err.message}`)
+          }
+        }
+      }
+      writeProductTranslationsFile(productTranslations)
+    }
+    if (!typeFilter || typeFilter === 'product') {
+      console.log('\n✅ Productos traducidos y guardados en product-translations.ts\n')
+      if (typeFilter === 'product') return
+    }
+  }
+
+  // 2. Sync content to Supabase "content" table (solo si no --output-files o si hay más tipos)
+  if (!outputFiles && (!NEXT_PUBLIC_SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY)) {
+    console.error('❌ Supabase credentials required (NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)')
+    process.exit(1)
+  }
+
+  if (outputFiles && (!typeFilter || typeFilter === 'product')) {
+    return // Ya terminamos con productos
   }
 
   // 2. Sync content to Supabase "content" table

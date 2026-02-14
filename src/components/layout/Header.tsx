@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import type { Dictionary } from '@/lib/i18n/types'
-import { getFullPath } from '@/lib/i18n/paths'
+import { getFullPath, getPathForLocaleSwitch } from '@/lib/i18n/paths'
 
 const LOCALES = [
   { code: 'es', label: 'ES' },
@@ -56,7 +56,10 @@ export function Header({ locale, dict }: HeaderProps) {
     if (isBlogPost && !blogSlugsByLocale?.[locCode]) {
       return `/${locCode}/blog`
     }
-    return pathWithoutLocale ? `/${locCode}${pathWithoutLocale}` : `/${locCode}`
+    if (pathWithoutLocale) {
+      return getPathForLocaleSwitch(pathWithoutLocale, locale, locCode)
+    }
+    return `/${locCode}`
   }
 
   const navLinks = [

@@ -3,15 +3,17 @@
 import { useState, useMemo } from 'react'
 import type { Product } from '@/types/shop'
 import { ProductCardShop } from './ProductCardShop'
+import type { Dictionary } from '@/lib/i18n/types'
 
 interface ShopGridProps {
   products: Product[]
   locale: string
+  t: Dictionary['shop']
 }
 
 type CategoryFilter = 'all' | 'trichocereus' | 'packs'
 
-export function ShopGrid({ products, locale }: ShopGridProps) {
+export function ShopGrid({ products, locale, t }: ShopGridProps) {
   const [category, setCategory] = useState<CategoryFilter>('all')
   const [search, setSearch] = useState('')
 
@@ -24,7 +26,7 @@ export function ShopGrid({ products, locale }: ShopGridProps) {
           p.name.toLowerCase().includes(q) ||
           p.sku.toLowerCase().includes(q) ||
           p.short_description.toLowerCase().includes(q) ||
-          p.tags.some((t) => t.includes(q))
+          p.tags.some((tag) => tag.includes(q))
         )
       }
       return true
@@ -37,17 +39,17 @@ export function ShopGrid({ products, locale }: ShopGridProps) {
       <div className="flex flex-col sm:flex-row gap-4 mb-8">
         <input
           type="text"
-          placeholder="Buscar producto..."
+          placeholder={t.searchProduct}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="flex-1 px-4 py-2.5 border border-linea bg-blanco text-sm focus:outline-none focus:border-naranja transition-colors"
         />
         <div className="flex gap-2">
           {([
-            { value: 'all', label: 'Todos' },
-            { value: 'trichocereus', label: 'Trichocereus' },
-            { value: 'packs', label: 'Packs' },
-          ] as { value: CategoryFilter; label: string }[]).map((opt) => (
+            { value: 'all' as CategoryFilter, label: t.filterAll },
+            { value: 'trichocereus' as CategoryFilter, label: t.filterTrichocereus },
+            { value: 'packs' as CategoryFilter, label: t.filterPacks },
+          ]).map((opt) => (
             <button
               key={opt.value}
               onClick={() => setCategory(opt.value)}
@@ -65,19 +67,19 @@ export function ShopGrid({ products, locale }: ShopGridProps) {
 
       {/* Count */}
       <p className="text-sm text-marron-claro mb-6">
-        {filtered.length} {filtered.length === 1 ? 'producto' : 'productos'}
+        {filtered.length} {t.productCount}
       </p>
 
       {/* Grid */}
       {filtered.length === 0 ? (
         <div className="text-center py-16 text-marron-claro">
-          <p className="text-lg mb-2">No se encontraron productos</p>
-          <p className="text-sm">Prueba con otros filtros</p>
+          <p className="text-lg mb-2">{t.noProductsFound}</p>
+          <p className="text-sm">{t.tryOtherFilters}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((product) => (
-            <ProductCardShop key={product.id} product={product} locale={locale} />
+            <ProductCardShop key={product.id} product={product} locale={locale} t={t} />
           ))}
         </div>
       )}

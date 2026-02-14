@@ -6,13 +6,15 @@ import { useCart } from '@/lib/shop/cart-context'
 import { formatPrice } from '@/types/shop'
 import type { Product } from '@/types/shop'
 import { getFullPath } from '@/lib/i18n/paths'
+import type { Dictionary } from '@/lib/i18n/types'
 
 interface AddToCartButtonProps {
   product: Product
   className?: string
+  t: Dictionary['shop']
 }
 
-export function AddToCartButton({ product, className = '' }: AddToCartButtonProps) {
+export function AddToCartButton({ product, className = '', t }: AddToCartButtonProps) {
   const { addItem, isInCart } = useCart()
   const inCart = isInCart(product.id)
 
@@ -25,7 +27,7 @@ export function AddToCartButton({ product, className = '' }: AddToCartButtonProp
           : 'bg-naranja text-blanco hover:bg-marron'
       } ${className}`}
     >
-      {inCart ? '✓ En tu pedido · Añadir otro' : 'Añadir al pedido →'}
+      {inCart ? t.inYourOrderAddAnother : t.addToOrder}
     </button>
   )
 }
@@ -33,9 +35,10 @@ export function AddToCartButton({ product, className = '' }: AddToCartButtonProp
 interface ProductCardShopProps {
   product: Product
   locale: string
+  t: Dictionary['shop']
 }
 
-export function ProductCardShop({ product, locale }: ProductCardShopProps) {
+export function ProductCardShop({ product, locale, t }: ProductCardShopProps) {
   const isLowStock = product.stock_qty !== null && product.stock_qty <= 5
 
   return (
@@ -54,7 +57,7 @@ export function ProductCardShop({ product, locale }: ProductCardShopProps) {
         </span>
         {product.featured && (
           <span className="absolute top-3 right-3 bg-naranja text-blanco px-2.5 py-1 font-[family-name:var(--font-archivo-narrow)] text-[0.65rem] font-bold uppercase tracking-wide">
-            Destacado
+            {t.featured}
           </span>
         )}
       </Link>
@@ -80,15 +83,15 @@ export function ProductCardShop({ product, locale }: ProductCardShopProps) {
         {product.stock_qty !== null && (
           <p className={`text-xs mt-1 font-semibold ${isLowStock ? 'text-terracota' : 'text-verde'}`}>
             {isLowStock
-              ? `⚡ Solo quedan ${product.stock_qty} lotes`
-              : `● ${product.stock_qty} lotes disponibles`}
+              ? `⚡ ${t.onlyXLotsLeft} ${product.stock_qty} ${t.lotsLeft}`
+              : `● ${product.stock_qty} ${t.lotsAvailable}`}
           </p>
         )}
       </div>
 
       {/* Add to cart */}
       <div className="px-5 pb-4">
-        <AddToCartButton product={product} className="w-full py-3 px-4" />
+        <AddToCartButton product={product} className="w-full py-3 px-4" t={t} />
       </div>
     </div>
   )

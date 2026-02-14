@@ -137,6 +137,57 @@ export function getAlternatesMetadata(locale: string, key: PathKey, slug?: strin
   }
 }
 
+/**
+ * Traduce la ruta actual al path equivalente en otro locale.
+ * Ej: /en/shop → /es/tienda, /en/shop/order → /es/tienda/pedido
+ */
+export function getPathForLocaleSwitch(
+  pathWithoutLocale: string,
+  currentLocale: string,
+  targetLocale: string
+): string {
+  const segments = pathWithoutLocale.replace(/^\//, '').split('/').filter(Boolean)
+  if (segments.length === 0) return `/${targetLocale}`
+
+  const pathKeys: PathKey[] = [
+    'shopOrder',
+    'shop',
+    'varieties',
+    'catalog',
+    'services',
+    'about',
+    'contact',
+    'certifications',
+    'privacy',
+    'legal',
+  ]
+
+  for (const key of pathKeys) {
+    const currentPath = getPath(currentLocale, key)
+    const currentSegs = currentPath.split('/')
+
+    if (key === 'shopOrder') {
+      if (segments[0] === currentSegs[0] && segments[1] === currentSegs[1]) {
+        return getFullPath(targetLocale, key)
+      }
+    } else if (key === 'shop' || key === 'varieties') {
+      if (segments[0] === currentSegs[0]) {
+        if (segments.length === 1) {
+          return getFullPath(targetLocale, key)
+        }
+        const slug = segments.slice(1).join('/')
+        return getFullPath(targetLocale, key, slug)
+      }
+    } else {
+      if (currentPath === segments.join('/')) {
+        return getFullPath(targetLocale, key)
+      }
+    }
+  }
+
+  return `/${targetLocale}${pathWithoutLocale.startsWith('/') ? pathWithoutLocale : '/' + pathWithoutLocale}`
+}
+
 /** Alternates para índice de blog (/blog igual en todos los locales) */
 export function getBlogIndexAlternates(locale: string) {
   const locales = ['es', 'en', 'de', 'fr', 'it', 'nl', 'pt'] as const

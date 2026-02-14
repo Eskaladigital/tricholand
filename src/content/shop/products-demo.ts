@@ -1,4 +1,5 @@
 import type { Product } from '@/types/shop'
+import { getBulkTranslations } from '@/lib/translations'
 
 /**
  * Datos demo de productos/lotes.
@@ -268,10 +269,47 @@ export function getProductById(id: string): Product | undefined {
   return productsDemo.find((p) => p.id === id)
 }
 
+/** Devuelve el producto con campos traducidos según locale. Lee de Supabase. Fallback a español. */
+export async function getProductForLocale(slug: string, locale: string): Promise<Product | undefined> {
+  const base = getProductBySlug(slug)
+  if (!base) return undefined
+  if (locale === 'es') return base
+
+  const bulk = await getBulkTranslations('product', locale)
+  const trans = bulk[slug]
+  if (!trans) return base
+
+  return {
+    ...base,
+    ...(trans.name && { name: trans.name }),
+    ...(trans.short_description && { short_description: trans.short_description }),
+    ...(trans.description && { description: trans.description }),
+    ...(trans.unit_label && { unit_label: trans.unit_label }),
+  }
+}
+
 export function getActiveProducts(): Product[] {
   return productsDemo
     .filter((p) => p.status === 'active')
     .sort((a, b) => a.sort_order - b.sort_order)
+}
+
+/** Productos activos con traducciones según locale. Lee de Supabase. */
+export async function getActiveProductsForLocale(locale: string): Promise<Product[]> {
+  if (locale === 'es') return getActiveProducts()
+
+  const bulk = await getBulkTranslations('product', locale)
+  return getActiveProducts().map((p) => {
+    const trans = bulk[p.slug]
+    if (!trans) return p
+    return {
+      ...p,
+      ...(trans.name && { name: trans.name }),
+      ...(trans.short_description && { short_description: trans.short_description }),
+      ...(trans.description && { description: trans.description }),
+      ...(trans.unit_label && { unit_label: trans.unit_label }),
+    }
+  })
 }
 
 export function getFeaturedProducts(): Product[] {

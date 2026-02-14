@@ -3,21 +3,24 @@
 import { useState, useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { varietiesES } from '@/content/varieties/es/data'
 import { getFullPath } from '@/lib/i18n/paths'
+import type { Variety } from '@/types/variety'
+import type { Dictionary } from '@/lib/i18n/types'
 
 type StockFilter = 'all' | 'available' | 'limited'
 
 interface CatalogGridProps {
   locale: string
+  varieties: Variety[]
+  t: Dictionary['catalog']
 }
 
-export function CatalogGrid({ locale }: CatalogGridProps) {
+export function CatalogGrid({ locale, varieties, t }: CatalogGridProps) {
   const [stockFilter, setStockFilter] = useState<StockFilter>('all')
   const [searchQuery, setSearchQuery] = useState('')
 
   const filtered = useMemo(() => {
-    return varietiesES.filter((v) => {
+    return varieties.filter((v) => {
       if (stockFilter !== 'all' && v.stock !== stockFilter) return false
       if (searchQuery) {
         const q = searchQuery.toLowerCase()
@@ -30,12 +33,12 @@ export function CatalogGrid({ locale }: CatalogGridProps) {
       }
       return true
     })
-  }, [stockFilter, searchQuery])
+  }, [varieties, stockFilter, searchQuery])
 
   const stockLabels = {
-    available: '● Disponible',
-    limited: '● Limitado',
-    out_of_stock: '● Agotado',
+    available: `● ${t.available}`,
+    limited: `● ${t.limited}`,
+    out_of_stock: `● ${t.outOfStock}`,
   }
   const stockColors = {
     available: 'text-verde',
@@ -50,7 +53,7 @@ export function CatalogGrid({ locale }: CatalogGridProps) {
         {/* Search */}
         <input
           type="text"
-          placeholder="Buscar variedad..."
+          placeholder={t.searchVariety}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="flex-1 px-4 py-2.5 border border-linea bg-blanco font-[family-name:var(--font-archivo)] text-sm focus:outline-none focus:border-naranja transition-colors"
@@ -59,10 +62,10 @@ export function CatalogGrid({ locale }: CatalogGridProps) {
         {/* Stock filter */}
         <div className="flex gap-2">
           {([
-            { value: 'all', label: 'Todos' },
-            { value: 'available', label: 'Disponible' },
-            { value: 'limited', label: 'Limitado' },
-          ] as { value: StockFilter; label: string }[]).map((opt) => (
+            { value: 'all' as StockFilter, label: t.filterAll },
+            { value: 'available' as StockFilter, label: t.available },
+            { value: 'limited' as StockFilter, label: t.limited },
+          ]).map((opt) => (
             <button
               key={opt.value}
               onClick={() => setStockFilter(opt.value)}
@@ -80,16 +83,16 @@ export function CatalogGrid({ locale }: CatalogGridProps) {
 
       {/* Count */}
       <p className="text-sm text-marron-claro mb-6">
-        {filtered.length} {filtered.length === 1 ? 'variedad' : 'variedades'}
-        {stockFilter !== 'all' && ` · Filtro: ${stockFilter === 'available' ? 'disponible' : 'limitado'}`}
-        {searchQuery && ` · Búsqueda: "${searchQuery}"`}
+        {filtered.length} {t.varietyCount}
+        {stockFilter !== 'all' && ` · ${stockFilter === 'available' ? t.available : t.limited}`}
+        {searchQuery && ` · "${searchQuery}"`}
       </p>
 
       {/* Grid */}
       {filtered.length === 0 ? (
         <div className="text-center py-16 text-marron-claro">
-          <p className="text-lg mb-2">No se encontraron variedades</p>
-          <p className="text-sm">Prueba con otros filtros o términos de búsqueda</p>
+          <p className="text-lg mb-2">{t.noVarietiesFound}</p>
+          <p className="text-sm">{t.tryOtherFilters}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -130,7 +133,7 @@ export function CatalogGrid({ locale }: CatalogGridProps) {
                 </span>
                 <span className="text-marron-claro">{v.sizeRange}</span>
                 <span className="font-[family-name:var(--font-archivo-narrow)] text-[0.72rem] text-marron font-bold uppercase tracking-wide group-hover:text-naranja transition-colors">
-                  Ver ficha →
+                  {t.viewSheet}
                 </span>
               </div>
             </Link>

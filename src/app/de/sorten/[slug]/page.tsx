@@ -2,8 +2,11 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getVarietyBySlug, getAllVarietySlugs } from '@/content/varieties/es/data'
+import { getVarietyForLocale, getAllVarietySlugs } from '@/content/varieties/es/data'
 import { getFullPath, getAlternatesMetadata } from '@/lib/i18n/paths'
+import { getDictionary } from '@/lib/i18n'
+
+const LOCALE = 'de'
 
 export async function generateStaticParams() {
   return getAllVarietySlugs().map((slug) => ({ slug }))
@@ -11,13 +14,13 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const variety = getVarietyBySlug(slug)
+  const variety = getVarietyForLocale(slug, LOCALE)
   if (!variety) return { title: 'Sorte nicht gefunden' }
 
   return {
     title: `${variety.name} — ${variety.commonName}`,
     description: variety.description.slice(0, 160),
-    alternates: getAlternatesMetadata('de', 'varieties', slug),
+    alternates: getAlternatesMetadata(LOCALE, 'varieties', slug),
     openGraph: {
       title: `${variety.name} | Tricholand`,
       description: variety.description.slice(0, 160),
@@ -28,7 +31,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function VarietyPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const variety = getVarietyBySlug(slug)
+  const variety = getVarietyForLocale(slug, LOCALE)
+  const t = getDictionary(LOCALE)
 
   if (!variety) notFound()
 
@@ -39,9 +43,9 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
   }
 
   const stockLabels = {
-    available: '● Verfügbar',
-    limited: '● Begrenzter Bestand',
-    out_of_stock: '● Ausverkauft',
+    available: t.variety.stockAvailable,
+    limited: t.variety.stockLimited,
+    out_of_stock: t.variety.stockOutOfStock,
   }
 
   return (
@@ -72,9 +76,9 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
       <div className="px-5 lg:px-8 max-w-5xl mx-auto">
         {/* Breadcrumb */}
         <nav className="py-4 text-sm text-marron-claro">
-          <Link href="/de" className="hover:text-naranja transition-colors">Startseite</Link>
+          <Link href={`/${LOCALE}`} className="hover:text-naranja transition-colors">{t.variety.home}</Link>
           <span className="mx-2">›</span>
-          <Link href={getFullPath('de', 'varieties')} className="hover:text-naranja transition-colors">Sorten</Link>
+          <Link href={getFullPath(LOCALE, 'varieties')} className="hover:text-naranja transition-colors">{t.nav.varieties}</Link>
           <span className="mx-2">›</span>
           <span className="text-negro font-medium">{variety.name}</span>
         </nav>
@@ -85,13 +89,13 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
             {stockLabels[variety.stock]}
           </span>
           <span className="text-sm text-marron-claro">
-            Größen: <strong className="text-negro">{variety.sizeRange}</strong>
+            {t.variety.sizes}: <strong className="text-negro">{variety.sizeRange}</strong>
           </span>
           <Link
-            href={getFullPath('de', 'contact')}
+            href={getFullPath(LOCALE, 'contact')}
             className="ml-auto bg-naranja text-blanco px-5 py-2.5 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-marron transition-colors"
           >
-            Angebot anfordern →
+            {t.variety.requestQuote}
           </Link>
         </div>
 
@@ -100,7 +104,7 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
           {/* Description */}
           <div>
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mb-4 pb-2 border-b-2 border-negro">
-              Beschreibung
+              {t.variety.description}
             </h2>
             <p className="text-base leading-relaxed text-marron-claro">
               {variety.description}
@@ -108,7 +112,7 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
 
             {/* Highlights */}
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mt-10 mb-4 pb-2 border-b-2 border-negro">
-              Wesentliche Merkmale
+              {t.variety.highlightedFeatures}
             </h2>
             <ul className="space-y-3">
               {variety.highlights.map((h, i) => (
@@ -124,41 +128,41 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
           <aside>
             <div className="bg-blanco border border-linea p-6 sticky top-8">
               <h3 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold uppercase mb-4 pb-2 border-b border-linea">
-                Pflegeanleitung
+                {t.variety.careGuide}
               </h3>
 
               <div className="space-y-5">
                 <div>
                   <h4 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase text-naranja mb-1">
-                    Licht
+                    {t.variety.light}
                   </h4>
                   <p className="text-sm text-marron-claro leading-relaxed">{variety.care.light}</p>
                 </div>
                 <div>
                   <h4 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase text-naranja mb-1">
-                    Wasser
+                    {t.variety.water}
                   </h4>
                   <p className="text-sm text-marron-claro leading-relaxed">{variety.care.water}</p>
                 </div>
                 <div>
                   <h4 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase text-naranja mb-1">
-                    Temperatur
+                    {t.variety.temperature}
                   </h4>
                   <p className="text-sm text-marron-claro leading-relaxed">{variety.care.temperature}</p>
                 </div>
                 <div>
                   <h4 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase text-naranja mb-1">
-                    Substrat
+                    {t.variety.soil}
                   </h4>
                   <p className="text-sm text-marron-claro leading-relaxed">{variety.care.soil}</p>
                 </div>
               </div>
 
               <Link
-                href={getFullPath('de', 'contact')}
+                href={getFullPath(LOCALE, 'contact')}
                 className="block mt-6 bg-negro text-crudo text-center py-3 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-marron transition-colors"
               >
-                Verfügbarkeit prüfen
+                {t.variety.checkAvailability}
               </Link>
             </div>
           </aside>
