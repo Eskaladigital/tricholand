@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createApiClient } from '@/lib/supabase/api'
+import { createServiceClient } from '@/lib/supabase/api'
 
 interface OrderItem {
   product_id: string
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       (sum, item) => sum + item.unit_price_cents * item.quantity, 0
     )
 
-    const supabase = createApiClient()
+    const supabase = createServiceClient()
 
     // Número de pedido: RPC si existe, sino timestamp
     let order_number: string
@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (orderError || !order) {
-      console.error('Error guardando pedido:', orderError)
+      console.error('Error guardando pedido:', orderError?.message ?? orderError, orderError?.details)
       return NextResponse.json({ error: 'Error al guardar el pedido' }, { status: 500 })
     }
 
