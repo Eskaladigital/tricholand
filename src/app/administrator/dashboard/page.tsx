@@ -1,5 +1,3 @@
-import { AdminSidebar } from '@/components/admin/AdminSidebar'
-
 export default function DashboardPage() {
   // TODO: Datos reales de Supabase
   const stats = {
@@ -11,10 +9,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="flex min-h-screen">
-      <AdminSidebar />
-
-      <main className="flex-1 p-8">
+    <>
         <div className="mb-8">
           <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
             Dashboard
@@ -109,7 +104,6 @@ export default function DashboardPage() {
             </a>
           </div>
         </div>
-      </main>
-    </div>
+    </>
   )
 }

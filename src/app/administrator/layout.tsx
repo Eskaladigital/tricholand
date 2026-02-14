@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import { AdminLayoutShell } from '@/components/admin/AdminLayoutShell'
 import { PwaInstallPrompt } from '@/components/admin/PwaInstallPrompt'
 
 export const metadata: Metadata = {
@@ -22,7 +23,7 @@ export const viewport: Viewport = {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[#f5f5f0]">
-      {children}
+      <AdminLayoutShell>{children}</AdminLayoutShell>
       <PwaInstallPrompt />
     </div>
   )

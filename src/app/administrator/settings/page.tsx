@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { AdminSidebar } from '@/components/admin/AdminSidebar'
 
 export default function SettingsPage() {
   const [companyName, setCompanyName] = useState('Tricholand')
@@ -29,10 +28,7 @@ export default function SettingsPage() {
   const labelClass = 'block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1'
 
   return (
-    <div className="flex min-h-screen">
-      <AdminSidebar />
-
-      <main className="flex-1 p-8">
+    <>
         <div className="mb-8">
           <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
             Configuración
@@ -152,7 +148,6 @@ export default function SettingsPage() {
             )}
           </div>
         </form>
-      </main>
-    </div>
+    </>
   )
 }

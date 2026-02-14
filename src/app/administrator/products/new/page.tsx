@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { ProductForm } from '@/components/admin/ProductForm'
 
 export default function NewProductPage() {
@@ -21,9 +20,7 @@ export default function NewProductPage() {
   }
 
   return (
-    <div className="flex min-h-screen">
-      <AdminSidebar />
-      <main className="flex-1 p-8">
+    <>
         <div className="mb-8">
           <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
             Nuevo producto
@@ -33,7 +30,6 @@ export default function NewProductPage() {
           </p>
         </div>
         <ProductForm onSave={handleSave} isSaving={isSaving} />
-      </main>
-    </div>
+    </>
   )
 }

@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { AdminSidebar } from '@/components/admin/AdminSidebar'
 
 // Demo orders (en producción: Supabase query)
 const ordersDemo = [
@@ -80,10 +79,7 @@ const statusConfig = {
 
 export default function OrdersListPage() {
   return (
-    <div className="flex min-h-screen">
-      <AdminSidebar />
-
-      <main className="flex-1 p-8">
+    <>
         <div className="mb-8">
           <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
             Pedidos
@@ -146,7 +142,6 @@ export default function OrdersListPage() {
             </table>
           </div>
         </div>
-      </main>
-    </div>
+    </>
   )
 }

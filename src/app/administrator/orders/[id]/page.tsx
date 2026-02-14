@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, use } from 'react'
-import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import type { OrderStatus, PaymentMethod } from '@/types/shop'
 
 // Demo order detail (en producción: Supabase fetch)
@@ -59,10 +58,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const labelClass = 'block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1'
 
   return (
-    <div className="flex min-h-screen">
-      <AdminSidebar />
-
-      <main className="flex-1 p-8">
+    <>
         <div className="flex justify-between items-start mb-8">
           <div>
             <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
@@ -256,7 +252,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             </section>
           </div>
         </div>
-      </main>
-    </div>
+    </>
   )
 }

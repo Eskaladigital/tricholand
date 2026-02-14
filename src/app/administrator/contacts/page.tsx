@@ -1,5 +1,3 @@
-import { AdminSidebar } from '@/components/admin/AdminSidebar'
-
 // Demo contacts
 const contactsDemo = [
   { id: 'c_001', name: 'Marco Visser', company: 'Garden Center Holanda B.V.', email: 'marco@gcholanda.nl', country: 'Países Bajos', type: 'professional', inquiry: 'quote_catalog', status: 'new', date: '2025-01-20' },
@@ -11,10 +9,7 @@ const contactsDemo = [
 
 export default function ContactsPage() {
   return (
-    <div className="flex min-h-screen">
-      <AdminSidebar />
-
-      <main className="flex-1 p-8">
+    <>
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
@@ -77,7 +72,6 @@ export default function ContactsPage() {
             </table>
           </div>
         </div>
-      </main>
-    </div>
+    </>
   )
 }

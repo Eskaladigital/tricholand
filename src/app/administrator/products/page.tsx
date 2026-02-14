@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { productsDemo } from '@/content/shop/products-demo'
 import { formatPrice } from '@/types/shop'
 
@@ -7,10 +6,7 @@ export default function ProductsListPage() {
   const products = productsDemo
 
   return (
-    <div className="flex min-h-screen">
-      <AdminSidebar />
-
-      <main className="flex-1 p-8">
+    <>
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
@@ -109,7 +105,6 @@ export default function ProductsListPage() {
             </table>
           </div>
         </div>
-      </main>
-    </div>
+    </>
   )
 }

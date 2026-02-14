@@ -3,7 +3,6 @@
 import { useState, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { notFound } from 'next/navigation'
-import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { ProductForm } from '@/components/admin/ProductForm'
 import { getProductById } from '@/content/shop/products-demo'
 
@@ -26,9 +25,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   }
 
   return (
-    <div className="flex min-h-screen">
-      <AdminSidebar />
-      <main className="flex-1 p-8">
+    <>
         <div className="mb-8">
           <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
             Editar producto
@@ -38,7 +35,6 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           </p>
         </div>
         <ProductForm product={product} onSave={handleSave} isSaving={isSaving} />
-      </main>
-    </div>
+    </>
   )
 }
