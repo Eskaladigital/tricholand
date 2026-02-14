@@ -20,33 +20,28 @@ interface ContactPayload {
 }
 
 export async function POST(request: NextRequest) {
+  const log: string[] = []
+  const addLog = (msg: string) => { log.push(msg); console.log(`[Contact] ${msg}`) }
+  const addError = (msg: string) => { log.push(`ERROR: ${msg}`); console.error(`[Contact] ${msg}`) }
+
   try {
     const body: ContactPayload = await request.json()
 
-    // Validación básica
+    // --- Validación ---
     if (!body.name || !body.email || !body.country || !body.message) {
-      return NextResponse.json(
-        { error: 'Faltan campos obligatorios: nombre, email, país y mensaje' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Faltan campos obligatorios: nombre, email, país y mensaje' }, { status: 400 })
     }
-
     if (!body.gdpr_consent) {
-      return NextResponse.json(
-        { error: 'Debes aceptar la política de privacidad' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Debes aceptar la política de privacidad' }, { status: 400 })
     }
-
-    // Validar email básico
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(body.email)) {
-      return NextResponse.json(
-        { error: 'El formato del email no es válido' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'El formato del email no es válido' }, { status: 400 })
     }
 
+    addLog(`Nuevo contacto de ${body.name} (${body.email}) - ${body.contact_type}`)
+
+    // --- 1. Guardar en Supabase ---
     const supabase = createServiceClient()
     const { error } = await supabase.from('contacts').insert({
       contact_type: body.contact_type || 'particular',
@@ -68,59 +63,57 @@ export async function POST(request: NextRequest) {
     })
 
     if (error) {
-      console.error('Error guardando contacto:', error)
-      return NextResponse.json({ error: 'Error al guardar el contacto' }, { status: 500 })
+      addError(`Fallo al insertar contacto: ${error.message} | code: ${error.code} | details: ${error.details}`)
+      return NextResponse.json({ error: 'Error al guardar el contacto', log }, { status: 500 })
     }
 
-    // Enviar emails (no bloquear la respuesta si falla)
-    const emailData = {
-      name: body.name,
-      company: body.company || null,
-      email: body.email,
-      phone: body.phone || null,
-      country: body.country,
-      city: body.city || null,
-      contact_type: body.contact_type || 'particular',
-      professional_subtype: body.professional_subtype || null,
-      inquiry_type: body.inquiry_type || null,
-      message: body.message,
-      referral_source: body.referral_source || null,
-    }
+    addLog('Contacto guardado en BD')
 
-    const isPro = body.contact_type === 'professional'
-    let emailsSent = false
+    // --- 2. Enviar emails ---
+    let emailAdmin = false
+    let emailClient = false
+
     try {
-      await sendMailPair(
+      const emailData = {
+        name: body.name,
+        company: body.company || null,
+        email: body.email,
+        phone: body.phone || null,
+        country: body.country,
+        city: body.city || null,
+        contact_type: body.contact_type || 'particular',
+        professional_subtype: body.professional_subtype || null,
+        inquiry_type: body.inquiry_type || null,
+        message: body.message,
+        referral_source: body.referral_source || null,
+      }
+
+      const isPro = body.contact_type === 'professional'
+      const emailResult = await sendMailPair(
         `[Web] Nueva consulta de ${body.name}${isPro ? ' (Profesional)' : ''} — ${body.country}`,
         contactAdminEmail(emailData),
         body.email,
         `Hemos recibido tu consulta — Tricholand`,
         contactClientEmail(emailData),
       )
-      emailsSent = true
-      console.log(`Emails enviados para contacto de ${body.name}`)
+      emailAdmin = emailResult.admin
+      emailClient = emailResult.client
+      addLog(`Emails: admin=${emailAdmin}, cliente=${emailClient}`)
     } catch (err) {
-      console.error('Error enviando emails de contacto:', err)
+      addError(`Error general enviando emails: ${err instanceof Error ? err.message : err}`)
     }
 
-    console.log('Nuevo contacto recibido:', {
-      type: body.contact_type,
-      name: body.name,
-      email: body.email,
-      country: body.country,
-      inquiry: body.inquiry_type,
-      emailsSent,
-    })
+    // --- Respuesta ---
+    addLog(`Contacto completado. Email admin: ${emailAdmin}, Email cliente: ${emailClient}`)
 
-    return NextResponse.json(
-      { success: true, emails_sent: emailsSent, message: 'Contacto recibido correctamente' },
-      { status: 200 }
-    )
+    return NextResponse.json({
+      success: true,
+      email_admin: emailAdmin,
+      email_client: emailClient,
+      log,
+    })
   } catch (err) {
-    console.error('Error procesando contacto:', err)
-    return NextResponse.json(
-      { error: 'Error interno del servidor' },
-      { status: 500 }
-    )
+    addError(`Error general: ${err instanceof Error ? err.message : err}`)
+    return NextResponse.json({ error: 'Error interno del servidor', log }, { status: 500 })
   }
 }

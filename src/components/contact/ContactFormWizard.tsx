@@ -103,11 +103,9 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
       }
 
       console.log('[Tricholand] Contacto guardado correctamente')
-      if (data.emails_sent) {
-        console.log('[Tricholand] Emails enviados a', form.email, 'y a info@tricholand.com')
-      } else {
-        console.warn('[Tricholand] Contacto guardado pero los emails no se pudieron enviar')
-      }
+      console.log('[Tricholand] Email admin:', data.email_admin ? 'OK' : 'FALLO')
+      console.log('[Tricholand] Email cliente:', data.email_client ? 'OK' : 'FALLO')
+      if (data.log) console.log('[Tricholand] Log servidor:', data.log)
 
       setSubmitted(true)
     } catch (err) {

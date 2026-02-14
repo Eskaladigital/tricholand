@@ -1,48 +1,75 @@
 import nodemailer from 'nodemailer'
+import type { Transporter } from 'nodemailer'
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT) || 465,
-  secure: true, // SSL
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-})
+let _transporter: Transporter | null = null
+
+function getTransporter(): Transporter {
+  if (_transporter) return _transporter
+
+  const host = process.env.SMTP_HOST
+  const port = Number(process.env.SMTP_PORT) || 465
+  const user = process.env.SMTP_USER
+  const pass = process.env.SMTP_PASS
+
+  if (!host || !user || !pass) {
+    const missing = [
+      !host && 'SMTP_HOST',
+      !user && 'SMTP_USER',
+      !pass && 'SMTP_PASS',
+    ].filter(Boolean).join(', ')
+    throw new Error(`Variables SMTP no configuradas: ${missing}`)
+  }
+
+  console.log(`[Email] Configurando SMTP: ${host}:${port} con usuario ${user}`)
+
+  _transporter = nodemailer.createTransport({
+    host,
+    port,
+    secure: port === 465,
+    auth: { user, pass },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
+  })
+
+  return _transporter
+}
 
 const FROM = process.env.SMTP_FROM || 'Tricholand <info@tricholand.com>'
 const ADMIN_EMAIL = 'info@tricholand.com'
 
-export interface SendMailOptions {
-  to: string
-  subject: string
-  html: string
+export async function sendMail(to: string, subject: string, html: string): Promise<void> {
+  const transporter = getTransporter()
+  console.log(`[Email] Enviando a ${to}: "${subject}"`)
+  const info = await transporter.sendMail({ from: FROM, to, subject, html })
+  console.log(`[Email] Enviado OK a ${to} - messageId: ${info.messageId}`)
 }
 
-export async function sendMail({ to, subject, html }: SendMailOptions): Promise<void> {
-  await transporter.sendMail({ from: FROM, to, subject, html })
-}
-
-export async function sendMailToAdmin(subject: string, html: string): Promise<void> {
-  await sendMail({ to: ADMIN_EMAIL, subject, html })
-}
-
+/**
+ * Envía email al admin y al cliente. Devuelve { admin: boolean, client: boolean }
+ */
 export async function sendMailPair(
   adminSubject: string,
   adminHtml: string,
   clientEmail: string,
   clientSubject: string,
   clientHtml: string
-): Promise<void> {
-  // Enviar ambos en paralelo, no bloquear si uno falla
-  const results = await Promise.allSettled([
-    sendMailToAdmin(adminSubject, adminHtml),
-    sendMail({ to: clientEmail, subject: clientSubject, html: clientHtml }),
-  ])
+): Promise<{ admin: boolean; client: boolean }> {
+  const result = { admin: false, client: false }
 
-  for (const r of results) {
-    if (r.status === 'rejected') {
-      console.error('Error enviando email:', r.reason)
-    }
+  try {
+    await sendMail(ADMIN_EMAIL, adminSubject, adminHtml)
+    result.admin = true
+  } catch (err) {
+    console.error('[Email] Error enviando al admin:', err instanceof Error ? err.message : err)
   }
+
+  try {
+    await sendMail(clientEmail, clientSubject, clientHtml)
+    result.client = true
+  } catch (err) {
+    console.error('[Email] Error enviando al cliente:', err instanceof Error ? err.message : err)
+  }
+
+  return result
 }

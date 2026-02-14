@@ -81,11 +81,10 @@ export function OrderForm({ locale }: OrderFormProps) {
       }
 
       console.log('[Tricholand] Pedido creado:', data.order_number)
-      console.log('[Tricholand] Items guardados:', data.items_saved ? 'OK' : 'ERROR')
-      console.log('[Tricholand] Emails enviados:', data.emails_sent ? 'OK' : 'ERROR')
-      if (!data.items_saved) {
-        console.error('[Tricholand] Los items del pedido NO se guardaron en la base de datos')
-      }
+      console.log('[Tricholand] Items guardados:', data.items_saved ? 'OK' : 'FALLO')
+      console.log('[Tricholand] Email admin:', data.email_admin ? 'OK' : 'FALLO')
+      console.log('[Tricholand] Email cliente:', data.email_client ? 'OK' : 'FALLO')
+      if (data.log) console.log('[Tricholand] Log servidor:', data.log)
 
       setSubmitted(true)
       clearCart()
