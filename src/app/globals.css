@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  /* Paleta Tricholand */
+  --color-crudo: #f5f2eb;
+  --color-blanco: #faf9f7;
+  --color-negro: #1a1a1a;
+  --color-marron: #3d3730;
+  --color-marron-claro: #6b6258;
+  --color-verde: #3d5a3d;
+  --color-verde-oscuro: #1b3a2f;
+  --color-verde-claro: #eaf0e8;
+  --color-terracota: #b85c38;
+  --color-naranja: #c4652a;
+  --color-linea: #d4cfc3;
+
+  /* Fuentes */
+  --font-archivo: 'Archivo', sans-serif;
+  --font-archivo-narrow: 'Archivo Narrow', sans-serif;
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-archivo);
+  background-color: var(--color-crudo);
+  color: var(--color-negro);
+}
