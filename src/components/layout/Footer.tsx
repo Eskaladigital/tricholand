@@ -7,10 +7,12 @@ function BackToTop() {
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      className="fixed bottom-6 left-6 z-40 bg-verde text-negro w-11 h-11 flex items-center justify-center rounded-full font-black text-lg shadow-lg hover:bg-verde/90 transition-colors"
+      className="fixed bottom-6 left-6 z-40 bg-verde w-11 h-11 flex items-center justify-center rounded-full shadow-lg ring-2 ring-white ring-inset hover:bg-verde/90 transition-colors"
       aria-label="Volver arriba"
     >
-      ↑
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <path d="M12 19V5M5 12l7-7 7 7" />
+      </svg>
     </button>
   )
 }
