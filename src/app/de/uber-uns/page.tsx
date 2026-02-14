@@ -51,7 +51,7 @@ export default function SobreNosotrosPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <Image
-              src="/images/vivero/productores_cactus_1.png"
+              src="/images/vivero/productores_cactus_1.webp"
               alt="Vivero Tricholand"
               width={500}
               height={350}
@@ -60,7 +60,7 @@ export default function SobreNosotrosPage() {
               className="w-full h-[200px] lg:h-full object-cover"
             />
             <Image
-              src="/images/vivero/productores_cactus_2.png"
+              src="/images/vivero/productores_cactus_2.webp"
               alt="Cultivo de Trichocereus"
               width={500}
               height={350}

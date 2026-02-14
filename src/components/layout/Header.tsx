@@ -78,7 +78,7 @@ export function Header({ locale, dict }: HeaderProps) {
         {/* Logo */}
         <Link href={`/${locale}`} className="flex items-center gap-3 group">
           <Image
-            src="/images/icons/logo_tricho_yellow_200_200.png"
+            src="/images/icons/logo_tricho_yellow_200_200.webp"
             alt="Tricholand"
             width={44}
             height={44}

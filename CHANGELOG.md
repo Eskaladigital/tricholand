@@ -2,6 +2,24 @@
 
 Todos los cambios notables del proyecto Tricholand Web.
 
+## [1.2.1] - 2026-02
+
+### Añadido
+
+- **Script `images:webp`**: convierte imágenes PNG/JPG en `public/images` a WebP (sharp, calidad 82)
+- **Script `update-image-refs-to-webp.mjs`**: actualiza referencias en código tras conversión
+
+### Modificado
+
+- **Optimización de rendimiento**:
+  - Fuentes: Google Fonts reemplazado por `next/font` (Archivo, Archivo Narrow) auto-hospedado — elimina ~750ms de recursos bloqueantes
+  - Imágenes: `sizes` y `quality` optimizados en CatalogPreview, HeroSection, Header, Footer, CatalogGrid, ProductCardShop, BlogGrid y páginas sobre-nosotros (7 idiomas)
+- **Imágenes convertidas a WebP**: 140 imágenes PNG/JPG → WebP en `public/images` (blog, icons, products, varieties, vivero)
+- **Referencias actualizadas**: 22 archivos (componentes, páginas, content, scripts) apuntan a `.webp`
+- **Favicon**: `generate-favicon.mjs` usa ahora `logo_tricho.webp` como fuente
+
+---
+
 ## [1.2.0] - 2026-02
 
 ### Añadido

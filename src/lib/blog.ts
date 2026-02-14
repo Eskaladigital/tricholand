@@ -31,7 +31,7 @@ function rowToMeta(row: {
     title: row.title,
     description: row.description || '',
     date: row.date,
-    image: row.image || '/images/blog/Tricholand_blog_1.png',
+    image: row.image || '/images/blog/Tricholand_blog_1.webp',
     imageAlt: row.image_alt || row.title,
     tags: row.tags || [],
     readingTime: row.reading_time,

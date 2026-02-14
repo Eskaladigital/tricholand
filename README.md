@@ -159,6 +159,7 @@ NEXT_PUBLIC_SITE_URL=https://www.tricholand.com
 | `npm run translate:dry` | Simular translate:content sin escribir |
 | `npm run translate:blog` | Traducir posts del blog a otros idiomas (OpenAI) |
 | `npm run favicon` | Regenerar favicon y apple-touch-icon desde logo |
+| `npm run images:webp` | Convertir imágenes PNG/JPG a WebP (optimización) |
 | `npm run seed:products` | Seed de productos de ejemplo |
 | `npm run seed:blog` | Seed de posts del blog |
 | `npm run import:blog` | Importar blog desde CSV |
@@ -166,15 +167,21 @@ NEXT_PUBLIC_SITE_URL=https://www.tricholand.com
 
 ---
 
-## Favicon
+## Favicon e imágenes
 
-El favicon se genera desde `public/images/icons/logo_tricho.png` con fondo blanco. Para regenerar:
+El favicon se genera desde `public/images/icons/logo_tricho.webp` con fondo blanco. Para regenerar:
 
 ```bash
 npm run favicon
 ```
 
 Genera `public/favicon.png` (32×32) y `public/apple-touch-icon.png` (180×180).
+
+Las imágenes del sitio están en formato **WebP** para optimizar rendimiento. Para convertir nuevas imágenes PNG/JPG a WebP:
+
+```bash
+npm run images:webp
+```
 
 ---
 
@@ -211,6 +218,8 @@ tricholand-web/
 │   ├── translate-blog-posts.mjs # Traducción posts del blog
 │   ├── generate-locales.mjs    # Generador de páginas por idioma
 │   ├── generate-favicon.mjs    # Favicon desde logo (fondo blanco)
+│   ├── convert-images-to-webp.mjs   # Conversión PNG/JPG → WebP
+│   ├── update-image-refs-to-webp.mjs # Actualizar referencias a .webp
 │   ├── seed-products.mjs       # Seed productos
 │   ├── seed-blog-posts.mjs     # Seed blog
 │   ├── import-blog-from-csv.mjs # Importar blog desde CSV

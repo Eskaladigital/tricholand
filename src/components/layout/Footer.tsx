@@ -43,7 +43,7 @@ export function Footer({ locale, dict }: FooterProps) {
         <div>
           <Link href={`/${locale}`} className="flex items-center gap-3 mb-4">
             <Image
-              src="/images/icons/logo_tricho_yellow_200_200.png"
+              src="/images/icons/logo_tricho_yellow_200_200.webp"
               alt="Tricholand"
               width={64}
               height={64}

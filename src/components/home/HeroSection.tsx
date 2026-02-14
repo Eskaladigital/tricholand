@@ -14,7 +14,7 @@ export function HeroSection({ locale, dict }: HeroSectionProps) {
       {/* Image */}
       <div className="relative min-h-[400px] lg:min-h-0 order-first">
         <Image
-          src="/images/vivero/productores_cactus_1.png"
+          src="/images/vivero/productores_cactus_1.webp"
           alt="Tricholand vivero de Trichocereus"
           fill
           sizes="(max-width: 1024px) 100vw, 55vw"

@@ -12,6 +12,7 @@
     "translate:all": "node scripts/translate-ui.mjs && node scripts/translate-content.mjs",
     "translate:dry": "node scripts/translate-content.mjs --dry-run",
     "favicon": "node scripts/generate-favicon.mjs",
+    "images:webp": "node scripts/convert-images-to-webp.mjs && node scripts/update-image-refs-to-webp.mjs",
     "seed:products": "node scripts/seed-products.mjs",
     "seed:blog": "node scripts/seed-blog-posts.mjs",
     "import:blog": "node scripts/import-blog-from-csv.mjs",

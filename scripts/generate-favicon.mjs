@@ -1,5 +1,5 @@
 /**
- * Genera favicon con fondo blanco desde logo_tricho.png
+ * Genera favicon con fondo blanco desde logo_tricho.webp
  * Ejecutar: node scripts/generate-favicon.mjs
  */
 import sharp from 'sharp'
@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
-const LOGO = join(ROOT, 'public/images/icons/logo_tricho.png')
+const LOGO = join(ROOT, 'public/images/icons/logo_tricho.webp')
 const OUT_FAVICON = join(ROOT, 'public/favicon.png')
 const OUT_APPLE = join(ROOT, 'public/apple-touch-icon.png')
 
