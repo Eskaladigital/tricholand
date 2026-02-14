@@ -64,15 +64,8 @@ const nextConfig: NextConfig = {
     ]
   },
 
-  // Optimización de imágenes
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-    ],
-  },
+  // Optimización de imágenes (solo locales, no se necesitan remotePatterns)
+  images: {},
 }
 
 export default nextConfig
