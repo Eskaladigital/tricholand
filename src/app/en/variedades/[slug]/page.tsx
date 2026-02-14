@@ -11,7 +11,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const variety = getVarietyBySlug(slug)
-  if (!variety) return { title: 'Variedad no encontrada' }
+  if (!variety) return { title: 'Variety not found' }
 
   return {
     title: `${variety.name} — ${variety.commonName}`,
@@ -37,9 +37,9 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
   }
 
   const stockLabels = {
-    available: '● Disponible',
-    limited: '● Stock limitado',
-    out_of_stock: '● Agotado',
+    available: '● Available',
+    limited: '● Limited stock',
+    out_of_stock: '● Out of stock',
   }
 
   return (
@@ -70,9 +70,9 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
       <div className="px-5 lg:px-8 max-w-5xl mx-auto">
         {/* Breadcrumb */}
         <nav className="py-4 text-sm text-marron-claro">
-          <Link href="/en" className="hover:text-naranja transition-colors">Inicio</Link>
+          <Link href="/en" className="hover:text-naranja transition-colors">Home</Link>
           <span className="mx-2">›</span>
-          <Link href="/es/variedades" className="hover:text-naranja transition-colors">Variedades</Link>
+          <Link href="/en/variedades" className="hover:text-naranja transition-colors">Varieties</Link>
           <span className="mx-2">›</span>
           <span className="text-negro font-medium">{variety.name}</span>
         </nav>
@@ -83,13 +83,13 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
             {stockLabels[variety.stock]}
           </span>
           <span className="text-sm text-marron-claro">
-            Tamaños: <strong className="text-negro">{variety.sizeRange}</strong>
+            Sizes: <strong className="text-negro">{variety.sizeRange}</strong>
           </span>
           <Link
-            href="/es/contacto"
+            href="/en/contacto"
             className="ml-auto bg-naranja text-blanco px-5 py-2.5 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-marron transition-colors"
           >
-            Solicitar presupuesto →
+            Request quote →
           </Link>
         </div>
 
@@ -98,7 +98,7 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
           {/* Description */}
           <div>
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mb-4 pb-2 border-b-2 border-negro">
-              Descripción
+              Description
             </h2>
             <p className="text-base leading-relaxed text-marron-claro">
               {variety.description}
@@ -106,7 +106,7 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
 
             {/* Highlights */}
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mt-10 mb-4 pb-2 border-b-2 border-negro">
-              Características destacadas
+              Key features
             </h2>
             <ul className="space-y-3">
               {variety.highlights.map((h, i) => (
@@ -122,41 +122,41 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
           <aside>
             <div className="bg-blanco border border-linea p-6 sticky top-8">
               <h3 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold uppercase mb-4 pb-2 border-b border-linea">
-                Guía de cuidados
+                Care guide
               </h3>
 
               <div className="space-y-5">
                 <div>
                   <h4 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase text-naranja mb-1">
-                    Luz
+                    Light
                   </h4>
                   <p className="text-sm text-marron-claro leading-relaxed">{variety.care.light}</p>
                 </div>
                 <div>
                   <h4 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase text-naranja mb-1">
-                    Riego
+                    Water
                   </h4>
                   <p className="text-sm text-marron-claro leading-relaxed">{variety.care.water}</p>
                 </div>
                 <div>
                   <h4 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase text-naranja mb-1">
-                    Temperatura
+                    Temperature
                   </h4>
                   <p className="text-sm text-marron-claro leading-relaxed">{variety.care.temperature}</p>
                 </div>
                 <div>
                   <h4 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase text-naranja mb-1">
-                    Sustrato
+                    Soil
                   </h4>
                   <p className="text-sm text-marron-claro leading-relaxed">{variety.care.soil}</p>
                 </div>
               </div>
 
               <Link
-                href="/es/contacto"
+                href="/en/contacto"
                 className="block mt-6 bg-negro text-crudo text-center py-3 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-marron transition-colors"
               >
-                Consultar disponibilidad
+                Check availability
               </Link>
             </div>
           </aside>

@@ -16,27 +16,27 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
 
-      // === INGLÉS (Fase 2) ===
-      // {
-      //   source: '/en/posts',
-      //   destination: '/en/blog',
-      //   permanent: true,
-      // },
-      // {
-      //   source: '/en/news',
-      //   destination: '/en/blog',
-      //   permanent: true,
-      // },
-      // {
-      //   source: '/en/blog-en',
-      //   destination: '/en/blog',
-      //   permanent: true,
-      // },
-      // {
-      //   source: '/en/blog-en/:slug',
-      //   destination: '/en/blog/:slug',
-      //   permanent: true,
-      // },
+      // === INGLÉS — Redirects 301 para preservar SEO (URLs antiguas bien posicionadas) ===
+      {
+        source: '/en/posts',
+        destination: '/en/blog',
+        permanent: true,
+      },
+      {
+        source: '/en/news',
+        destination: '/en/blog',
+        permanent: true,
+      },
+      {
+        source: '/en/blog-en',
+        destination: '/en/blog',
+        permanent: true,
+      },
+      {
+        source: '/en/blog-en/:slug',
+        destination: '/en/blog/:slug',
+        permanent: true,
+      },
       // {
       //   source: '/en/varieties/collectie-cactussen',
       //   destination: '/en/varieties/other-cacti',

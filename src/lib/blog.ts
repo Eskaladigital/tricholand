@@ -102,6 +102,43 @@ export async function getPostBySlug(slug: string, locale: string): Promise<BlogP
 }
 
 
+/** Devuelve el slug de este artículo en cada idioma (para el selector de idiomas) */
+export async function getSlugsByLocaleForArticle(slug: string, locale: string): Promise<Record<string, string> | null> {
+  const effectiveLocale = getEffectiveLocale(locale)
+
+  let sourceSlug: string | null = null
+  const { data: bySlug } = await supabase
+    .from('blog_posts')
+    .select('source_slug')
+    .eq('slug', slug)
+    .eq('locale', effectiveLocale)
+    .eq('status', 'published')
+    .single()
+  sourceSlug = bySlug?.source_slug ?? null
+
+  if (!sourceSlug && effectiveLocale !== 'es') {
+    const { data: bySource } = await supabase
+      .from('blog_posts')
+      .select('source_slug')
+      .eq('source_slug', slug)
+      .eq('locale', effectiveLocale)
+      .eq('status', 'published')
+      .single()
+    sourceSlug = bySource?.source_slug ?? null
+  }
+
+  if (!sourceSlug) return null
+
+  const { data: all } = await supabase
+    .from('blog_posts')
+    .select('locale, slug')
+    .eq('source_slug', sourceSlug)
+    .eq('status', 'published')
+
+  if (!all?.length) return null
+  return Object.fromEntries(all.map((r) => [r.locale, r.slug]))
+}
+
 export async function getAllPostSlugs(locale: string): Promise<string[]> {
   const effectiveLocale = getEffectiveLocale(locale)
 

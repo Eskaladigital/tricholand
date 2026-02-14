@@ -2,9 +2,11 @@
 
 import { useState } from 'react'
 import type { ContactType, ProfessionalSubtype, InquiryType, ReferralSource } from '@/types/contact'
+import type { Dictionary } from '@/lib/i18n/types'
 
 interface ContactFormWizardProps {
   locale: string
+  dict: Dictionary
 }
 
 type Step = 1 | 2 | 3 | 4
@@ -39,7 +41,8 @@ const initialState: FormState = {
   gdpr_consent: false,
 }
 
-export function ContactFormWizard({ locale }: ContactFormWizardProps) {
+export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
+  const cf = dict.contact_form
   const [step, setStep] = useState<Step>(1)
   const [form, setForm] = useState<FormState>(initialState)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -91,12 +94,12 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || 'Error al enviar el formulario')
+        throw new Error(data.error || cf.error_send)
       }
 
       setSubmitted(true)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error desconocido')
+      setError(err instanceof Error ? err.message : cf.error_unknown)
     } finally {
       setIsSubmitting(false)
     }
@@ -108,11 +111,10 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
       <div className="bg-verde text-blanco p-8 lg:p-12 text-center">
         <div className="text-4xl mb-4">✓</div>
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-2xl font-bold uppercase mb-3">
-          Mensaje enviado
+          {cf.success_title}
         </h2>
         <p className="opacity-85 max-w-md mx-auto">
-          Hemos recibido tu consulta. Te responderemos en menos de 24 horas laborables a{' '}
-          <strong>{form.email}</strong>.
+          {cf.success_text} <strong>{form.email}</strong>.
         </p>
       </div>
     )
@@ -133,10 +135,10 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
                   : 'bg-crudo text-marron-claro'
             }`}
           >
-            {s === 1 && '1. Perfil'}
-            {s === 2 && '2. Consulta'}
-            {s === 3 && '3. Datos'}
-            {s === 4 && '4. Confirmar'}
+            {s === 1 && cf.step1_label}
+            {s === 2 && cf.step2_label}
+            {s === 3 && cf.step3_label}
+            {s === 4 && cf.step4_label}
           </div>
         ))}
       </div>
@@ -146,7 +148,7 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
         {step === 1 && (
           <div>
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mb-6">
-              ¿Quién eres?
+              {cf.step1_title}
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
@@ -159,10 +161,10 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
                 }`}
               >
                 <span className="font-[family-name:var(--font-archivo-narrow)] text-base font-bold block">
-                  🌵 Particular / Hobbyist
+                  🌵 {cf.particular}
                 </span>
                 <span className="text-sm text-marron-claro mt-1 block">
-                  Coleccionista, aficionado o compra personal
+                  {cf.particular_desc}
                 </span>
               </button>
 
@@ -175,10 +177,10 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
                 }`}
               >
                 <span className="font-[family-name:var(--font-archivo-narrow)] text-base font-bold block">
-                  🏢 Profesional / Empresa
+                  🏢 {cf.professional}
                 </span>
                 <span className="text-sm text-marron-claro mt-1 block">
-                  Vivero, distribuidor, paisajista u otro profesional
+                  {cf.professional_desc}
                 </span>
               </button>
             </div>
@@ -187,10 +189,10 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
             {form.contact_type === 'professional' && (
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                 {([
-                  { value: 'nursery', label: 'Vivero / Garden Center' },
-                  { value: 'distributor', label: 'Distribuidor / Mayorista' },
-                  { value: 'landscaper', label: 'Paisajista / Arquitecto' },
-                  { value: 'other_pro', label: 'Otro profesional' },
+                  { value: 'nursery', label: cf.pro_nursery },
+                  { value: 'distributor', label: cf.pro_distributor },
+                  { value: 'landscaper', label: cf.pro_landscaper },
+                  { value: 'other_pro', label: cf.pro_other },
                 ] as { value: ProfessionalSubtype; label: string }[]).map((opt) => (
                   <button
                     key={opt.value}
@@ -216,7 +218,7 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
                   : 'bg-linea text-marron-claro cursor-not-allowed'
               }`}
             >
-              Siguiente →
+              {cf.next}
             </button>
           </div>
         )}
@@ -225,22 +227,22 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
         {step === 2 && (
           <div>
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mb-6">
-              ¿Qué necesitas?
+              {cf.step2_title}
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
               {(form.contact_type === 'particular'
                 ? [
-                    { value: 'purchase' as InquiryType, label: 'Comprar cactus', desc: 'Información de compra o pedido' },
-                    { value: 'care_consultation' as InquiryType, label: 'Consulta de cuidados', desc: 'Dudas sobre cultivo o mantenimiento' },
-                    { value: 'other_particular' as InquiryType, label: 'Otra consulta', desc: 'Pregunta general' },
+                    { value: 'purchase' as InquiryType, label: cf.inquiry_purchase, desc: cf.inquiry_purchase_desc },
+                    { value: 'care_consultation' as InquiryType, label: cf.inquiry_care, desc: cf.inquiry_care_desc },
+                    { value: 'other_particular' as InquiryType, label: cf.inquiry_other_part, desc: cf.inquiry_other_part_desc },
                   ]
                 : [
-                    { value: 'quote_catalog' as InquiryType, label: 'Presupuesto / Catálogo', desc: 'Solicitar precios y disponibilidad' },
-                    { value: 'recurring_order' as InquiryType, label: 'Pedido recurrente', desc: 'Acuerdo de suministro periódico' },
-                    { value: 'shipping_info' as InquiryType, label: 'Información de envío', desc: 'Logística, plazos o documentación' },
-                    { value: 'certifications' as InquiryType, label: 'Certificaciones', desc: 'Pasaporte fito, docs exportación' },
-                    { value: 'other_professional' as InquiryType, label: 'Otra consulta', desc: 'Pregunta general profesional' },
+                    { value: 'quote_catalog' as InquiryType, label: cf.inquiry_quote, desc: cf.inquiry_quote_desc },
+                    { value: 'recurring_order' as InquiryType, label: cf.inquiry_recurring, desc: cf.inquiry_recurring_desc },
+                    { value: 'shipping_info' as InquiryType, label: cf.inquiry_shipping, desc: cf.inquiry_shipping_desc },
+                    { value: 'certifications' as InquiryType, label: cf.inquiry_certs, desc: cf.inquiry_certs_desc },
+                    { value: 'other_professional' as InquiryType, label: cf.inquiry_other_pro, desc: cf.inquiry_other_pro_desc },
                   ]
               ).map((opt) => (
                 <button
@@ -265,7 +267,7 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
                 onClick={() => setStep(1)}
                 className="px-6 py-3 border border-linea font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-crudo transition-colors"
               >
-                ← Volver
+                {cf.back}
               </button>
               <button
                 onClick={() => canAdvanceStep3 && setStep(3)}
@@ -276,7 +278,7 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
                     : 'bg-linea text-marron-claro cursor-not-allowed'
                 }`}
               >
-                Siguiente →
+                {cf.next}
               </button>
             </div>
           </div>
@@ -286,41 +288,41 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
         {step === 3 && (
           <div>
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mb-6">
-              Tus datos
+              {cf.step3_title}
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">
-                  Nombre *
+                  {cf.label_name}
                 </label>
                 <input
                   type="text"
                   value={form.name}
                   onChange={(e) => update({ name: e.target.value })}
                   className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja transition-colors"
-                  placeholder="Tu nombre completo"
+                  placeholder={cf.placeholder_name}
                 />
               </div>
 
               {form.contact_type === 'professional' && (
                 <div>
                   <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">
-                    Empresa
+                    {cf.label_company}
                   </label>
                   <input
                     type="text"
                     value={form.company}
                     onChange={(e) => update({ company: e.target.value })}
                     className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja transition-colors"
-                    placeholder="Nombre de tu empresa"
+                    placeholder={cf.placeholder_company}
                   />
                 </div>
               )}
 
               <div>
                 <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">
-                  Email *
+                  {cf.label_email}
                 </label>
                 <input
                   type="email"
@@ -333,47 +335,47 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
 
               <div>
                 <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">
-                  Teléfono
+                  {cf.label_phone}
                 </label>
                 <input
                   type="tel"
                   value={form.phone}
                   onChange={(e) => update({ phone: e.target.value })}
                   className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja transition-colors"
-                  placeholder="+34 600 000 000"
+                  placeholder={cf.placeholder_phone}
                 />
               </div>
 
               <div>
                 <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">
-                  País *
+                  {cf.label_country}
                 </label>
                 <input
                   type="text"
                   value={form.country}
                   onChange={(e) => update({ country: e.target.value })}
                   className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja transition-colors"
-                  placeholder="España"
+                  placeholder={cf.placeholder_country}
                 />
               </div>
 
               <div>
                 <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">
-                  Ciudad
+                  {cf.label_city}
                 </label>
                 <input
                   type="text"
                   value={form.city}
                   onChange={(e) => update({ city: e.target.value })}
                   className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja transition-colors"
-                  placeholder="Tu ciudad"
+                  placeholder={cf.placeholder_city}
                 />
               </div>
             </div>
 
             <div className="mb-4">
               <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">
-                Mensaje *
+                {cf.label_message}
               </label>
               <textarea
                 value={form.message}
@@ -382,23 +384,23 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
                 className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja transition-colors resize-none"
                 placeholder={
                   form.contact_type === 'professional'
-                    ? 'Indícanos variedades, tamaños y cantidades que necesitas...'
-                    : 'Escribe tu consulta...'
+                    ? cf.placeholder_message_pro
+                    : cf.placeholder_message
                 }
               />
             </div>
 
             <div className="mb-4">
               <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">
-                ¿Cómo nos has conocido?
+                {cf.label_referral}
               </label>
               <div className="flex flex-wrap gap-2">
                 {([
-                  { value: 'google', label: 'Google' },
-                  { value: 'social', label: 'Redes sociales' },
-                  { value: 'referral', label: 'Recomendación' },
-                  { value: 'fair', label: 'Feria / Evento' },
-                  { value: 'other', label: 'Otro' },
+                  { value: 'google', label: cf.referral_google },
+                  { value: 'social', label: cf.referral_social },
+                  { value: 'referral', label: cf.referral_referral },
+                  { value: 'fair', label: cf.referral_fair },
+                  { value: 'other', label: cf.referral_other },
                 ] as { value: ReferralSource; label: string }[]).map((opt) => (
                   <button
                     key={opt.value}
@@ -420,7 +422,7 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
                 onClick={() => setStep(2)}
                 className="px-6 py-3 border border-linea font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-crudo transition-colors"
               >
-                ← Volver
+                {cf.back}
               </button>
               <button
                 onClick={() => setStep(4)}
@@ -431,7 +433,7 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
                     : 'bg-linea text-marron-claro cursor-not-allowed'
                 }`}
               >
-                Revisar y enviar →
+                {cf.review_send}
               </button>
             </div>
           </div>
@@ -441,48 +443,48 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
         {step === 4 && (
           <div>
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mb-6">
-              Confirmar envío
+              {cf.step4_title}
             </h2>
 
             {/* Summary */}
             <div className="bg-crudo p-5 mb-6 space-y-3 text-sm">
               <div className="flex justify-between">
-                <span className="text-marron-claro">Tipo:</span>
+                <span className="text-marron-claro">{cf.summary_type}</span>
                 <span className="font-semibold">
                   {form.contact_type === 'particular' ? 'Particular' : 'Profesional'}
                   {form.professional_subtype && ` — ${form.professional_subtype}`}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-marron-claro">Consulta:</span>
+                <span className="text-marron-claro">{cf.summary_inquiry}</span>
                 <span className="font-semibold">{form.inquiry_type?.replace(/_/g, ' ')}</span>
               </div>
               <div className="border-t border-linea pt-3 flex justify-between">
-                <span className="text-marron-claro">Nombre:</span>
+                <span className="text-marron-claro">{cf.summary_name}</span>
                 <span className="font-semibold">{form.name}</span>
               </div>
               {form.company && (
                 <div className="flex justify-between">
-                  <span className="text-marron-claro">Empresa:</span>
+                  <span className="text-marron-claro">{cf.summary_company}</span>
                   <span className="font-semibold">{form.company}</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-marron-claro">Email:</span>
+                <span className="text-marron-claro">{cf.summary_email}</span>
                 <span className="font-semibold">{form.email}</span>
               </div>
               {form.phone && (
                 <div className="flex justify-between">
-                  <span className="text-marron-claro">Teléfono:</span>
+                  <span className="text-marron-claro">{cf.summary_phone}</span>
                   <span className="font-semibold">{form.phone}</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-marron-claro">Ubicación:</span>
+                <span className="text-marron-claro">{cf.summary_location}</span>
                 <span className="font-semibold">{form.city ? `${form.city}, ` : ''}{form.country}</span>
               </div>
               <div className="border-t border-linea pt-3">
-                <span className="text-marron-claro block mb-1">Mensaje:</span>
+                <span className="text-marron-claro block mb-1">{cf.summary_message}</span>
                 <p className="text-negro">{form.message}</p>
               </div>
             </div>
@@ -496,11 +498,11 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
                 className="mt-1 w-4 h-4 accent-naranja"
               />
               <span className="text-xs text-marron-claro leading-relaxed">
-                He leído y acepto la{' '}
-                <a href="/es/politica-privacidad" className="text-naranja underline">
-                  Política de privacidad
+                {cf.gdpr_text}{' '}
+                <a href={`/${locale}/politica-privacidad`} className="text-naranja underline">
+                  {cf.gdpr_link}
                 </a>
-                . Autorizo el tratamiento de mis datos para gestionar mi consulta. *
+                {cf.gdpr_suffix}
               </span>
             </label>
 
@@ -515,7 +517,7 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
                 onClick={() => setStep(3)}
                 className="px-6 py-3 border border-linea font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-crudo transition-colors"
               >
-                ← Editar
+                {cf.edit_btn}
               </button>
               <button
                 onClick={handleSubmit}
@@ -526,7 +528,7 @@ export function ContactFormWizard({ locale }: ContactFormWizardProps) {
                     : 'bg-linea text-marron-claro cursor-not-allowed'
                 }`}
               >
-                {isSubmitting ? 'Enviando...' : 'Enviar mensaje →'}
+                {isSubmitting ? cf.sending : cf.send_btn}
               </button>
             </div>
           </div>

@@ -1,12 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { es } from '@/lib/i18n/es'
-import { ServicesSection } from '@/components/home/ServicesSection'
+import { en } from '@/lib/i18n/en'
 import { CertificationsBar } from '@/components/home/CertificationsBar'
 
 export const metadata: Metadata = {
-  title: 'Servicios',
-  description: 'Servicios de Tricholand: venta mayorista de Trichocereus, envíos a toda Europa, documentación fitosanitaria UE/UK y cultivo por encargo.',
+  title: 'Services',
+  description: 'Tricholand services: wholesale Trichocereus sales, Europe-wide shipping, EU/UK phytosanitary documentation and custom cultivation.',
 }
 
 export default function ServiciosPage() {
@@ -16,17 +15,16 @@ export default function ServiciosPage() {
       <section className="px-5 lg:px-8 py-16">
         <div className="mb-8 pb-4 border-b-2 border-negro">
           <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
-            Servicios
+            Services
           </h1>
-          <p className="text-marron-claro mt-2">Soluciones completas para profesionales del sector</p>
+          <p className="text-marron-claro mt-2">Complete solutions for industry professionals</p>
         </div>
 
         <div className="max-w-3xl space-y-4 text-marron-claro leading-relaxed mb-12">
           <p>
-            En Tricholand ofrecemos un servicio integral para profesionales del sector viverístico
-            y de jardinería. Desde la producción y cultivo hasta el envío con toda la documentación
-            necesaria, nos encargamos de que recibas tus plantas en perfectas condiciones y con
-            todas las garantías legales.
+            At Tricholand we offer a comprehensive service for nursery and horticulture professionals.
+            From production and cultivation to shipping with all necessary documentation, we ensure you
+            receive your plants in perfect condition and with full legal guarantees.
           </p>
         </div>
 
@@ -35,47 +33,47 @@ export default function ServiciosPage() {
           {[
             {
               num: '01',
-              title: 'Venta mayorista',
+              title: 'Wholesale sales',
               details: [
-                'Pedido mínimo: 100 unidades',
-                'Condiciones especiales para pedidos recurrentes y grandes volúmenes',
-                'Pago por transferencia bancaria o a 30 días para clientes habituales',
-                'Presupuesto personalizado en menos de 24h laborables',
-                'Posibilidad de reserva anticipada de producción',
+                'Minimum order: 100 units',
+                'Special conditions for recurring orders and large volumes',
+                'Payment by bank transfer or 30 days for regular customers',
+                'Custom quote in less than 24 business hours',
+                'Advance production reservation available',
               ],
             },
             {
               num: '02',
-              title: 'Envíos a toda Europa',
+              title: 'Europe-wide shipping',
               details: [
-                'España peninsular: 48–72 horas',
-                'Unión Europea: 72–96 horas',
-                'Reino Unido: 5–7 días laborables',
-                'Embalaje especializado para cactáceas (protección individual)',
-                'Seguimiento de envío en tiempo real',
-                'Seguro incluido en todos los envíos',
+                'Mainland Spain: 48–72 hours',
+                'European Union: 72–96 hours',
+                'United Kingdom: 5–7 business days',
+                'Specialized packaging for cacti (individual protection)',
+                'Real-time shipment tracking',
+                'Insurance included on all shipments',
               ],
             },
             {
               num: '03',
-              title: 'Documentación y certificaciones',
+              title: 'Documentation and certifications',
               details: [
-                'Pasaporte fitosanitario UE incluido en cada envío',
-                'Documentación aduanera para exportación a Reino Unido',
-                'Certificado de origen cuando sea requerido',
-                'Etiquetado conforme a la normativa europea vigente',
-                'Asesoramiento sobre requisitos de importación',
+                'EU phytosanitary passport included with each shipment',
+                'Customs documentation for export to the United Kingdom',
+                'Certificate of origin when required',
+                'Labelling compliant with current European regulations',
+                'Advice on import requirements',
               ],
             },
             {
               num: '04',
-              title: 'Cultivo por encargo',
+              title: 'Custom cultivation',
               details: [
-                'Reserva anticipada de producción para el siguiente año',
-                'Variedades específicas bajo pedido',
-                'Garantía de suministro anual para clientes con acuerdo',
-                'Tamaños personalizados según necesidades',
-                'Posibilidad de cultivo de variedades exclusivas',
+                'Advance production reservation for the following year',
+                'Specific varieties on request',
+                'Annual supply guarantee for customers with agreement',
+                'Custom sizes according to needs',
+                'Exclusive variety cultivation available',
               ],
             },
           ].map((service) => (
@@ -101,21 +99,21 @@ export default function ServiciosPage() {
         {/* CTA */}
         <div className="bg-negro text-crudo p-8 lg:p-12 text-center max-w-3xl mx-auto">
           <h2 className="font-[family-name:var(--font-archivo-narrow)] text-2xl font-bold uppercase mb-3">
-            ¿Necesitas un servicio personalizado?
+            Need a custom service?
           </h2>
           <p className="opacity-70 mb-6">
-            Contacta con nuestro equipo comercial y te preparamos una propuesta adaptada a las necesidades de tu negocio.
+            Contact our sales team and we will prepare a proposal tailored to your business needs.
           </p>
           <Link
             href="/en/contacto"
             className="inline-flex bg-naranja text-blanco px-8 py-3 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-verde transition-colors"
           >
-            Solicitar información →
+            Request information →
           </Link>
         </div>
       </section>
 
-      <CertificationsBar dict={es} />
+      <CertificationsBar dict={en} />
     </>
   )
 }

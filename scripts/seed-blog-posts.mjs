@@ -150,6 +150,135 @@ Si el cactus tiene pocas espinas y color azulado, probablemente es un Pachanoi. 
     locale: 'es',
     status: 'published',
   },
+  {
+    slug: 'guia-de-enfermedades-fungicas-en-cactus-como-prevenir-y-tratarlas',
+    title: 'Guía de enfermedades fúngicas en cactus: cómo prevenir y tratarlas',
+    description:
+      'Identifica las principales enfermedades por hongos en cactus (manchas, podredumbres y mohos), aprende a prevenirlas con buen riego y ventilación, y aplica tratamientos seguros y efectivos.',
+    date: '2024-10-03',
+    image: '/images/blog/Tricholand_blog_4.png',
+    image_alt: 'Cactus con síntomas de hongos y tratamiento preventivo',
+    tags: ['cactus', 'hongos', 'enfermedades', 'prevención', 'tratamiento'],
+    reading_time: 10,
+    content: `Las enfermedades fúngicas (causadas por hongos) son una de las razones más comunes de pérdidas en colecciones y viveros de cactus. Suelen aparecer cuando se combinan **humedad alta**, **poco intercambio de aire**, **sustratos demasiado orgánicos** y/o **heridas** en el tejido.
+
+En esta guía vas a aprender a reconocer los síntomas típicos, las causas más habituales y un protocolo práctico de prevención y tratamiento para minimizar recaídas.
+
+## 1) Cómo reconocer un problema fúngico
+
+Aunque no siempre es fácil distinguir hongos de bacterias o plagas, hay señales bastante típicas:
+
+- **Manchas circulares** marrones/negras que crecen lentamente.
+- **Áreas hundidas** (necrosis) y corchosidad (tejido “acorchado”).
+- **Podredumbre blanda** en la base (cuello) o en raíces, con mal olor en fases avanzadas.
+- **Moho gris** superficial en heridas o zonas blandas (especialmente en ambientes fríos y húmedos).
+- **Detención del crecimiento** y decoloración general cuando el daño es interno.
+
+Importante: un cactus puede “cicatrizar” (corchar) una lesión antigua. Lo preocupante es que la mancha **avance**, aparezca tejido **blando** o haya **exudados**.
+
+## 2) Causas más frecuentes
+
+En cactus, los hongos suelen aprovechar condiciones de estrés:
+
+- **Riego excesivo** o riegos frecuentes sin secado completo.
+- **Sustrato poco drenante** (demasiada turba, fibra de coco fina o tierra compacta).
+- **Macetas sin buena aireación** o platos con agua.
+- **Poca ventilación** en invernadero o interior (aire estancado).
+- **Temperaturas bajas** con humedad alta (muy típico en otoño/invierno).
+- **Heridas** por trasplantes, granizo, roces, insectos o cortes de esquejes.
+- **Herramientas no desinfectadas** que transmiten patógenos.
+
+## 3) Hongos habituales (y qué suelen provocar)
+
+Sin entrar en diagnóstico de laboratorio, estas son categorías útiles:
+
+- **Hongos de podredumbre de raíz/cuello**: suelen atacar cuando hay exceso de humedad. El cactus se ablanda desde la base y puede colapsar.
+- **Hongos vasculares**: provocan decoloraciones internas y deterioro progresivo. A veces se ve un anillo marrón al cortar.
+- **Mohos oportunistas en heridas**: aparecen en cortes recientes o zonas dañadas si no secan bien.
+
+Si el daño avanza rápido, hay mal olor o el tejido se licúa, actúa cuanto antes.
+
+## 4) Protocolo de prevención (lo que más funciona)
+
+La prevención suele ser el 80% del éxito:
+
+### Sustrato y maceta
+- Usa un sustrato **muy drenante**: alto porcentaje mineral (pómice, grava volcánica, perlita, arena gruesa).
+- Evita mezclas “de interior” muy orgánicas.
+- Asegura **agujeros de drenaje** y no dejes agua acumulada.
+
+### Riego
+- Riega solo cuando el sustrato esté **completamente seco**.
+- En frío, reduce mucho el riego (o suspéndelo según especie y temperaturas).
+- Mejor un riego profundo y espaciado que “sorbos” frecuentes.
+
+### Ventilación y luz
+- Ventila bien: en interior, evita rincones sin movimiento de aire.
+- Luz suficiente: cactus debilitados enferman más.
+
+### Higiene
+- Desinfecta herramientas (alcohol isopropílico) antes y después de cada planta.
+- Aísla plantas nuevas 2–3 semanas para observar síntomas.
+
+## 5) Qué hacer si ya hay síntomas
+
+### Paso 1: Aislar y evaluar
+Separa la planta para evitar contagios. Evalúa si la lesión está:
+- **Superficial y seca** (mejor pronóstico).
+- **Activa, blanda o extendiéndose** (hay que intervenir).
+
+### Paso 2: Detener el riego
+Si sospechas hongos, **para el riego inmediatamente**. Mantener el sustrato húmedo suele acelerar el problema.
+
+### Paso 3: Revisar raíces y cuello (si aplica)
+Si el problema parece venir de la base:
+
+- Saca la planta de la maceta.
+- Elimina todo el sustrato viejo.
+- Revisa raíces: si hay partes **negras/blandas**, córtalas hasta tejido sano.
+
+Deja secar al aire (sombra luminosa, buena ventilación) 24–72 horas antes de replantar.
+
+### Paso 4: Saneado del tejido afectado
+Si la lesión está en el cuerpo del cactus y avanza:
+
+- Con una herramienta limpia, corta/raspa hasta llegar a tejido firme.
+- Desinfecta la herramienta entre cortes.
+- Deja la zona **secar** y formar una capa protectora.
+
+### Paso 5: Tratamiento (opciones habituales)
+El tratamiento exacto depende del país y del producto disponible. Aun así, el enfoque general es:
+
+- **Fungicida de contacto** (preventivo): suele usarse en lesiones superficiales o como apoyo tras saneado.
+- **Fungicida sistémico** (curativo): se reserva para casos más serios o recurrentes.
+
+Sigue siempre la etiqueta del producto (dosis, frecuencia, compatibilidades) y evita tratar a pleno sol o con temperaturas extremas.
+
+### Paso 6: Replantado y cuarentena
+- Replanta en sustrato **nuevo y estéril**, con mayor proporción mineral.
+- No riegues durante varios días (o incluso 1–2 semanas) para permitir cicatrización.
+- Mantén la planta en **cuarentena** y observa si la mancha se estabiliza o continúa creciendo.
+
+## 6) Caso típico: podredumbre en la base (salvar por corte)
+
+Si el cactus está blando desde abajo, a menudo lo más efectivo es:
+
+- Cortar por encima de la zona afectada hasta ver tejido limpio (sin decoloración).
+- Dejar el esqueje **cicatrizar** en un lugar seco y ventilado.
+- Enraizar en sustrato muy mineral, con riegos mínimos al inicio.
+
+## 7) Checklist rápido (para no volver a caer)
+
+- Sustrato más mineral y drenante
+- Riego solo cuando seque al 100%
+- Ventilación real (aire en movimiento)
+- Herramientas desinfectadas
+- Plantas nuevas en cuarentena
+
+Con estos cambios, la mayoría de problemas fúngicos en cactus se reducen drásticamente y, cuando aparecen, se controlan mucho antes de que avancen.`,
+    locale: 'es',
+    status: 'published',
+  },
 ]
 
 async function main() {

@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { Dictionary } from '@/lib/i18n/types'
 
 const LOCALES = [
@@ -24,6 +24,7 @@ interface HeaderProps {
 export function Header({ locale, dict }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [langDropdownOpen, setLangDropdownOpen] = useState(false)
+  const [blogSlugsByLocale, setBlogSlugsByLocale] = useState<Record<string, string> | null>(null)
   const pathname = usePathname()
 
   // Obtener ruta sin locale para construir enlaces de idioma
@@ -31,6 +32,31 @@ export function Header({ locale, dict }: HeaderProps) {
   const pathWithoutLocale = pathSegments.length > 0 && LOCALES.some((l) => l.code === pathSegments[0])
     ? '/' + pathSegments.slice(1).join('/')
     : ''
+
+  // En páginas de blog, obtener el slug correcto para cada idioma (cada idioma tiene su propio slug)
+  const isBlogPost = pathSegments[1] === 'blog' && pathSegments[2]
+  const currentSlug = pathSegments[2]
+
+  useEffect(() => {
+    if (isBlogPost && currentSlug && locale) {
+      fetch(`/api/blog-alternate-slugs?slug=${encodeURIComponent(currentSlug)}&locale=${locale}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then(setBlogSlugsByLocale)
+        .catch(() => setBlogSlugsByLocale(null))
+    } else {
+      setBlogSlugsByLocale(null)
+    }
+  }, [isBlogPost, currentSlug, locale])
+
+  const getHrefForLocale = (locCode: string) => {
+    if (isBlogPost && blogSlugsByLocale?.[locCode]) {
+      return `/${locCode}/blog/${blogSlugsByLocale[locCode]}`
+    }
+    if (isBlogPost && !blogSlugsByLocale?.[locCode]) {
+      return `/${locCode}/blog`
+    }
+    return pathWithoutLocale ? `/${locCode}${pathWithoutLocale}` : `/${locCode}`
+  }
 
   const navLinks = [
     { label: dict.nav.varieties, href: `/${locale}/variedades` },
@@ -96,7 +122,7 @@ export function Header({ locale, dict }: HeaderProps) {
                 {LOCALES.map((loc) => (
                   <Link
                     key={loc.code}
-                    href={pathWithoutLocale ? `/${loc.code}${pathWithoutLocale}` : `/${loc.code}`}
+                    href={getHrefForLocale(loc.code)}
                     className={`block font-[family-name:var(--font-archivo-narrow)] text-[0.75rem] font-bold uppercase px-3 py-2 transition-colors ${
                       locale === loc.code
                         ? 'bg-verde text-negro'
@@ -144,7 +170,7 @@ export function Header({ locale, dict }: HeaderProps) {
               {LOCALES.map((loc) => (
                 <Link
                   key={loc.code}
-                  href={pathWithoutLocale ? `/${loc.code}${pathWithoutLocale}` : `/${loc.code}`}
+                  href={getHrefForLocale(loc.code)}
                   onClick={() => setMobileMenuOpen(false)}
                   className={`font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase px-2 py-1 rounded transition-colors ${
                     locale === loc.code

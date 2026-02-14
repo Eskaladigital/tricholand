@@ -4,14 +4,14 @@ import Link from 'next/link'
 import { varietiesES } from '@/content/varieties/es/data'
 
 export const metadata: Metadata = {
-  title: 'Variedades de Trichocereus',
-  description: 'Descubre todas las variedades de Trichocereus que cultivamos: Pachanoi, Peruvianus, Bridgesii, Terscheckii, Macrogonus, Spachianus y más.',
+  title: 'Trichocereus varieties',
+  description: 'Discover all Trichocereus varieties we cultivate: Pachanoi, Peruvianus, Bridgesii, Terscheckii, Macrogonus, Spachianus and more.',
 }
 
 const stockLabels = {
-  available: '● Disponible',
-  limited: '● Limitado',
-  out_of_stock: '● Agotado',
+  available: '● Available',
+  limited: '● Limited',
+  out_of_stock: '● Out of stock',
 }
 
 const stockColors = {
@@ -26,10 +26,10 @@ export default function VariedadesPage() {
       {/* Header */}
       <div className="mb-8 pb-4 border-b-2 border-negro">
         <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
-          Variedades
+          Varieties
         </h1>
         <p className="text-marron-claro mt-2">
-          Todas las variedades de Trichocereus y cactáceas que producimos en nuestro vivero de Murcia
+          All Trichocereus and cacti varieties we produce at our nursery in Murcia
         </p>
       </div>
 
@@ -38,7 +38,7 @@ export default function VariedadesPage() {
         {varietiesES.map((v) => (
           <Link
             key={v.slug}
-            href={`/es/variedades/${v.slug}`}
+            href={`/en/variedades/${v.slug}`}
             className="group bg-blanco border border-linea hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
           >
             {/* Image */}
@@ -72,7 +72,7 @@ export default function VariedadesPage() {
               </span>
               <span className="text-marron-claro">{v.sizeRange}</span>
               <span className="font-[family-name:var(--font-archivo-narrow)] text-[0.72rem] text-marron font-bold uppercase tracking-wide group-hover:text-naranja transition-colors">
-                Ficha →
+                Sheet →
               </span>
             </div>
           </Link>

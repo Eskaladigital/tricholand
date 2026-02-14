@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { ContactFormWizard } from '@/components/contact/ContactFormWizard'
+import { es } from '@/lib/i18n/es'
 
 export const metadata: Metadata = {
   title: 'Contacto',
@@ -21,7 +22,7 @@ export default function ContactoPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8">
           {/* Form */}
-          <ContactFormWizard locale="es" />
+          <ContactFormWizard locale="es" dict={es} />
 
           {/* Sidebar */}
           <aside className="space-y-6">
