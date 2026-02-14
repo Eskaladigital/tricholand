@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 
 const navItems = [
   { label: 'Dashboard', href: '/administrator/dashboard', icon: '📊' },
@@ -16,8 +17,10 @@ export function AdminSidebar() {
   const router = useRouter()
 
   async function handleLogout() {
-    await fetch('/api/admin/auth', { method: 'DELETE' })
+    const supabase = createClient()
+    await supabase.auth.signOut()
     router.push('/administrator/login')
+    router.refresh()
   }
 
   return (

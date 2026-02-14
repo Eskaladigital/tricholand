@@ -1,30 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest } from 'next/server'
+import { updateSession } from '@/lib/supabase/middleware'
 
-const SESSION_TOKEN = 'tricholand_admin_session'
-
-// Rutas protegidas del admin (excepto login)
-const PROTECTED_ADMIN_PATHS = [
-  '/administrator/dashboard',
-  '/administrator/products',
-  '/administrator/orders',
-  '/administrator/contacts',
-  '/administrator/settings',
-]
-
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
-
-  // Solo proteger rutas admin
-  const isProtectedAdmin = PROTECTED_ADMIN_PATHS.some((path) => pathname.startsWith(path))
-
-  if (isProtectedAdmin) {
-    const session = request.cookies.get(SESSION_TOKEN)
-    if (!session?.value) {
-      return NextResponse.redirect(new URL('/administrator/login', request.url))
-    }
-  }
-
-  return NextResponse.next()
+export async function middleware(request: NextRequest) {
+  return await updateSession(request)
 }
 
 export const config = {

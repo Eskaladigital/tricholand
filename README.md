@@ -92,9 +92,7 @@ OPENAI_API_KEY=sk-...
 # Google Analytics (opcional)
 NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
 
-# Admin (opcional, valores por defecto en desarrollo)
-ADMIN_EMAIL=admin@tricholand.com
-ADMIN_PASSWORD=tricholand2025
+# Admin: login con usuarios de Supabase Auth (Authentication → Users)
 ```
 
 ---
@@ -200,8 +198,6 @@ Ejecuta los schemas **en este orden** en el SQL Editor de Supabase:
 | `SUPABASE_SERVICE_ROLE_KEY` | tu service_role key | Production, Preview |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | `G-NG0PKMVECG` | Production |
 | `OPENAI_API_KEY` | sk-... | Production (si usas translate) |
-| `ADMIN_EMAIL` | admin@tricholand.com | Production |
-| `ADMIN_PASSWORD` | tu contraseña | Production |
 
 4. Cada push a `main` despliega automáticamente
 

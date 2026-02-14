@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 
 export default function AdminLoginPage() {
   const router = useRouter()
@@ -16,18 +17,17 @@ export default function AdminLoginPage() {
     setError(null)
 
     try {
-      const res = await fetch('/api/admin/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      })
+      const supabase = createClient()
+      const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || 'Credenciales incorrectas')
+      if (authError) {
+        throw new Error(authError.message === 'Invalid login credentials'
+          ? 'Credenciales incorrectas'
+          : authError.message)
       }
 
       router.push('/administrator/dashboard')
+      router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error de autenticación')
     } finally {
@@ -60,7 +60,7 @@ export default function AdminLoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full px-4 py-2.5 border border-linea text-sm focus:outline-none focus:border-naranja transition-colors"
-              placeholder="admin@tricholand.com"
+              placeholder="tu@email.com"
             />
           </div>
 

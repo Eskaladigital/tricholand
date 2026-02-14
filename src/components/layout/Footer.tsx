@@ -144,6 +144,9 @@ export function Footer({ locale, dict }: FooterProps) {
       <div className="pt-5 border-t border-white/[0.08] flex flex-col sm:flex-row justify-between items-center gap-2 font-[family-name:var(--font-archivo-narrow)] text-[0.75rem] opacity-45">
         <span>{dict.footer.copyright}</span>
         <div className="flex gap-4">
+          <Link href="/sitemap" className="hover:opacity-100 transition-opacity">
+            Mapa del sitio
+          </Link>
           <Link href={`/${locale}/politica-privacidad`} className="hover:opacity-100 transition-opacity">
             Política de privacidad
           </Link>
