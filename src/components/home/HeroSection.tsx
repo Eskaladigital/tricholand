@@ -18,7 +18,7 @@ export function HeroSection({ locale, dict }: HeroSectionProps) {
           alt="Tricholand vivero de Trichocereus"
           fill
           sizes="(max-width: 1024px) 100vw, 55vw"
-          quality={70}
+          quality={65}
           className="object-cover"
           priority
         />

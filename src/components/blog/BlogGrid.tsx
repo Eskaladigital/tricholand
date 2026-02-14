@@ -222,7 +222,7 @@ export function BlogGrid({ posts, locale }: BlogGridProps) {
                 alt={post.imageAlt}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                quality={65}
+                quality={60}
                 className="object-cover group-hover:scale-[1.04] transition-transform duration-400"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-negro/30 to-transparent" />
