@@ -1,0 +1,31 @@
+{
+  "name": "Tricholand Admin",
+  "short_name": "Tricholand Admin",
+  "description": "Panel de administración Tricholand — productos, pedidos y contactos",
+  "start_url": "/administrator",
+  "scope": "/administrator",
+  "display": "standalone",
+  "background_color": "#f5f2eb",
+  "theme_color": "#1a1a1a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/administrator/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/administrator/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/administrator/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

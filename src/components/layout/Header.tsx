@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
@@ -46,9 +47,13 @@ export function Header({ locale, dict }: HeaderProps) {
       <div className="flex justify-between items-center px-5 lg:px-8 py-4">
         {/* Logo */}
         <Link href={`/${locale}`} className="flex items-center gap-3 group">
-          <div className="w-11 h-11 bg-verde flex items-center justify-center font-black text-xl text-crudo">
-            T
-          </div>
+          <Image
+            src="/images/icons/logo_tricho_yellow_200_200.png"
+            alt="Tricholand"
+            width={44}
+            height={44}
+            className="h-11 w-auto"
+          />
           <div className="flex flex-col">
             <span className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold tracking-wide uppercase">
               Tricholand
