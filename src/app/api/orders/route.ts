@@ -83,17 +83,25 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Error al guardar el pedido' }, { status: 500 })
     }
 
-    for (const item of body.items) {
-      await supabase.from('order_items').insert({
-        order_id: order.id,
-        product_id: item.product_id || null,
-        product_name: item.product_name,
-        product_sku: item.product_sku,
-        quantity: item.quantity,
-        unit_price_cents: item.unit_price_cents,
-        total_cents: item.unit_price_cents * item.quantity,
-        notes: item.notes,
-      })
+    // Insertar todos los items en una sola operación batch
+    const itemsToInsert = body.items.map((item) => ({
+      order_id: order.id,
+      product_id: item.product_id || null,
+      product_name: item.product_name,
+      product_sku: item.product_sku,
+      quantity: item.quantity,
+      unit_price_cents: item.unit_price_cents,
+      total_cents: item.unit_price_cents * item.quantity,
+      notes: item.notes,
+    }))
+
+    const { error: itemsError } = await supabase.from('order_items').insert(itemsToInsert)
+
+    if (itemsError) {
+      console.error('Error guardando items del pedido:', itemsError.message, itemsError.details)
+      // El pedido ya se creó, registrar el error pero no fallar la respuesta al cliente
+      // El admin verá el pedido sin items y podrá añadirlos manualmente
+      console.error(`⚠️ Pedido ${order_number} creado pero sin items. Revisar en admin.`)
     }
 
     // TODO: Email de notificación al admin

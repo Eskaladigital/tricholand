@@ -88,7 +88,6 @@ export default async function ContactsPage() {
                       </td>
                       <td className="px-4 py-3">
                         <TableActions
-                          viewHref={`/administrator/contacts/${contact.id}`}
                           editHref={`/administrator/contacts/${contact.id}`}
                           deleteAction={deleteContact}
                           entityId={contact.id}

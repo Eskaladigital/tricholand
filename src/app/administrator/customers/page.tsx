@@ -1,6 +1,7 @@
 import Link from 'next/link'
-import { getCustomers } from '@/lib/actions/customers'
+import { getCustomers, deleteCustomer } from '@/lib/actions/customers'
 import { ExportCustomersButton } from '@/components/admin/ExportCustomersButton'
+import { TableActions } from '@/components/admin/TableActions'
 import { formatPrice } from '@/types/shop'
 
 export default async function CustomersPage() {
@@ -51,12 +52,15 @@ export default async function CustomersPage() {
                 <th className="text-center px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">
                   Mailing
                 </th>
+                <th className="text-center px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">
+                  Acciones
+                </th>
               </tr>
             </thead>
             <tbody>
               {customers.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="px-4 py-8 text-center text-marron-claro">
+                  <td colSpan={9} className="px-4 py-8 text-center text-marron-claro">
                     No hay clientes. Se irán añadiendo al enviar el formulario de contacto o al hacer
                     pedidos.
                   </td>
@@ -104,6 +108,14 @@ export default async function CustomersPage() {
                           No
                         </span>
                       )}
+                    </td>
+                    <td className="px-4 py-3">
+                      <TableActions
+                        editHref={`/administrator/customers/${c.id}`}
+                        deleteAction={deleteCustomer}
+                        entityId={c.id}
+                        entityLabel={`el cliente ${c.name}`}
+                      />
                     </td>
                   </tr>
                 ))

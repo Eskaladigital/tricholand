@@ -44,6 +44,21 @@ export async function getContacts(): Promise<ContactRow[]> {
   return (data ?? []) as ContactRow[]
 }
 
+export type ContactStatusValue = 'new' | 'read' | 'replied' | 'archived' | 'spam'
+
+export async function updateContactStatus(
+  id: string,
+  status: ContactStatusValue
+): Promise<{ error?: string }> {
+  const validStatuses: ContactStatusValue[] = ['new', 'read', 'replied', 'archived', 'spam']
+  if (!validStatuses.includes(status)) return { error: 'Estado no válido' }
+
+  const supabase = await createClient()
+  const { error } = await supabase.from('contacts').update({ status }).eq('id', id)
+  if (error) return { error: error.message }
+  return {}
+}
+
 export async function deleteContact(id: string): Promise<{ error?: string }> {
   const supabase = await createClient()
   const { error } = await supabase.from('contacts').delete().eq('id', id)

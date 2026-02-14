@@ -110,11 +110,12 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
             </div>
           </section>
 
-          {/* Acciones */}
+          {/* Estado + Acciones */}
           <ContactDetailActions
             contactId={contact.id}
             contactName={contact.name}
             contactEmail={contact.email}
+            currentStatus={contact.status}
           />
         </div>
       </div>

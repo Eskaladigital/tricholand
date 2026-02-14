@@ -34,6 +34,29 @@ export async function getCustomers(): Promise<CustomerRow[]> {
   return (data ?? []) as CustomerRow[]
 }
 
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+export async function getCustomerById(id: string): Promise<CustomerRow | null> {
+  if (!UUID_REGEX.test(id)) return null
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('customers')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (error || !data) return null
+  return data as CustomerRow
+}
+
+export async function deleteCustomer(id: string): Promise<{ error?: string }> {
+  if (!UUID_REGEX.test(id)) return { error: 'ID inválido' }
+  const supabase = await createClient()
+  const { error } = await supabase.from('customers').delete().eq('id', id)
+  if (error) return { error: error.message }
+  return {}
+}
+
 export async function exportCustomersCsv(): Promise<string> {
   const customers = await getCustomers()
   const headers = [

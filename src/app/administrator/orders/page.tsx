@@ -79,7 +79,6 @@ export default async function OrdersListPage() {
                         </td>
                         <td className="px-4 py-3">
                           <TableActions
-                            viewHref={`/administrator/orders/${order.id}`}
                             editHref={`/administrator/orders/${order.id}`}
                             deleteAction={deleteOrder}
                             entityId={order.id}
