@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer'
 import type { Transporter } from 'nodemailer'
+import type Mail from 'nodemailer/lib/mailer'
 
 let _transporter: Transporter | null = null
 
@@ -38,10 +39,32 @@ function getTransporter(): Transporter {
 const FROM = process.env.SMTP_FROM || 'Tricholand <info@tricholand.com>'
 const ADMIN_EMAIL = 'info@tricholand.com'
 
-export async function sendMail(to: string, subject: string, html: string): Promise<void> {
+export interface EmailAttachment {
+  filename: string
+  content: Buffer
+  contentType?: string
+}
+
+export async function sendMail(
+  to: string,
+  subject: string,
+  html: string,
+  attachments?: EmailAttachment[]
+): Promise<void> {
   const transporter = getTransporter()
-  console.log(`[Email] Enviando a ${to}: "${subject}"`)
-  const info = await transporter.sendMail({ from: FROM, to, subject, html })
+  console.log(`[Email] Enviando a ${to}: "${subject}"${attachments?.length ? ` (${attachments.length} adjuntos)` : ''}`)
+
+  const mailOptions: Mail.Options = { from: FROM, to, subject, html }
+
+  if (attachments && attachments.length > 0) {
+    mailOptions.attachments = attachments.map((a) => ({
+      filename: a.filename,
+      content: a.content,
+      contentType: a.contentType || 'application/pdf',
+    }))
+  }
+
+  const info = await transporter.sendMail(mailOptions)
   console.log(`[Email] Enviado OK a ${to} - messageId: ${info.messageId}`)
 }
 

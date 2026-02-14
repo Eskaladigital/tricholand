@@ -22,10 +22,13 @@
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.95.3",
     "@tinymce/tinymce-react": "^6.3.0",
+    "jspdf": "^4.1.0",
+    "jspdf-autotable": "^5.0.7",
     "next": "^15.1.0",
     "nodemailer": "^8.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "stripe": "^20.3.1",
     "tinymce": "^8.3.2"
   },
   "devDependencies": {

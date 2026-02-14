@@ -13,6 +13,7 @@ import {
   deleteOrderItem,
   deleteOrder,
   recalcOrderTotals,
+  validateOrder,
 } from '@/lib/actions/orders'
 
 const statusFlow: OrderStatus[] = ['pending', 'reviewing', 'quoted', 'payment_pending', 'paid', 'preparing', 'shipped', 'delivered']
@@ -43,7 +44,6 @@ export function OrderDetailClient({ order: initialOrder, items: initialItems, pr
   const [discount, setDiscount] = useState((order.discount_cents ?? 0) / 100)
   const [shipping, setShipping] = useState((order.shipping_cents ?? 0) / 100)
   const [taxRate, setTaxRate] = useState(21)
-  const [paymentLink, setPaymentLink] = useState(order.payment_link ?? '')
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(order.payment_method ?? 'stripe')
   const [adminNotes, setAdminNotes] = useState(order.admin_notes ?? '')
   const [trackingNumber, setTrackingNumber] = useState(order.shipping_tracking ?? '')
@@ -52,6 +52,9 @@ export function OrderDetailClient({ order: initialOrder, items: initialItems, pr
   const [saveMsg, setSaveMsg] = useState<{ ok: boolean; text: string } | null>(null)
   const [editingItem, setEditingItem] = useState<string | null>(null)
   const [deletingOrder, setDeletingOrder] = useState(false)
+  const [sendingQuote, setSendingQuote] = useState(false)
+  const [quoteMsg, setQuoteMsg] = useState<{ ok: boolean; text: string } | null>(null)
+  const [urlCopied, setUrlCopied] = useState(false)
   const [addingProduct, setAddingProduct] = useState(false)
   const [newProductId, setNewProductId] = useState('')
   const [newProductQty, setNewProductQty] = useState(1)
@@ -88,14 +91,13 @@ export function OrderDetailClient({ order: initialOrder, items: initialItems, pr
       total_cents: totalCents,
       admin_notes: adminNotes,
       payment_method: paymentMethod,
-      payment_link: paymentLink || undefined,
       shipping_tracking: trackingNumber || undefined,
       invoice_number: invoiceNumber || undefined,
     })
     setSaving(false)
     if (error) showMsg(false, error)
     else {
-      setOrder((o) => ({ ...o, status, admin_notes: adminNotes, shipping_tracking: trackingNumber || null, payment_link: paymentLink || null }))
+      setOrder((o) => ({ ...o, status, admin_notes: adminNotes, shipping_tracking: trackingNumber || null }))
       showMsg(true, 'Cambios guardados')
     }
   }
@@ -256,6 +258,58 @@ export function OrderDetailClient({ order: initialOrder, items: initialItems, pr
       `Hola ${order.customer_name},\n\nEn relación a su pedido ${order.order_number}.\n\nSaludos,\nTricholand`
     )
     window.location.href = `mailto:${order.customer_email}?subject=${subject}&body=${body}`
+  }
+
+  const [validationLog, setValidationLog] = useState<string[]>([])
+
+  const handleValidateOrder = async () => {
+    if (!confirm(
+      `¿Validar pedido y enviar al cliente?\n\nEsto hará:\n1. Generar proforma PDF\n2. Enviar email al cliente con proforma + link de pago\n3. Enviar email de confirmación al admin\n4. Cambiar estado a "Esperando pago"\n\n¿Continuar?`
+    )) return
+    setSendingQuote(true)
+    setQuoteMsg(null)
+    setValidationLog([])
+
+    // Primero guardar los cambios actuales
+    const taxCents = Math.round(taxAmount * 100)
+    const discountCents = Math.round(discount * 100)
+    const shippingCents = Math.round(shipping * 100)
+    await updateOrder(order.id, {
+      status: 'reviewing' as OrderStatus,
+      discount_cents: discountCents,
+      shipping_cents: shippingCents,
+      tax_cents: taxCents,
+      total_cents: totalCents,
+      admin_notes: adminNotes,
+      payment_method: paymentMethod,
+    })
+
+    // Ejecutar pipeline de validación
+    const result = await validateOrder(order.id)
+    setValidationLog(result.log)
+
+    if (result.error) {
+      setQuoteMsg({ ok: false, text: result.error })
+    } else {
+      const msgs: string[] = ['Pedido validado']
+      if (result.email_client) msgs.push('Email al cliente OK')
+      else msgs.push('Email al cliente FALLÓ')
+      if (result.email_admin) msgs.push('Email al admin OK')
+      if (result.proforma_url) msgs.push('Proforma generada')
+      setQuoteMsg({ ok: true, text: msgs.join(' · ') })
+      setOrder((prev) => ({ ...prev, status: 'payment_pending' as OrderStatus, invoice_url: result.proforma_url || prev.invoice_url }))
+      setStatus('payment_pending' as OrderStatus)
+    }
+    setSendingQuote(false)
+  }
+
+  const handleCopyOrderUrl = () => {
+    const baseUrl = window.location.origin
+    const url = `${baseUrl}/pedido/${order.order_number}`
+    navigator.clipboard.writeText(url).then(() => {
+      setUrlCopied(true)
+      setTimeout(() => setUrlCopied(false), 2000)
+    })
   }
 
   const selectedProduct = products.find((p) => p.id === newProductId)
@@ -501,36 +555,14 @@ export function OrderDetailClient({ order: initialOrder, items: initialItems, pr
             </div>
           </section>
 
-          {/* Payment link */}
+          {/* Método de pago info */}
           <section className="bg-blanco border border-linea p-6">
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-base font-bold uppercase mb-4 pb-2 border-b border-linea">
-              Link de pago
+              Pago
             </h2>
-            <div className="space-y-3">
-              <div>
-                <label className={labelClass}>URL del link de pago (Stripe/Redsys)</label>
-                <input
-                  type="url"
-                  value={paymentLink}
-                  onChange={(e) => setPaymentLink(e.target.value)}
-                  className={fieldClass}
-                  placeholder="https://checkout.stripe.com/pay/..."
-                />
-              </div>
-              <p className="text-xs text-marron-claro">
-                Crear links desde el panel de Stripe o Redsys y pegarlos aquí. Guarda los cambios para asociar el link al pedido.
-              </p>
-              {paymentLink && (
-                <a
-                  href={paymentLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block px-4 py-2 bg-verde text-blanco text-xs font-bold uppercase hover:opacity-90"
-                >
-                  Abrir link de pago
-                </a>
-              )}
-            </div>
+            <p className="text-xs text-marron-claro">
+              El pago se realiza desde la p&aacute;gina del pedido del cliente. Al pulsar &quot;Enviar email de pago&quot;, el cliente recibir&aacute; un email con un enlace a su pedido donde podr&aacute; pagar con TPV virtual (Redsys) o Stripe.
+            </p>
           </section>
 
           {/* Admin notes + tracking */}
@@ -616,40 +648,216 @@ export function OrderDetailClient({ order: initialOrder, items: initialItems, pr
             />
           </section>
 
+          {/* Pipeline del pedido */}
+          <section className="bg-blanco border border-linea p-6">
+            <h3 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide mb-4">Pipeline del pedido</h3>
+            <div className="space-y-0">
+              {/* Paso 1: Recibido */}
+              <PipelineStep
+                number={1}
+                title="Pedido recibido"
+                description={new Date(order.created_at).toLocaleString('es-ES')}
+                status="done"
+                isLast={false}
+              />
+
+              {/* Paso 2: Revisión */}
+              <PipelineStep
+                number={2}
+                title="Revisión del admin"
+                description={['pending', 'reviewing'].includes(order.status)
+                  ? 'Ajusta productos, precios, descuentos y envío arriba'
+                  : 'Revisado'}
+                status={['pending', 'reviewing'].includes(order.status) ? 'active' : 'done'}
+                isLast={false}
+              />
+
+              {/* Paso 3: Validación — Botón principal */}
+              <PipelineStep
+                number={3}
+                title="Validar y enviar al cliente"
+                description={
+                  order.status === 'payment_pending' || statusFlow.indexOf(order.status) > statusFlow.indexOf('payment_pending')
+                    ? 'Proforma enviada al cliente'
+                    : 'Genera proforma, envía email y link de pago'
+                }
+                status={
+                  ['pending', 'reviewing', 'quoted'].includes(order.status)
+                    ? (['pending', 'reviewing'].includes(order.status) ? 'pending' : 'active')
+                    : 'done'
+                }
+                isLast={false}
+              >
+                {['pending', 'reviewing', 'quoted'].includes(order.status) && (
+                  <button
+                    type="button"
+                    onClick={handleValidateOrder}
+                    disabled={sendingQuote || items.length === 0}
+                    className="w-full mt-2 py-2.5 bg-naranja text-white text-xs font-bold uppercase tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50"
+                  >
+                    {sendingQuote ? 'Procesando...' : 'Validar pedido'}
+                  </button>
+                )}
+                {quoteMsg && (
+                  <div className={`mt-2 text-xs px-3 py-2 ${quoteMsg.ok ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'}`}>
+                    {quoteMsg.text}
+                  </div>
+                )}
+                {order.invoice_url && statusFlow.indexOf(order.status) >= statusFlow.indexOf('payment_pending') && (
+                  <a href={order.invoice_url} target="_blank" rel="noopener noreferrer" className="inline-block mt-2 text-xs text-naranja hover:underline">
+                    Descargar proforma PDF
+                  </a>
+                )}
+              </PipelineStep>
+
+              {/* Paso 4: Esperando pago */}
+              <PipelineStep
+                number={4}
+                title="Esperando pago"
+                description={order.status === 'payment_pending' ? 'El cliente puede pagar desde su página de pedido' : (statusFlow.indexOf(order.status) > statusFlow.indexOf('payment_pending') ? 'Pago recibido' : 'Pendiente de validación')}
+                status={order.status === 'payment_pending' ? 'active' : (statusFlow.indexOf(order.status) > statusFlow.indexOf('payment_pending') ? 'done' : 'pending')}
+                isLast={false}
+              >
+                {order.status === 'payment_pending' && (
+                  <button
+                    type="button"
+                    onClick={handleCopyOrderUrl}
+                    className="w-full mt-2 py-2 border border-linea text-xs font-bold uppercase hover:bg-crudo transition-colors"
+                  >
+                    {urlCopied ? 'URL copiada' : 'Copiar URL del pedido'}
+                  </button>
+                )}
+              </PipelineStep>
+
+              {/* Paso 5: Pagado */}
+              <PipelineStep
+                number={5}
+                title="Pagado"
+                description={['paid', 'preparing', 'shipped', 'delivered'].includes(order.status) ? `Factura: ${order.invoice_number || 'generada automáticamente'}` : 'Se genera factura automáticamente'}
+                status={['paid', 'preparing', 'shipped', 'delivered'].includes(order.status) ? 'done' : 'pending'}
+                isLast={false}
+              />
+
+              {/* Paso 6: Enviado / Entregado */}
+              <PipelineStep
+                number={6}
+                title="Envío y entrega"
+                description={
+                  order.status === 'shipped' ? `Tracking: ${order.shipping_tracking || 'sin tracking'}`
+                  : order.status === 'delivered' ? 'Entregado'
+                  : 'Pendiente'
+                }
+                status={['shipped', 'delivered'].includes(order.status) ? 'done' : (order.status === 'preparing' ? 'active' : 'pending')}
+                isLast={true}
+              />
+            </div>
+
+            {/* Log de validación */}
+            {validationLog.length > 0 && (
+              <details className="mt-4 text-xs">
+                <summary className="cursor-pointer text-marron-claro font-bold uppercase">Log del pipeline</summary>
+                <div className="mt-2 bg-crudo p-3 space-y-1 font-mono text-marron-claro max-h-40 overflow-y-auto">
+                  {validationLog.map((l, i) => (
+                    <div key={i} className={l.startsWith('ERROR') ? 'text-red-600' : l.startsWith('WARN') ? 'text-yellow-700' : ''}>
+                      {l}
+                    </div>
+                  ))}
+                </div>
+              </details>
+            )}
+          </section>
+
+          {/* Herramientas secundarias */}
           <section className="bg-blanco border border-linea p-6 space-y-2">
-            <h3 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide mb-3">Acciones rápidas</h3>
+            <h3 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide mb-3">Herramientas</h3>
+            <button
+              type="button"
+              onClick={handleCopyOrderUrl}
+              className="w-full py-2 border border-linea text-xs font-bold uppercase hover:bg-crudo transition-colors"
+            >
+              {urlCopied ? 'URL copiada' : 'Copiar URL del pedido'}
+            </button>
             <button
               type="button"
               onClick={handleSendEmail}
               className="w-full py-2 border border-linea text-xs font-bold uppercase hover:bg-crudo transition-colors"
             >
-              📧 Enviar email al cliente
+              Email libre al cliente
             </button>
             <button
               type="button"
               onClick={() => handleExportPdf('presupuesto')}
               className="w-full py-2 border border-linea text-xs font-bold uppercase hover:bg-crudo transition-colors"
             >
-              📄 Generar presupuesto / Proforma
+              Imprimir proforma (navegador)
             </button>
             <button
               type="button"
               onClick={() => handleExportPdf('factura')}
               className="w-full py-2 border border-linea text-xs font-bold uppercase hover:bg-crudo transition-colors"
             >
-              🧾 Generar factura
+              Imprimir factura (navegador)
             </button>
+            <hr className="border-linea" />
             <button
               type="button"
               onClick={handleDeleteOrder}
               disabled={deletingOrder}
               className="w-full py-2 border border-linea text-xs font-bold uppercase hover:bg-crudo transition-colors disabled:opacity-50 text-marron-claro hover:text-red-600"
             >
-              🗑️ Borrar pedido
+              Borrar pedido
             </button>
           </section>
         </div>
       </div>
     </>
+  )
+}
+
+// ============================================
+// PipelineStep — Componente de paso del pipeline
+// ============================================
+
+type StepStatus = 'pending' | 'active' | 'done'
+
+function PipelineStep({
+  number,
+  title,
+  description,
+  status,
+  isLast,
+  children,
+}: {
+  number: number
+  title: string
+  description: string
+  status: StepStatus
+  isLast: boolean
+  children?: React.ReactNode
+}) {
+  const dotColor =
+    status === 'done' ? 'bg-verde text-white'
+    : status === 'active' ? 'bg-naranja text-white animate-pulse'
+    : 'bg-linea text-marron-claro'
+
+  const lineColor = status === 'done' ? 'bg-verde' : 'bg-linea'
+  const textColor = status === 'pending' ? 'text-marron-claro/50' : 'text-negro'
+
+  return (
+    <div className="flex gap-3">
+      {/* Línea vertical + punto */}
+      <div className="flex flex-col items-center">
+        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${dotColor}`}>
+          {status === 'done' ? '✓' : number}
+        </div>
+        {!isLast && <div className={`w-0.5 flex-1 min-h-[24px] ${lineColor}`} />}
+      </div>
+      {/* Contenido */}
+      <div className={`pb-4 flex-1 ${textColor}`}>
+        <p className="text-xs font-bold uppercase tracking-wide">{title}</p>
+        <p className="text-xs mt-0.5">{description}</p>
+        {children}
+      </div>
+    </div>
   )
 }

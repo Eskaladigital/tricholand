@@ -25,6 +25,11 @@ interface CustomerData {
 
 export function OrderForm({ locale }: OrderFormProps) {
   const { items, itemCount, totalCents, totalFormatted, removeItem, updateQuantity, updateNotes, clearCart } = useCart()
+
+  // Estimación IVA 21% para transparencia B2B
+  const IVA_RATE = 21
+  const estimatedTaxCents = Math.round(totalCents * (IVA_RATE / 100))
+  const estimatedTotalWithTax = totalCents + estimatedTaxCents
   const [step, setStep] = useState<'cart' | 'details' | 'confirm'>('cart')
   const [customer, setCustomer] = useState<CustomerData>({
     name: '', company: '', email: '', phone: '',
@@ -176,7 +181,7 @@ export function OrderForm({ locale }: OrderFormProps) {
                         </button>
                       </div>
                       <span className="text-xs text-marron-claro">{item.product.unit_label}</span>
-                      <span className="ml-auto font-[family-name:var(--font-archivo-narrow)] font-bold text-naranja">
+                      <span className="ml-auto font-[family-name:var(--font-archivo-narrow)] font-bold text-naranja" title="Precio sin IVA">
                         {formatPrice(item.product.price_cents * item.quantity)}
                       </span>
                     </div>
@@ -199,6 +204,23 @@ export function OrderForm({ locale }: OrderFormProps) {
                   </button>
                 </div>
               ))}
+            </div>
+
+            {/* Resumen rápido con IVA (visible en móvil donde no hay sidebar) */}
+            <div className="lg:hidden bg-crudo border border-linea p-4 mb-4 space-y-1 text-sm">
+              <div className="flex justify-between">
+                <span>Base imponible</span>
+                <span className="font-semibold">{totalFormatted}</span>
+              </div>
+              <div className="flex justify-between text-marron-claro">
+                <span>IVA estimado ({IVA_RATE}%)</span>
+                <span>{formatPrice(estimatedTaxCents)}</span>
+              </div>
+              <div className="flex justify-between font-bold border-t border-linea pt-1">
+                <span>Total estimado con IVA</span>
+                <span className="text-naranja">{formatPrice(estimatedTotalWithTax)}</span>
+              </div>
+              <p className="text-xs text-marron-claro pt-1">Precios sin IVA · Envío y descuentos se confirmarán en el presupuesto.</p>
             </div>
 
             <button
@@ -295,12 +317,22 @@ export function OrderForm({ locale }: OrderFormProps) {
                   <span className="font-bold">{formatPrice(item.product.price_cents * item.quantity)}</span>
                 </div>
               ))}
-              <div className="flex justify-between pt-2 font-bold text-base">
-                <span>Subtotal estimado</span>
-                <span className="text-naranja">{totalFormatted}</span>
+              <div className="pt-3 space-y-1">
+                <div className="flex justify-between text-sm">
+                  <span>Base imponible</span>
+                  <span className="font-semibold">{totalFormatted}</span>
+                </div>
+                <div className="flex justify-between text-sm text-marron-claro">
+                  <span>IVA estimado ({IVA_RATE}%)</span>
+                  <span>{formatPrice(estimatedTaxCents)}</span>
+                </div>
+                <div className="flex justify-between pt-2 font-bold text-base border-t border-linea/50">
+                  <span>Total estimado con IVA</span>
+                  <span className="text-naranja">{formatPrice(estimatedTotalWithTax)}</span>
+                </div>
               </div>
-              <p className="text-xs text-marron-claro">
-                * Precio final puede variar. El envío y descuentos se confirmarán en el presupuesto.
+              <p className="text-xs text-marron-claro mt-2">
+                * Todos los precios son sin IVA. El importe final puede variar si se aplican descuentos o gastos de envío, que se confirmarán en el presupuesto.
               </p>
 
               <h3 className="font-bold text-xs uppercase text-marron-claro pt-4">Datos</h3>
@@ -349,12 +381,21 @@ export function OrderForm({ locale }: OrderFormProps) {
               </div>
             ))}
           </div>
-          <div className="pt-3 border-t border-linea flex justify-between font-bold">
-            <span>Subtotal</span>
-            <span className="text-naranja text-lg">{totalFormatted}</span>
+          <div className="pt-3 border-t border-linea space-y-2">
+            <div className="flex justify-between text-sm">
+              <span>Base imponible</span>
+              <span className="font-semibold">{totalFormatted}</span>
+            </div>
+            <div className="flex justify-between text-sm text-marron-claro">
+              <span>IVA estimado ({IVA_RATE}%)</span>
+              <span>{formatPrice(estimatedTaxCents)}</span>
+            </div>
+            <div className="flex justify-between font-bold border-t border-linea pt-2">
+              <span>Total estimado</span>
+              <span className="text-naranja text-lg">{formatPrice(estimatedTotalWithTax)}</span>
+            </div>
           </div>
-          <p className="text-xs text-marron-claro mt-2">+ envío (se confirma en presupuesto)</p>
-          <p className="text-xs text-marron-claro">+ IVA aplicable</p>
+          <p className="text-xs text-marron-claro mt-3">Precios sin IVA · El envío y posibles descuentos se confirmarán en el presupuesto final.</p>
         </div>
       </aside>
     </div>

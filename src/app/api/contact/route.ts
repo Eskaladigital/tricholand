@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/api'
 import { sendMailPair } from '@/lib/email/transporter'
 import { contactAdminEmail, contactClientEmail } from '@/lib/email/templates'
+import { resolveLocale, t } from '@/lib/email/i18n'
 
 interface ContactPayload {
   contact_type: string
@@ -74,6 +75,7 @@ export async function POST(request: NextRequest) {
     let emailClient = false
 
     try {
+      const locale = resolveLocale(body.locale)
       const emailData = {
         name: body.name,
         company: body.company || null,
@@ -86,14 +88,16 @@ export async function POST(request: NextRequest) {
         inquiry_type: body.inquiry_type || null,
         message: body.message,
         referral_source: body.referral_source || null,
+        locale: body.locale || 'es',
       }
 
       const isPro = body.contact_type === 'professional'
+      const tr = t(locale)
       const emailResult = await sendMailPair(
         `[Web] Nueva consulta de ${body.name}${isPro ? ' (Profesional)' : ''} — ${body.country}`,
         contactAdminEmail(emailData),
         body.email,
-        `Hemos recibido tu consulta — Tricholand`,
+        tr.subjectContactReceived,
         contactClientEmail(emailData),
       )
       emailAdmin = emailResult.admin

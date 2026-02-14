@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/api'
 import { sendMailPair } from '@/lib/email/transporter'
 import { orderAdminEmail, orderClientEmail } from '@/lib/email/templates'
+import { resolveLocale, t } from '@/lib/email/i18n'
 
 interface OrderItem {
   product_id: string
@@ -159,11 +160,13 @@ export async function POST(request: NextRequest) {
         locale: body.locale || 'es',
       }
 
+      const locale = resolveLocale(body.locale)
+      const tr = t(locale)
       const emailResult = await sendMailPair(
         `[PEDIDO] ${order_number} — ${body.customer_name} (${body.customer_country})`,
         orderAdminEmail(emailData),
         body.customer_email,
-        `Tu solicitud de pedido ${order_number} — Tricholand`,
+        tr.subjectOrderReceived.replace('{order}', order_number),
         orderClientEmail(emailData),
       )
       emailAdmin = emailResult.admin
