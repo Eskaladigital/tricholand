@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import { getPostsMeta } from '@/lib/blog'
 import { BlogGrid } from '@/components/blog/BlogGrid'
+import { getBlogIndexAlternates } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
   title: 'Blog',
   description: 'Tricholand Blog: technische Leitfäden zu Anbau, Pflege, Veredelung und Vermehrung von Trichocereus. Ressourcen für Fachleute und Enthusiasten.',
+  alternates: getBlogIndexAlternates('de'),
 }
 
 export default async function BlogPage() {

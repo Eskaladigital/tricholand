@@ -2,10 +2,12 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { varietiesES } from '@/content/varieties/es/data'
+import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
   title: 'Variedades de Trichocereus',
   description: 'Descubre todas las variedades de Trichocereus que cultivamos: Pachanoi, Peruvianus, Bridgesii, Terscheckii, Macrogonus, Spachianus y más.',
+  alternates: getAlternatesMetadata('es', 'varieties'),
 }
 
 const stockLabels = {

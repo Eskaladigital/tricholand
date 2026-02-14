@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Dictionary } from '@/lib/i18n/types'
+import { getFullPath } from '@/lib/i18n/paths'
 
 interface CatalogPreviewProps {
   locale: string
@@ -73,7 +74,7 @@ export function CatalogPreview({ locale, dict }: CatalogPreviewProps) {
           {dict.catalog.title}
         </h2>
         <Link
-          href={`/${locale}/variedades`}
+          href={getFullPath(locale, 'varieties')}
           className="font-[family-name:var(--font-archivo-narrow)] text-sm text-naranja font-bold uppercase tracking-wide hover:underline"
         >
           {dict.catalog.viewAll}
@@ -85,7 +86,7 @@ export function CatalogPreview({ locale, dict }: CatalogPreviewProps) {
         {products.map((product) => (
           <Link
             key={product.slug}
-            href={`/${locale}/variedades/${product.slug}`}
+            href={getFullPath(locale, 'varieties', product.slug)}
             className="group bg-blanco border border-linea hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
           >
             {/* Image */}

@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
   title: 'Certificaciones fitosanitarias',
   description: 'Certificaciones de Tricholand: pasaporte fitosanitario UE, documentación de exportación UK, cumplimiento normativo europeo para cactáceas.',
+  alternates: getAlternatesMetadata('es', 'certifications'),
 }
 
 export default function CertificacionesPage() {

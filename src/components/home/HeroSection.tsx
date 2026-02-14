@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Dictionary } from '@/lib/i18n/types'
+import { getFullPath } from '@/lib/i18n/paths'
 
 interface HeroSectionProps {
   locale: string
@@ -54,7 +55,7 @@ export function HeroSection({ locale, dict }: HeroSectionProps) {
         </div>
 
         <Link
-          href={`/${locale}/contacto`}
+          href={getFullPath(locale, 'contact')}
           className="inline-flex items-center gap-2 bg-naranja text-blanco px-8 py-4 font-[family-name:var(--font-archivo-narrow)] text-[0.9rem] font-bold uppercase tracking-wide w-fit hover:bg-marron transition-colors"
         >
           {dict.hero.cta}

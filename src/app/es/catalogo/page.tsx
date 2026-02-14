@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { CatalogGrid } from '@/components/varieties/CatalogGrid'
+import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
   title: 'Catálogo de cactus al por mayor',
   description: 'Catálogo completo de Trichocereus y cactáceas columnares para venta mayorista. Filtra por variedad, tamaño y disponibilidad.',
+  alternates: getAlternatesMetadata('es', 'catalog'),
 }
 
 export default function CatalogoPage() {
@@ -27,7 +29,7 @@ export default function CatalogoPage() {
         </Link>
       </div>
 
-      <CatalogGrid />
+      <CatalogGrid locale="es" />
     </section>
   )
 }

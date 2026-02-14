@@ -44,7 +44,7 @@ export const en: Dictionary = {
     available: 'Available',
     limited: 'Limited',
     outOfStock: 'Out of Stock',
-    viewSheet: 'Sheet →',
+    viewSheet: 'View →',
   },
   services: {
     title: 'Services',
@@ -89,9 +89,9 @@ export const en: Dictionary = {
     catalog_title: 'Catalog',
     company_title: 'Company',
     company_links: [
-      { label: 'Services', href: '/en/servicios' },
-      { label: 'Certifications', href: '/en/certificaciones' },
-      { label: 'About Us', href: '/en/sobre-nosotros' },
+      { label: 'Services', href: '/en/services' },
+      { label: 'Certifications', href: '/en/certifications' },
+      { label: 'About Us', href: '/en/about-us' },
       { label: 'Blog', href: '/en/blog' },
     ],
     contact_title: 'Contact',

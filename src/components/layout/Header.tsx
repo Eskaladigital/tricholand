@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import type { Dictionary } from '@/lib/i18n/types'
+import { getFullPath } from '@/lib/i18n/paths'
 
 const LOCALES = [
   { code: 'es', label: 'ES' },
@@ -59,12 +60,12 @@ export function Header({ locale, dict }: HeaderProps) {
   }
 
   const navLinks = [
-    { label: dict.nav.varieties, href: `/${locale}/variedades` },
-    { label: dict.nav.catalog, href: `/${locale}/catalogo` },
-    { label: dict.nav.shop, href: `/${locale}/tienda`, highlight: true },
-    { label: dict.nav.services, href: `/${locale}/servicios` },
+    { label: dict.nav.varieties, href: getFullPath(locale, 'varieties') },
+    { label: dict.nav.catalog, href: getFullPath(locale, 'catalog') },
+    { label: dict.nav.shop, href: getFullPath(locale, 'shop'), highlight: true },
+    { label: dict.nav.services, href: getFullPath(locale, 'services') },
     { label: dict.nav.blog, href: `/${locale}/blog` },
-    { label: dict.nav.contact, href: `/${locale}/contacto` },
+    { label: dict.nav.contact, href: getFullPath(locale, 'contact') },
   ]
 
   return (

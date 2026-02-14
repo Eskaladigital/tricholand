@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Dictionary } from '@/lib/i18n/types'
+import { getFullPath } from '@/lib/i18n/paths'
 
 interface CtaSectionProps {
   locale: string
@@ -30,7 +31,7 @@ export function CtaSection({ locale, dict }: CtaSectionProps) {
             {dict.cta.location}
           </span>
           <Link
-            href={`/${locale}/contacto`}
+            href={getFullPath(locale, 'contact')}
             className="inline-flex bg-naranja text-blanco px-7 py-3 font-[family-name:var(--font-archivo-narrow)] text-[0.82rem] font-bold uppercase tracking-wide hover:bg-verde transition-colors"
           >
             {dict.cta.button}

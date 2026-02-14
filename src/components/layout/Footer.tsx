@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Dictionary } from '@/lib/i18n/types'
+import { getFullPath } from '@/lib/i18n/paths'
 
 function BackToTop() {
   return (
@@ -92,7 +93,7 @@ export function Footer({ locale, dict }: FooterProps) {
             {varieties.map((v) => (
               <li key={v.slug}>
                 <Link
-                  href={`/${locale}/variedades/${v.slug}`}
+                  href={getFullPath(locale, 'varieties', v.slug)}
                   className="text-sm opacity-65 hover:opacity-100 transition-opacity"
                 >
                   {v.name}
@@ -147,10 +148,10 @@ export function Footer({ locale, dict }: FooterProps) {
           <Link href="/sitemap" className="hover:opacity-100 transition-opacity">
             Mapa del sitio
           </Link>
-          <Link href={`/${locale}/politica-privacidad`} className="hover:opacity-100 transition-opacity">
+          <Link href={getFullPath(locale, 'privacy')} className="hover:opacity-100 transition-opacity">
             Política de privacidad
           </Link>
-          <Link href={`/${locale}/aviso-legal`} className="hover:opacity-100 transition-opacity">
+          <Link href={getFullPath(locale, 'legal')} className="hover:opacity-100 transition-opacity">
             Aviso legal
           </Link>
         </div>

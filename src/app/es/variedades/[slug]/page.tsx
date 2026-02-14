@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getVarietyBySlug, getAllVarietySlugs } from '@/content/varieties/es/data'
+import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export async function generateStaticParams() {
   return getAllVarietySlugs().map((slug) => ({ slug }))
@@ -16,6 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${variety.name} — ${variety.commonName}`,
     description: variety.description.slice(0, 160),
+    alternates: getAlternatesMetadata('es', 'varieties', slug),
     openGraph: {
       title: `${variety.name} | Tricholand`,
       description: variety.description.slice(0, 160),

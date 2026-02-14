@@ -3,10 +3,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { es } from '@/lib/i18n/es'
 import { StatsBar } from '@/components/home/StatsBar'
+import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
   title: 'Sobre nosotros',
   description: 'Conoce Tricholand: vivero productor especializado en Trichocereus y cactáceas columnares en Murcia, España. Más de 50 variedades, 2.500 m² de cultivo.',
+  alternates: getAlternatesMetadata('es', 'about'),
 }
 
 export default function SobreNosotrosPage() {

@@ -3,10 +3,12 @@ import Link from 'next/link'
 import { es } from '@/lib/i18n/es'
 import { ServicesSection } from '@/components/home/ServicesSection'
 import { CertificationsBar } from '@/components/home/CertificationsBar'
+import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
   title: 'Servicios',
   description: 'Servicios de Tricholand: venta mayorista de Trichocereus, envíos a toda Europa, documentación fitosanitaria UE/UK y cultivo por encargo.',
+  alternates: getAlternatesMetadata('es', 'services'),
 }
 
 export default function ServiciosPage() {

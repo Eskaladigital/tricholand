@@ -2,16 +2,18 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { varietiesES } from '@/content/varieties/es/data'
+import { getFullPath, getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
   title: 'Variedades de Trichocereus',
-  description: 'Descubre todas las variedades de Trichocereus que cultivamos: Pachanoi, Peruvianus, Bridgesii, Terscheckii, Macrogonus, Spachianus y más.',
+  description: 'Descubra todas as variedades de Trichocereus que cultivamos: Pachanoi, Peruvianus, Bridgesii, Terscheckii, Macrogonus, Spachianus e mais.',
+  alternates: getAlternatesMetadata('pt', 'varieties'),
 }
 
 const stockLabels = {
-  available: '● Disponible',
+  available: '● Disponível',
   limited: '● Limitado',
-  out_of_stock: '● Agotado',
+  out_of_stock: '● Esgotado',
 }
 
 const stockColors = {
@@ -29,7 +31,7 @@ export default function VariedadesPage() {
           Variedades
         </h1>
         <p className="text-marron-claro mt-2">
-          Todas las variedades de Trichocereus y cactáceas que producimos en nuestro vivero de Murcia
+          Todas as variedades de Trichocereus e cactáceas que produzimos no nosso viveiro em Múrcia
         </p>
       </div>
 
@@ -38,7 +40,7 @@ export default function VariedadesPage() {
         {varietiesES.map((v) => (
           <Link
             key={v.slug}
-            href={`/pt/variedades/${v.slug}`}
+            href={getFullPath('pt', 'varieties', v.slug)}
             className="group bg-blanco border border-linea hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
           >
             {/* Image */}

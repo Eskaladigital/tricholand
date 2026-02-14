@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { getFullPath, getAlternatesMetadata } from '@/lib/i18n/paths'
 import { CatalogGrid } from '@/components/varieties/CatalogGrid'
 
 export const metadata: Metadata = {
-  title: 'Catálogo de cactus al por mayor',
-  description: 'Catálogo completo de Trichocereus y cactáceas columnares para venta mayorista. Filtra por variedad, tamaño y disponibilidad.',
+  title: 'Catálogo de cactos por atacado',
+  description: 'Catálogo completo de Trichocereus e cactáceas colunares para venda por atacado. Filtre por variedade, tamanho e disponibilidade.',
+  alternates: getAlternatesMetadata('pt', 'catalog'),
 }
 
 export default function CatalogoPage() {
@@ -16,18 +18,18 @@ export default function CatalogoPage() {
             Catálogo
           </h1>
           <p className="text-marron-claro mt-2">
-            Producción disponible para venta mayorista · Pedido mínimo 100 uds
+            Produção disponível para venda por atacado · Pedido mínimo 100 unidades
           </p>
         </div>
         <Link
-          href="/pt/contacto"
+          href={getFullPath('pt', 'contact')}
           className="bg-naranja text-blanco px-5 py-2.5 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-marron transition-colors shrink-0"
         >
-          Solicitar presupuesto →
+          Solicitar orçamento →
         </Link>
       </div>
 
-      <CatalogGrid />
+      <CatalogGrid locale="pt" />
     </section>
   )
 }

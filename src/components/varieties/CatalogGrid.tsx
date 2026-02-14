@@ -4,10 +4,15 @@ import { useState, useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { varietiesES } from '@/content/varieties/es/data'
+import { getFullPath } from '@/lib/i18n/paths'
 
 type StockFilter = 'all' | 'available' | 'limited'
 
-export function CatalogGrid() {
+interface CatalogGridProps {
+  locale: string
+}
+
+export function CatalogGrid({ locale }: CatalogGridProps) {
   const [stockFilter, setStockFilter] = useState<StockFilter>('all')
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -91,7 +96,7 @@ export function CatalogGrid() {
           {filtered.map((v) => (
             <Link
               key={v.slug}
-              href={`/es/variedades/${v.slug}`}
+              href={getFullPath(locale, 'varieties', v.slug)}
               className="group bg-blanco border border-linea hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
             >
               <div className="relative overflow-hidden">

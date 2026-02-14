@@ -1,0 +1,31 @@
+import type { Metadata } from 'next'
+import { OrderForm } from '@/components/shop/OrderForm'
+import { CartButton } from '@/components/shop/CartButton'
+import { getAlternatesMetadata } from '@/lib/i18n/paths'
+
+export const metadata: Metadata = {
+  title: 'Demande de commande',
+  description: 'Vérifiez et soumettez votre demande de commande B2B. Vous recevrez le devis final sous 24h.',
+  alternates: getAlternatesMetadata('fr', 'shopOrder'),
+}
+
+export default function PedidoPage() {
+  return (
+    <>
+      <section className="px-5 lg:px-8 py-16 max-w-5xl mx-auto">
+        <div className="mb-8 pb-4 border-b-2 border-negro">
+          <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
+            Demande de commande
+          </h1>
+          <p className="text-marron-claro mt-2">
+            Vérifiez votre commande, complétez vos coordonnées et envoyez-nous la demande. Nous vous enverrons le devis final sous 24h.
+          </p>
+        </div>
+
+        <OrderForm locale="fr" />
+      </section>
+
+      <CartButton locale="fr" />
+    </>
+  )
+}

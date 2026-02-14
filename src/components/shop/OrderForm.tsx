@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCart } from '@/lib/shop/cart-context'
 import { formatPrice } from '@/types/shop'
+import { getFullPath } from '@/lib/i18n/paths'
 
 interface OrderFormProps {
   locale: string
@@ -97,7 +98,7 @@ export function OrderForm({ locale }: OrderFormProps) {
           presupuesto final con link de pago a <strong>{customer.email}</strong> en menos de 24h laborables.
         </p>
         <Link
-          href={`/${locale}/tienda`}
+          href={getFullPath(locale, 'shop')}
           className="inline-flex bg-blanco text-verde px-6 py-3 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-crudo transition-colors"
         >
           Volver a la tienda
@@ -112,7 +113,7 @@ export function OrderForm({ locale }: OrderFormProps) {
       <div className="text-center py-16">
         <p className="text-xl text-marron-claro mb-4">Tu pedido está vacío</p>
         <Link
-          href={`/${locale}/tienda`}
+          href={getFullPath(locale, 'shop')}
           className="inline-flex bg-naranja text-blanco px-6 py-3 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-marron transition-colors"
         >
           Ir a la tienda →

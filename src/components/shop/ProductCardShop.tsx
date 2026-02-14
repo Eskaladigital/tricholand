@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useCart } from '@/lib/shop/cart-context'
 import { formatPrice } from '@/types/shop'
 import type { Product } from '@/types/shop'
+import { getFullPath } from '@/lib/i18n/paths'
 
 interface AddToCartButtonProps {
   product: Product
@@ -40,7 +41,7 @@ export function ProductCardShop({ product, locale }: ProductCardShopProps) {
   return (
     <div className="group bg-blanco border border-linea hover:shadow-lg transition-all duration-300 flex flex-col">
       {/* Image */}
-      <Link href={`/${locale}/tienda/${product.slug}`} className="relative overflow-hidden">
+      <Link href={getFullPath(locale, 'shop', product.slug)} className="relative overflow-hidden">
         <Image
           src={product.images[0]?.url || ''}
           alt={product.images[0]?.alt || product.name}
@@ -60,7 +61,7 @@ export function ProductCardShop({ product, locale }: ProductCardShopProps) {
 
       {/* Body */}
       <div className="px-5 py-4 flex-1">
-        <Link href={`/${locale}/tienda/${product.slug}`}>
+        <Link href={getFullPath(locale, 'shop', product.slug)}>
           <h3 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold group-hover:text-naranja transition-colors">
             {product.name}
           </h3>

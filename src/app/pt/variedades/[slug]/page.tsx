@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getVarietyBySlug, getAllVarietySlugs } from '@/content/varieties/es/data'
+import { getFullPath, getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export async function generateStaticParams() {
   return getAllVarietySlugs().map((slug) => ({ slug }))
@@ -16,6 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${variety.name} — ${variety.commonName}`,
     description: variety.description.slice(0, 160),
+    alternates: getAlternatesMetadata('pt', 'varieties', slug),
     openGraph: {
       title: `${variety.name} | Tricholand`,
       description: variety.description.slice(0, 160),
@@ -72,7 +74,7 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
         <nav className="py-4 text-sm text-marron-claro">
           <Link href="/pt" className="hover:text-naranja transition-colors">Inicio</Link>
           <span className="mx-2">›</span>
-          <Link href="/pt/variedades" className="hover:text-naranja transition-colors">Variedades</Link>
+          <Link href={getFullPath('pt', 'varieties')} className="hover:text-naranja transition-colors">Variedades</Link>
           <span className="mx-2">›</span>
           <span className="text-negro font-medium">{variety.name}</span>
         </nav>
@@ -86,7 +88,7 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
             Tamaños: <strong className="text-negro">{variety.sizeRange}</strong>
           </span>
           <Link
-            href="/pt/contacto"
+            href={getFullPath('pt', 'contact')}
             className="ml-auto bg-naranja text-blanco px-5 py-2.5 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-marron transition-colors"
           >
             Solicitar presupuesto →
@@ -153,7 +155,7 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
               </div>
 
               <Link
-                href="/pt/contacto"
+                href={getFullPath('pt', 'contact')}
                 className="block mt-6 bg-negro text-crudo text-center py-3 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-marron transition-colors"
               >
                 Consultar disponibilidad

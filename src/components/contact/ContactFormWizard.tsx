@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import type { ContactType, ProfessionalSubtype, InquiryType, ReferralSource } from '@/types/contact'
 import type { Dictionary } from '@/lib/i18n/types'
+import { getFullPath } from '@/lib/i18n/paths'
 
 interface ContactFormWizardProps {
   locale: string
@@ -499,7 +500,7 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
               />
               <span className="text-xs text-marron-claro leading-relaxed">
                 {cf.gdpr_text}{' '}
-                <a href={`/${locale}/politica-privacidad`} className="text-naranja underline">
+                <a href={getFullPath(locale, 'privacy')} className="text-naranja underline">
                   {cf.gdpr_link}
                 </a>
                 {cf.gdpr_suffix}

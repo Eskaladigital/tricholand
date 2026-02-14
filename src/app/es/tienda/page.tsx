@@ -2,10 +2,12 @@ import type { Metadata } from 'next'
 import { getActiveProducts } from '@/content/shop/products-demo'
 import { ShopGrid } from '@/components/shop/ShopGrid'
 import { CartButton } from '@/components/shop/CartButton'
+import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
   title: 'Tienda B2B — Lotes al por mayor',
   description: 'Tienda online B2B de Tricholand. Compra lotes de Trichocereus al por mayor con precios visibles. Solicita tu pedido y recibe presupuesto en 24h.',
+  alternates: getAlternatesMetadata('es', 'shop'),
 }
 
 export default function TiendaPage() {

@@ -116,9 +116,9 @@ export async function updateBlogPostStatus(
   return {}
 }
 
-export async function setBlogPostStatusFromForm(formData: FormData): Promise<{ error?: string }> {
+export async function setBlogPostStatusFromForm(formData: FormData): Promise<void> {
   const id = formData.get('id') as string
   const status = formData.get('status') as 'published' | 'draft' | 'archived'
-  if (!id || !['published', 'draft', 'archived'].includes(status)) return { error: 'Datos inválidos' }
-  return updateBlogPostStatus(id, status)
+  if (!id || !['published', 'draft', 'archived'].includes(status)) return
+  await updateBlogPostStatus(id, status)
 }

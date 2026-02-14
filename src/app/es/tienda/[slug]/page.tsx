@@ -6,6 +6,7 @@ import { getProductBySlug, getActiveProducts } from '@/content/shop/products-dem
 import { formatPrice } from '@/types/shop'
 import { ProductDetailActions } from '@/components/shop/ProductDetailActions'
 import { CartButton } from '@/components/shop/CartButton'
+import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export async function generateStaticParams() {
   return getActiveProducts().map((p) => ({ slug: p.slug }))
@@ -18,6 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${product.name} — Tienda B2B`,
     description: product.description.slice(0, 160),
+    alternates: getAlternatesMetadata('es', 'shop', slug),
   }
 }
 

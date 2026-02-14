@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import { ContactFormWizard } from '@/components/contact/ContactFormWizard'
 import { pt } from '@/lib/i18n/pt'
+import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
   title: 'Contacto',
   description: 'Contacta con Tricholand para solicitar presupuesto de Trichocereus al por mayor. Respuesta en menos de 24h laborables.',
+  alternates: getAlternatesMetadata('pt', 'contact'),
 }
 
 export default function ContactoPage() {

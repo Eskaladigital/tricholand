@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
+import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
   title: 'Política de privacidad',
   description: 'Política de privacidad y protección de datos personales de Tricholand.',
   robots: { index: false, follow: false },
+  alternates: getAlternatesMetadata('es', 'privacy'),
 }
 
 export default function PoliticaPrivacidadPage() {

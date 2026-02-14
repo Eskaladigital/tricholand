@@ -2,10 +2,12 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
-import { getPostBySlug, getAllPostSlugs, getPostsMeta } from '@/lib/blog'
+import { getPostBySlug, getAllPostSlugs, getPostsMeta, getSlugsByLocaleForArticle } from '@/lib/blog'
 import { formatDate } from '@/lib/utils'
+import { getFullPath } from '@/lib/i18n/paths'
 
 const LOCALE = 'nl'
+const BASE_URL = 'https://www.tricholand.com'
 
 export async function generateStaticParams() {
   const slugs = await getAllPostSlugs(LOCALE)
@@ -17,9 +19,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = await getPostBySlug(slug, LOCALE)
   if (!post) return { title: 'Post niet gevonden' }
 
+  const slugsByLocale = await getSlugsByLocaleForArticle(slug, LOCALE)
+  const languages: Record<string, string> = slugsByLocale
+    ? Object.fromEntries(
+        Object.entries(slugsByLocale).map(([loc, s]) => [loc, `${BASE_URL}/${loc}/blog/${s}`])
+      )
+    : { [LOCALE]: `${BASE_URL}/${LOCALE}/blog/${slug}` }
+  languages['x-default'] = languages['es'] ?? Object.values(languages)[0]
+
   return {
     title: post.title,
     description: post.description,
+    alternates: {
+      canonical: `${BASE_URL}/${LOCALE}/blog/${slug}`,
+      languages,
+    },
     openGraph: {
       title: post.title,
       description: post.description,
@@ -144,7 +158,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             Offerte op maat in minder dan 24 werkuren
           </p>
           <Link
-            href="/nl/contacto"
+            href={getFullPath('nl', 'contact')}
             className="inline-flex bg-naranja text-blanco px-6 py-2.5 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-verde transition-colors"
           >
             Offerte aanvragen →

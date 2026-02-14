@@ -211,10 +211,41 @@ export const varietiesES: Variety[] = [
   },
 ]
 
+/** Common names in English (for /en/varieties) */
+export const COMMON_NAME_EN: Record<string, string> = {
+  'trichocereus-pachanoi': 'San Pedro',
+  'trichocereus-peruvianus': 'Peruvian Torch',
+  'trichocereus-bridgesii': 'Achuma / Wachuma',
+  'trichocereus-pasacana-terscheckii': 'Giant Cardón',
+  'trichocereus-macrogonus': 'Blue San Pedro',
+  'trichocereus-spachianus': 'Golden Torch',
+  'otros-cactus': 'Collection',
+}
+
+/** Display name in English (for "Otros cactus" etc.) */
+export const NAME_EN: Record<string, string> = {
+  'otros-cactus': 'Other cacti',
+}
+
+/** Scientific name in English */
+export const SCIENTIFIC_NAME_EN: Record<string, string> = {
+  'otros-cactus': 'Various species',
+}
+
 export function getVarietyBySlug(slug: string): Variety | undefined {
   return varietiesES.find((v) => v.slug === slug)
 }
 
 export function getAllVarietySlugs(): string[] {
   return varietiesES.map((v) => v.slug)
+}
+
+export function getVarietyDisplayEn(slug: string): { name: string; commonName: string; scientificName: string } {
+  const v = getVarietyBySlug(slug)
+  if (!v) return { name: slug, commonName: '', scientificName: '' }
+  return {
+    name: NAME_EN[slug] ?? v.name,
+    commonName: COMMON_NAME_EN[slug] ?? v.commonName,
+    scientificName: SCIENTIFIC_NAME_EN[slug] ?? v.scientificName,
+  }
 }
