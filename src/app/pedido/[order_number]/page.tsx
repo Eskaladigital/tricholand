@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { getOrderByNumber } from '@/lib/actions/orders'
 import { PaymentButtons } from '@/components/shop/PaymentButtons'
+import { getDictionary } from '@/lib/i18n'
 import type { Metadata } from 'next'
 
 type Props = { params: Promise<{ order_number: string }> }
@@ -8,25 +9,24 @@ type Props = { params: Promise<{ order_number: string }> }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { order_number } = await params
   return {
-    title: `Pedido ${order_number} | Tricholand`,
+    title: `${order_number} | Tricholand`,
     robots: { index: false, follow: false },
   }
 }
 
-function formatCents(cents: number): string {
-  return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(cents / 100)
+/** Locale-aware Intl currency formatter */
+const INTL_LOCALE_MAP: Record<string, string> = {
+  es: 'es-ES', en: 'en-GB', fr: 'fr-FR', de: 'de-DE', it: 'it-IT', nl: 'nl-NL', pt: 'pt-PT',
 }
 
-const STATUS_LABELS: Record<string, { label: string; color: string }> = {
-  pending: { label: 'Recibido', color: 'bg-yellow-100 text-yellow-800' },
-  reviewing: { label: 'En revisión', color: 'bg-blue-100 text-blue-800' },
-  quoted: { label: 'Presupuestado', color: 'bg-purple-100 text-purple-800' },
-  payment_pending: { label: 'Pendiente de pago', color: 'bg-orange-100 text-orange-800' },
-  paid: { label: 'Pagado', color: 'bg-green-100 text-green-800' },
-  preparing: { label: 'Preparando envío', color: 'bg-blue-100 text-blue-800' },
-  shipped: { label: 'Enviado', color: 'bg-indigo-100 text-indigo-800' },
-  delivered: { label: 'Entregado', color: 'bg-green-100 text-green-800' },
-  cancelled: { label: 'Cancelado', color: 'bg-red-100 text-red-800' },
+function getFormatter(locale: string) {
+  const intlLocale = INTL_LOCALE_MAP[locale] || 'es-ES'
+  return {
+    formatCents: (cents: number) =>
+      new Intl.NumberFormat(intlLocale, { style: 'currency', currency: 'EUR' }).format(cents / 100),
+    formatDate: (date: string) =>
+      new Date(date).toLocaleDateString(intlLocale, { year: 'numeric', month: 'long', day: 'numeric' }),
+  }
 }
 
 export default async function OrderPublicPage({ params }: Props) {
@@ -36,13 +36,30 @@ export default async function OrderPublicPage({ params }: Props) {
   if (!result) notFound()
 
   const { order, items } = result
+  const locale = order.locale || 'es'
+  const dict = getDictionary(locale)
+  const t = dict.orderPage
+  const { formatCents, formatDate } = getFormatter(locale)
+
+  const STATUS_LABELS: Record<string, { label: string; color: string }> = {
+    pending: { label: t.statusPending, color: 'bg-yellow-100 text-yellow-800' },
+    reviewing: { label: t.statusReviewing, color: 'bg-blue-100 text-blue-800' },
+    quoted: { label: t.statusQuoted, color: 'bg-purple-100 text-purple-800' },
+    payment_pending: { label: t.statusPaymentPending, color: 'bg-orange-100 text-orange-800' },
+    paid: { label: t.statusPaid, color: 'bg-green-100 text-green-800' },
+    preparing: { label: t.statusPreparing, color: 'bg-blue-100 text-blue-800' },
+    shipped: { label: t.statusShipped, color: 'bg-indigo-100 text-indigo-800' },
+    delivered: { label: t.statusDelivered, color: 'bg-green-100 text-green-800' },
+    cancelled: { label: t.statusCancelled, color: 'bg-red-100 text-red-800' },
+  }
+
   const statusInfo = STATUS_LABELS[order.status] ?? { label: order.status, color: 'bg-gray-100 text-gray-800' }
   const showPayment = order.status === 'payment_pending'
   const isPaid = ['paid', 'preparing', 'shipped', 'delivered'].includes(order.status)
   const isPrePayment = ['pending', 'reviewing', 'quoted'].includes(order.status)
 
   return (
-    <div className="min-h-screen bg-crudo" lang="es">
+    <div className="min-h-screen bg-crudo" lang={locale}>
       {/* Header mínimo */}
       <header className="bg-negro py-6 px-4 text-center">
         <a href="https://www.tricholand.com" className="inline-block">
@@ -51,7 +68,7 @@ export default async function OrderPublicPage({ params }: Props) {
           </span>
           <br />
           <span className="text-[11px] text-marron-claro tracking-[2px] uppercase">
-            Vivero de Trichocereus y cactáceas columnares
+            {t.headerSubtitle}
           </span>
         </a>
       </header>
@@ -62,14 +79,10 @@ export default async function OrderPublicPage({ params }: Props) {
           <div className="flex items-start justify-between mb-4">
             <div>
               <h1 className="text-xl font-bold font-[family-name:var(--font-archivo-narrow)] uppercase tracking-wide">
-                Pedido {order.order_number}
+                {t.orderTitle} {order.order_number}
               </h1>
               <p className="text-sm text-marron-claro mt-1">
-                {new Date(order.created_at).toLocaleDateString('es-ES', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
+                {formatDate(order.created_at)}
               </p>
             </div>
             <span className={`text-xs font-bold uppercase px-3 py-1 ${statusInfo.color}`}>
@@ -79,13 +92,13 @@ export default async function OrderPublicPage({ params }: Props) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
             <div>
-              <p className="text-marron-claro text-xs uppercase font-bold mb-1">Cliente</p>
+              <p className="text-marron-claro text-xs uppercase font-bold mb-1">{t.client}</p>
               <p className="font-semibold">{order.customer_name}</p>
               {order.customer_company && <p className="text-marron-claro">{order.customer_company}</p>}
               <p className="text-marron-claro">{order.customer_email}</p>
             </div>
             <div>
-              <p className="text-marron-claro text-xs uppercase font-bold mb-1">Dirección</p>
+              <p className="text-marron-claro text-xs uppercase font-bold mb-1">{t.address}</p>
               {order.customer_address && <p>{order.customer_address}</p>}
               {order.customer_city && <p>{order.customer_city}</p>}
               <p>{order.customer_country}</p>
@@ -97,7 +110,7 @@ export default async function OrderPublicPage({ params }: Props) {
         {isPrePayment && (
           <div className="bg-blue-50 border border-blue-200 p-6 mb-6 text-center">
             <p className="text-blue-800 text-sm">
-              Tu pedido está siendo revisado por nuestro equipo. Te enviaremos un email con el presupuesto final y el enlace de pago en breve.
+              {t.prePaymentMessage}
             </p>
           </div>
         )}
@@ -105,15 +118,15 @@ export default async function OrderPublicPage({ params }: Props) {
         {/* Tabla de productos */}
         <div className="bg-blanco border border-linea p-6 mb-6">
           <h2 className="text-sm font-bold font-[family-name:var(--font-archivo-narrow)] uppercase tracking-wide mb-4">
-            Productos
+            {t.products}
           </h2>
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-linea text-xs text-marron-claro uppercase">
-                <th className="py-2 text-left">Producto</th>
-                <th className="py-2 text-center w-16">Cant.</th>
-                <th className="py-2 text-right w-24">Precio</th>
-                <th className="py-2 text-right w-24">Total</th>
+                <th className="py-2 text-left">{t.productCol}</th>
+                <th className="py-2 text-center w-16">{t.qtyCol}</th>
+                <th className="py-2 text-right w-24">{t.priceCol}</th>
+                <th className="py-2 text-right w-24">{t.totalCol}</th>
               </tr>
             </thead>
             <tbody>
@@ -134,31 +147,31 @@ export default async function OrderPublicPage({ params }: Props) {
           {/* Totales */}
           <div className="border-t border-linea mt-4 pt-4 space-y-2 text-sm">
             <div className="flex justify-between">
-              <span>Base imponible</span>
+              <span>{t.taxBase}</span>
               <span>{formatCents(order.subtotal_cents)}</span>
             </div>
             {order.discount_cents > 0 && (
               <div className="flex justify-between text-verde">
-                <span>Descuento</span>
+                <span>{t.discount}</span>
                 <span>-{formatCents(order.discount_cents)}</span>
               </div>
             )}
             {order.shipping_cents > 0 && (
               <div className="flex justify-between">
-                <span>Envío</span>
+                <span>{t.shipping}</span>
                 <span>{formatCents(order.shipping_cents)}</span>
               </div>
             )}
             <div className="flex justify-between">
-              <span>IVA (21%)</span>
+              <span>{t.vat}</span>
               <span>{formatCents(order.tax_cents)}</span>
             </div>
             <div className="flex justify-between border-t border-linea pt-3 text-lg font-bold">
-              <span>Total con IVA</span>
+              <span>{t.totalWithVat}</span>
               <span className="text-naranja">{formatCents(order.total_cents)}</span>
             </div>
             <p className="text-xs text-marron-claro pt-1">
-              Todos los precios de productos se muestran sin IVA. El IVA se aplica sobre la base imponible.
+              {t.vatNote}
             </p>
           </div>
         </div>
@@ -166,7 +179,7 @@ export default async function OrderPublicPage({ params }: Props) {
         {/* Notas del cliente */}
         {order.customer_notes && (
           <div className="bg-yellow-50 border border-yellow-200 p-6 mb-6">
-            <h3 className="text-xs font-bold uppercase text-yellow-700 mb-2">Tus notas</h3>
+            <h3 className="text-xs font-bold uppercase text-yellow-700 mb-2">{t.yourNotes}</h3>
             <p className="text-sm text-yellow-800">{order.customer_notes}</p>
           </div>
         )}
@@ -174,7 +187,7 @@ export default async function OrderPublicPage({ params }: Props) {
         {/* Tracking */}
         {order.shipping_tracking && (
           <div className="bg-indigo-50 border border-indigo-200 p-6 mb-6">
-            <h3 className="text-xs font-bold uppercase text-indigo-700 mb-2">Seguimiento de envío</h3>
+            <h3 className="text-xs font-bold uppercase text-indigo-700 mb-2">{t.shippingTracking}</h3>
             <p className="text-sm text-indigo-800 font-mono">{order.shipping_tracking}</p>
           </div>
         )}
@@ -193,10 +206,10 @@ export default async function OrderPublicPage({ params }: Props) {
           <div className="bg-green-50 border border-green-200 p-6 mb-6">
             <div className="text-center mb-4">
               <p className="text-green-800 font-bold text-sm uppercase">
-                {order.status === 'paid' && 'Pago confirmado. Tu pedido se está preparando.'}
-                {order.status === 'preparing' && 'Tu pedido se está preparando para el envío.'}
-                {order.status === 'shipped' && 'Tu pedido ha sido enviado.'}
-                {order.status === 'delivered' && 'Tu pedido ha sido entregado. ¡Gracias!'}
+                {order.status === 'paid' && t.paymentConfirmed}
+                {order.status === 'preparing' && t.preparing}
+                {order.status === 'shipped' && t.shipped}
+                {order.status === 'delivered' && t.delivered}
               </p>
             </div>
             {/* Link para descargar factura */}
@@ -208,7 +221,7 @@ export default async function OrderPublicPage({ params }: Props) {
                   rel="noopener noreferrer"
                   className="inline-block px-6 py-3 bg-verde text-white text-xs font-bold uppercase tracking-wide hover:opacity-90 transition-opacity"
                 >
-                  Descargar factura (PDF)
+                  {t.downloadInvoice}
                 </a>
               </div>
             )}
@@ -218,13 +231,13 @@ export default async function OrderPublicPage({ params }: Props) {
         {/* Cancelado */}
         {order.status === 'cancelled' && (
           <div className="bg-red-50 border border-red-200 p-6 mb-6 text-center">
-            <p className="text-red-800 font-bold text-sm uppercase">Este pedido ha sido cancelado.</p>
+            <p className="text-red-800 font-bold text-sm uppercase">{t.cancelled}</p>
           </div>
         )}
 
         {/* Footer mínimo */}
         <div className="text-center mt-10 text-xs text-marron-claro">
-          <p>¿Tienes alguna duda? Escríbenos a{' '}
+          <p>{t.anyQuestion}{' '}
             <a href="mailto:info@tricholand.com" className="text-naranja underline">info@tricholand.com</a>
           </p>
           <p className="mt-2">

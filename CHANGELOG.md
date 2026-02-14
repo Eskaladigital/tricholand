@@ -2,6 +2,27 @@
 
 Todos los cambios notables del proyecto Tricholand Web.
 
+## [1.2.0] - 2026-02
+
+### Añadido
+
+- **Formulario de pedido traducido** a 7 idiomas (OrderForm, CartButton): labels, placeholders, botones, mensajes de éxito/error
+- **Página pública de pedido multiidioma**: `/pedido/[order_number]` detecta el locale del pedido y muestra toda la interfaz en el idioma del cliente (standalone, sin layout principal)
+- **Selector de país** en checkout: `<select>` con los 28 países de venta (UE-27 + UK), nombres en el idioma del usuario, ordenados alfabéticamente por locale
+- **Transparencia IVA en flujo B2B**: base imponible + IVA estimado 21% + total estimado visible en carrito, checkout, sidebar, emails y PDFs
+- **Nota exención IVA intracomunitario**: aviso en resumen de pedido para entregas UE con NIF-IVA válido
+- **Sección `orderForm` en i18n**: ~60 textos traducidos (7 idiomas) para todo el flujo de compra
+- **Sección `orderPage` en i18n**: ~35 textos traducidos (7 idiomas) para la página pública del pedido (estados, tabla, totales, mensajes)
+
+### Modificado
+
+- **Emails**: etiquetas mejoradas — "Base imponible (sin IVA)", "IVA (21%)", "TOTAL CON IVA" en templates y traducciones de emails
+- **PDF proforma/factura**: etiquetas actualizadas — "Base imponible", "IVA (21%)", "TOTAL CON IVA"
+- **Página IT** (`/it/shop/ordine`): título y descripción corregidos de español a italiano
+- **Página PT** (`/pt/loja/pedido`): título y descripción corregidos de español a portugués
+
+---
+
 ## [1.1.0] - 2026-02
 
 ### Añadido

@@ -195,6 +195,113 @@ export interface Dictionary {
     stockLimited: string
     stockOutOfStock: string
   }
+  orderForm: {
+    // Cart step
+    yourOrder: string
+    product: string
+    products: string
+    notesPlaceholder: string
+    remove: string
+    taxBase: string
+    estimatedVat: string
+    estimatedTotalWithVat: string
+    pricesExclVat: string
+    shippingConfirmedInQuote: string
+    vatExemptionNote: string
+    continueToDetails: string
+    // Mobile summary
+    mobileSummaryNote: string
+    // Details step
+    billingDetails: string
+    labelName: string
+    labelCompany: string
+    labelEmail: string
+    labelPhone: string
+    labelVatId: string
+    labelCountry: string
+    labelCity: string
+    labelAddress: string
+    labelNotes: string
+    placeholderName: string
+    placeholderCompany: string
+    placeholderEmail: string
+    placeholderPhone: string
+    placeholderVatId: string
+    placeholderCountry: string
+    placeholderCity: string
+    placeholderAddress: string
+    placeholderNotes: string
+    back: string
+    reviewOrder: string
+    // Confirm step
+    confirmRequest: string
+    productsLabel: string
+    dataLabel: string
+    nameLabel: string
+    companyLabel: string
+    emailLabel: string
+    countryLabel: string
+    vatIdLabel: string
+    allPricesExclVat: string
+    edit: string
+    submitOrder: string
+    submitting: string
+    noChargeNow: string
+    // Success
+    requestSent: string
+    requestSentMessage: string
+    backToShop: string
+    // Empty
+    emptyOrder: string
+    goToShop: string
+    // Cart button
+    orderButton: string
+    // Error
+    errorSubmit: string
+    errorUnknown: string
+    // Countries (EU-27 + UK, sorted alphabetically per locale)
+    selectCountry: string
+    countries: Array<{ code: string; name: string }>
+  }
+  orderPage: {
+    orderTitle: string
+    client: string
+    address: string
+    prePaymentMessage: string
+    products: string
+    productCol: string
+    qtyCol: string
+    priceCol: string
+    totalCol: string
+    taxBase: string
+    discount: string
+    shipping: string
+    vat: string
+    totalWithVat: string
+    vatNote: string
+    yourNotes: string
+    shippingTracking: string
+    paymentConfirmed: string
+    preparing: string
+    shipped: string
+    delivered: string
+    downloadInvoice: string
+    cancelled: string
+    anyQuestion: string
+    writeTo: string
+    // Status labels
+    statusPending: string
+    statusReviewing: string
+    statusQuoted: string
+    statusPaymentPending: string
+    statusPaid: string
+    statusPreparing: string
+    statusShipped: string
+    statusDelivered: string
+    statusCancelled: string
+    // Header
+    headerSubtitle: string
+  }
   common: {
     loading: string
     error: string

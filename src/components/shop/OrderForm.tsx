@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useCart } from '@/lib/shop/cart-context'
 import { formatPrice } from '@/types/shop'
 import { getFullPath } from '@/lib/i18n/paths'
+import { getDictionary } from '@/lib/i18n'
 
 interface OrderFormProps {
   locale: string
@@ -25,6 +26,7 @@ interface CustomerData {
 
 export function OrderForm({ locale }: OrderFormProps) {
   const { items, itemCount, totalCents, totalFormatted, removeItem, updateQuantity, updateNotes, clearCart } = useCart()
+  const t = getDictionary(locale).orderForm
 
   // Estimación IVA 21% para transparencia B2B
   const IVA_RATE = 21
@@ -49,8 +51,6 @@ export function OrderForm({ locale }: OrderFormProps) {
     if (!canSubmit) return
     setIsSubmitting(true)
     setError(null)
-
-    console.log('[Tricholand] Enviando pedido...', { customer: customer.name, items: items.length })
 
     try {
       const res = await fetch('/api/orders', {
@@ -81,20 +81,13 @@ export function OrderForm({ locale }: OrderFormProps) {
       const data = await res.json().catch(() => ({}))
 
       if (!res.ok) {
-        console.error('[Tricholand] Error en pedido:', data.error || res.status)
-        throw new Error(data.error || 'Error al enviar el pedido')
+        throw new Error(data.error || t.errorSubmit)
       }
-
-      console.log('[Tricholand] Pedido creado:', data.order_number)
-      console.log('[Tricholand] Items guardados:', data.items_saved ? 'OK' : 'FALLO')
-      console.log('[Tricholand] Email admin:', data.email_admin ? 'OK' : 'FALLO')
-      console.log('[Tricholand] Email cliente:', data.email_client ? 'OK' : 'FALLO')
-      if (data.log) console.log('[Tricholand] Log servidor:', data.log)
 
       setSubmitted(true)
       clearCart()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error desconocido')
+      setError(err instanceof Error ? err.message : t.errorUnknown)
     } finally {
       setIsSubmitting(false)
     }
@@ -106,17 +99,16 @@ export function OrderForm({ locale }: OrderFormProps) {
       <div className="bg-verde text-blanco p-8 lg:p-12 text-center">
         <div className="text-4xl mb-4">✓</div>
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-2xl font-bold uppercase mb-3">
-          Solicitud enviada
+          {t.requestSent}
         </h2>
         <p className="opacity-85 max-w-md mx-auto mb-6">
-          Hemos recibido tu solicitud de pedido. Revisaremos los productos y te enviaremos el
-          presupuesto final con link de pago a <strong>{customer.email}</strong> en menos de 24h laborables.
+          {t.requestSentMessage} <strong>{customer.email}</strong>.
         </p>
         <Link
           href={getFullPath(locale, 'shop')}
           className="inline-flex bg-blanco text-verde px-6 py-3 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-crudo transition-colors"
         >
-          Volver a la tienda
+          {t.backToShop}
         </Link>
       </div>
     )
@@ -126,12 +118,12 @@ export function OrderForm({ locale }: OrderFormProps) {
   if (items.length === 0 && !submitted) {
     return (
       <div className="text-center py-16">
-        <p className="text-xl text-marron-claro mb-4">Tu pedido está vacío</p>
+        <p className="text-xl text-marron-claro mb-4">{t.emptyOrder}</p>
         <Link
           href={getFullPath(locale, 'shop')}
           className="inline-flex bg-naranja text-blanco px-6 py-3 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-marron transition-colors"
         >
-          Ir a la tienda →
+          {t.goToShop}
         </Link>
       </div>
     )
@@ -145,7 +137,7 @@ export function OrderForm({ locale }: OrderFormProps) {
         {step === 'cart' && (
           <div>
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mb-4">
-              Tu pedido ({itemCount} {itemCount === 1 ? 'producto' : 'productos'})
+              {t.yourOrder} ({itemCount} {itemCount === 1 ? t.product : t.products})
             </h2>
 
             <div className="space-y-4 mb-6">
@@ -181,14 +173,14 @@ export function OrderForm({ locale }: OrderFormProps) {
                         </button>
                       </div>
                       <span className="text-xs text-marron-claro">{item.product.unit_label}</span>
-                      <span className="ml-auto font-[family-name:var(--font-archivo-narrow)] font-bold text-naranja" title="Precio sin IVA">
+                      <span className="ml-auto font-[family-name:var(--font-archivo-narrow)] font-bold text-naranja" title={t.pricesExclVat}>
                         {formatPrice(item.product.price_cents * item.quantity)}
                       </span>
                     </div>
 
                     <input
                       type="text"
-                      placeholder="Notas para este producto (opcional)"
+                      placeholder={t.notesPlaceholder}
                       value={item.notes}
                       onChange={(e) => updateNotes(item.product.id, e.target.value)}
                       className="mt-2 w-full px-2 py-1 border border-linea/50 text-xs bg-crudo focus:outline-none focus:border-naranja"
@@ -198,7 +190,7 @@ export function OrderForm({ locale }: OrderFormProps) {
                   <button
                     onClick={() => removeItem(item.product.id)}
                     className="text-marron-claro hover:text-red-600 text-sm self-start"
-                    title="Eliminar"
+                    title={t.remove}
                   >
                     ✕
                   </button>
@@ -209,25 +201,26 @@ export function OrderForm({ locale }: OrderFormProps) {
             {/* Resumen rápido con IVA (visible en móvil donde no hay sidebar) */}
             <div className="lg:hidden bg-crudo border border-linea p-4 mb-4 space-y-1 text-sm">
               <div className="flex justify-between">
-                <span>Base imponible</span>
+                <span>{t.taxBase}</span>
                 <span className="font-semibold">{totalFormatted}</span>
               </div>
               <div className="flex justify-between text-marron-claro">
-                <span>IVA estimado ({IVA_RATE}%)</span>
+                <span>{t.estimatedVat} ({IVA_RATE}%)</span>
                 <span>{formatPrice(estimatedTaxCents)}</span>
               </div>
               <div className="flex justify-between font-bold border-t border-linea pt-1">
-                <span>Total estimado con IVA</span>
+                <span>{t.estimatedTotalWithVat}</span>
                 <span className="text-naranja">{formatPrice(estimatedTotalWithTax)}</span>
               </div>
-              <p className="text-xs text-marron-claro pt-1">Precios sin IVA · Envío y descuentos se confirmarán en el presupuesto.</p>
+              <p className="text-xs text-marron-claro pt-1">{t.mobileSummaryNote}</p>
+              <p className="text-xs text-verde-oscuro italic pt-0.5">{t.vatExemptionNote}</p>
             </div>
 
             <button
               onClick={() => setStep('details')}
               className="w-full py-3 bg-negro text-crudo font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-marron transition-colors"
             >
-              Continuar → Datos de empresa
+              {t.continueToDetails}
             </button>
           </div>
         )}
@@ -236,67 +229,72 @@ export function OrderForm({ locale }: OrderFormProps) {
         {step === 'details' && (
           <div>
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mb-4">
-              Datos de facturación
+              {t.billingDetails}
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               <div>
-                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">Nombre *</label>
+                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">{t.labelName}</label>
                 <input type="text" value={customer.name} onChange={(e) => updateCustomer({ name: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja" placeholder="Nombre completo" />
+                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja" placeholder={t.placeholderName} />
               </div>
               <div>
-                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">Empresa</label>
+                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">{t.labelCompany}</label>
                 <input type="text" value={customer.company} onChange={(e) => updateCustomer({ company: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja" placeholder="Nombre de empresa" />
+                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja" placeholder={t.placeholderCompany} />
               </div>
               <div>
-                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">Email *</label>
+                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">{t.labelEmail}</label>
                 <input type="email" value={customer.email} onChange={(e) => updateCustomer({ email: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja" placeholder="email@empresa.com" />
+                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja" placeholder={t.placeholderEmail} />
               </div>
               <div>
-                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">Teléfono</label>
+                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">{t.labelPhone}</label>
                 <input type="tel" value={customer.phone} onChange={(e) => updateCustomer({ phone: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja" placeholder="+34 600 000 000" />
+                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja" placeholder={t.placeholderPhone} />
               </div>
               <div>
-                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">NIF / VAT</label>
+                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">{t.labelVatId}</label>
                 <input type="text" value={customer.vat_id} onChange={(e) => updateCustomer({ vat_id: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja" placeholder="B12345678 / NL123456789B01" />
+                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja" placeholder={t.placeholderVatId} />
               </div>
               <div>
-                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">País *</label>
-                <input type="text" value={customer.country} onChange={(e) => updateCustomer({ country: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja" placeholder="España" />
+                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">{t.labelCountry}</label>
+                <select value={customer.country} onChange={(e) => updateCustomer({ country: e.target.value })}
+                  className={`w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja ${!customer.country ? 'text-marron-claro' : ''}`}>
+                  <option value="">{t.selectCountry}</option>
+                  {t.countries.map((c) => (
+                    <option key={c.code} value={c.name}>{c.name}</option>
+                  ))}
+                </select>
               </div>
               <div>
-                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">Ciudad</label>
+                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">{t.labelCity}</label>
                 <input type="text" value={customer.city} onChange={(e) => updateCustomer({ city: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja" placeholder="Ciudad" />
+                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja" placeholder={t.placeholderCity} />
               </div>
               <div className="sm:col-span-2">
-                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">Dirección de envío</label>
+                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">{t.labelAddress}</label>
                 <input type="text" value={customer.address} onChange={(e) => updateCustomer({ address: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja" placeholder="Dirección completa" />
+                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja" placeholder={t.placeholderAddress} />
               </div>
               <div className="sm:col-span-2">
-                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">Notas adicionales</label>
+                <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">{t.labelNotes}</label>
                 <textarea value={customer.notes} onChange={(e) => updateCustomer({ notes: e.target.value })} rows={3}
-                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja resize-none" placeholder="Instrucciones especiales, horarios de entrega..." />
+                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja resize-none" placeholder={t.placeholderNotes} />
               </div>
             </div>
 
             <div className="flex gap-3">
               <button onClick={() => setStep('cart')}
                 className="px-6 py-3 border border-linea font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-crudo transition-colors">
-                ← Volver
+                {t.back}
               </button>
               <button onClick={() => canSubmit && setStep('confirm')} disabled={!canSubmit}
                 className={`flex-1 py-3 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide transition-colors ${
                   canSubmit ? 'bg-negro text-crudo hover:bg-marron' : 'bg-linea text-marron-claro cursor-not-allowed'
                 }`}>
-                Revisar pedido →
+                {t.reviewOrder}
               </button>
             </div>
           </div>
@@ -306,11 +304,11 @@ export function OrderForm({ locale }: OrderFormProps) {
         {step === 'confirm' && (
           <div>
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mb-4">
-              Confirmar solicitud
+              {t.confirmRequest}
             </h2>
 
             <div className="bg-crudo p-5 mb-6 space-y-3 text-sm">
-              <h3 className="font-bold text-xs uppercase text-marron-claro">Productos</h3>
+              <h3 className="font-bold text-xs uppercase text-marron-claro">{t.productsLabel}</h3>
               {items.map((item) => (
                 <div key={item.product.id} className="flex justify-between py-1 border-b border-linea/50">
                   <span>{item.quantity}× {item.product.name}</span>
@@ -319,29 +317,32 @@ export function OrderForm({ locale }: OrderFormProps) {
               ))}
               <div className="pt-3 space-y-1">
                 <div className="flex justify-between text-sm">
-                  <span>Base imponible</span>
+                  <span>{t.taxBase}</span>
                   <span className="font-semibold">{totalFormatted}</span>
                 </div>
                 <div className="flex justify-between text-sm text-marron-claro">
-                  <span>IVA estimado ({IVA_RATE}%)</span>
+                  <span>{t.estimatedVat} ({IVA_RATE}%)</span>
                   <span>{formatPrice(estimatedTaxCents)}</span>
                 </div>
                 <div className="flex justify-between pt-2 font-bold text-base border-t border-linea/50">
-                  <span>Total estimado con IVA</span>
+                  <span>{t.estimatedTotalWithVat}</span>
                   <span className="text-naranja">{formatPrice(estimatedTotalWithTax)}</span>
                 </div>
               </div>
               <p className="text-xs text-marron-claro mt-2">
-                * Todos los precios son sin IVA. El importe final puede variar si se aplican descuentos o gastos de envío, que se confirmarán en el presupuesto.
+                {t.allPricesExclVat}
+              </p>
+              <p className="text-xs text-verde-oscuro italic">
+                {t.vatExemptionNote}
               </p>
 
-              <h3 className="font-bold text-xs uppercase text-marron-claro pt-4">Datos</h3>
+              <h3 className="font-bold text-xs uppercase text-marron-claro pt-4">{t.dataLabel}</h3>
               <div className="space-y-1">
-                <p><span className="text-marron-claro">Nombre:</span> {customer.name}</p>
-                {customer.company && <p><span className="text-marron-claro">Empresa:</span> {customer.company}</p>}
-                <p><span className="text-marron-claro">Email:</span> {customer.email}</p>
-                <p><span className="text-marron-claro">País:</span> {customer.country}</p>
-                {customer.vat_id && <p><span className="text-marron-claro">NIF/VAT:</span> {customer.vat_id}</p>}
+                <p><span className="text-marron-claro">{t.nameLabel}</span> {customer.name}</p>
+                {customer.company && <p><span className="text-marron-claro">{t.companyLabel}</span> {customer.company}</p>}
+                <p><span className="text-marron-claro">{t.emailLabel}</span> {customer.email}</p>
+                <p><span className="text-marron-claro">{t.countryLabel}</span> {customer.country}</p>
+                {customer.vat_id && <p><span className="text-marron-claro">{t.vatIdLabel}</span> {customer.vat_id}</p>}
               </div>
             </div>
 
@@ -352,16 +353,16 @@ export function OrderForm({ locale }: OrderFormProps) {
             <div className="flex gap-3">
               <button onClick={() => setStep('details')}
                 className="px-6 py-3 border border-linea font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-crudo transition-colors">
-                ← Editar
+                {t.edit}
               </button>
               <button onClick={handleSubmit} disabled={isSubmitting}
                 className="flex-1 py-3 bg-naranja text-blanco font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-verde transition-colors disabled:opacity-50">
-                {isSubmitting ? 'Enviando...' : 'Enviar solicitud de pedido →'}
+                {isSubmitting ? t.submitting : t.submitOrder}
               </button>
             </div>
 
             <p className="text-xs text-marron-claro text-center mt-3">
-              No se cobra nada ahora. Recibirás presupuesto final con link de pago por email.
+              {t.noChargeNow}
             </p>
           </div>
         )}
@@ -371,7 +372,7 @@ export function OrderForm({ locale }: OrderFormProps) {
       <aside className="hidden lg:block">
         <div className="bg-blanco border border-linea p-6 sticky top-8">
           <h3 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide text-naranja mb-4">
-            Resumen
+            {t.yourOrder}
           </h3>
           <div className="space-y-2 text-sm mb-4">
             {items.map((item) => (
@@ -383,19 +384,20 @@ export function OrderForm({ locale }: OrderFormProps) {
           </div>
           <div className="pt-3 border-t border-linea space-y-2">
             <div className="flex justify-between text-sm">
-              <span>Base imponible</span>
+              <span>{t.taxBase}</span>
               <span className="font-semibold">{totalFormatted}</span>
             </div>
             <div className="flex justify-between text-sm text-marron-claro">
-              <span>IVA estimado ({IVA_RATE}%)</span>
+              <span>{t.estimatedVat} ({IVA_RATE}%)</span>
               <span>{formatPrice(estimatedTaxCents)}</span>
             </div>
             <div className="flex justify-between font-bold border-t border-linea pt-2">
-              <span>Total estimado</span>
+              <span>{t.estimatedTotalWithVat}</span>
               <span className="text-naranja text-lg">{formatPrice(estimatedTotalWithTax)}</span>
             </div>
           </div>
-          <p className="text-xs text-marron-claro mt-3">Precios sin IVA · El envío y posibles descuentos se confirmarán en el presupuesto final.</p>
+          <p className="text-xs text-marron-claro mt-3">{t.pricesExclVat} · {t.shippingConfirmedInQuote}</p>
+          <p className="text-xs text-verde-oscuro italic mt-1">{t.vatExemptionNote}</p>
         </div>
       </aside>
     </div>

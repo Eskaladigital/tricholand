@@ -23,15 +23,19 @@ npm run dev
 
 ## Características
 
-- **7 idiomas**: ES, EN, NL, FR, DE, IT, PT
+- **7 idiomas**: ES, EN, NL, FR, DE, IT, PT — formulario de pedido, checkout, página de pedido, emails y PDFs 100% traducidos
 - **Selector de idioma** en navbar (menú desplegable)
 - **Tienda B2B** con carrito, lotes mayoristas y solicitud de presupuesto
+- **Transparencia IVA B2B**: base imponible + IVA estimado (21%) visibles en todo el flujo de compra
+- **Nota exención IVA intracomunitario** para entregas UE con NIF-IVA válido
+- **Selector de país** en checkout: 28 países permitidos (UE-27 + UK), nombres traducidos y ordenados por locale
 - **Catálogo de variedades** con fichas detalladas
 - **Blog** con artículos técnicos
 - **Panel de administración** (productos, pedidos, clientes, contactos, blog, media, configuración)
 - **Pipeline automatizado de pedidos**: validación → proforma PDF → email al cliente → pago → factura
 - **Pagos**: transferencia bancaria, TPV Redsys, Stripe (infraestructura lista)
 - **Emails en idioma del cliente**: confirmación pedido, validación, pago confirmado, datos bancarios
+- **Página pública de pedido multiidioma**: `/pedido/[order_number]` — standalone, detecta el locale del pedido
 - **Sistema de traducciones** con Supabase + OpenAI
 - **SEO**: sitemap, robots, meta alternates por idioma
 - **Google Analytics** (GA4)
@@ -182,7 +186,7 @@ tricholand-web/
 │   ├── app/                    # App Router (Next.js 15)
 │   │   ├── es/, en/, nl/, fr/, de/, it/, pt/   # 7 idiomas (variedades, tienda, blog, contacto...)
 │   │   ├── administrator/      # Panel admin (protegido)
-│   │   ├── pedido/[order_number]  # Página pública del pedido (pago, factura)
+│   │   ├── pedido/[order_number]  # Página pública del pedido (standalone, multiidioma, pago, factura)
 │   │   └── api/                # API routes (contact, orders, payments, webhooks, transfer)
 │   ├── components/
 │   │   ├── layout/             # Header, Footer
