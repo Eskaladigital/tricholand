@@ -13,8 +13,24 @@ export interface ContactRow {
   city: string | null
   message: string | null
   contact_type: 'particular' | 'professional'
+  professional_subtype: string | null
   inquiry_type: string | null
+  referral_source: string | null
   status: 'new' | 'read' | 'replied' | 'archived' | 'spam'
+  priority: string | null
+  locale: string | null
+}
+
+export async function getContactById(id: string): Promise<ContactRow | null> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('contacts')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (error || !data) return null
+  return data as ContactRow
 }
 
 export async function getContacts(): Promise<ContactRow[]> {

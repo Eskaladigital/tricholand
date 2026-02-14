@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createApiClient } from '@/lib/supabase/api'
+import { createServiceClient } from '@/lib/supabase/api'
 
 interface ContactPayload {
   contact_type: string
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const supabase = createApiClient()
+    const supabase = createServiceClient()
     const { error } = await supabase.from('contacts').insert({
       contact_type: body.contact_type || 'particular',
       professional_subtype: body.professional_subtype || null,

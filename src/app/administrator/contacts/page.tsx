@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { getContacts } from '@/lib/actions/contacts'
 
 const statusLabels: Record<string, string> = {
@@ -51,14 +52,18 @@ export default async function ContactsPage() {
                   </tr>
                 ) : (
                   contacts.map((contact) => (
-                    <tr key={contact.id} className="border-b border-linea/50 hover:bg-crudo/50 transition-colors cursor-pointer">
+                    <tr key={contact.id} className="border-b border-linea/50 hover:bg-crudo/50 transition-colors">
                       <td className="px-4 py-3 text-xs text-marron-claro">
                         {new Date(contact.created_at).toLocaleDateString('es-ES')}
                       </td>
-                      <td className="px-4 py-3 font-bold">{contact.name}</td>
+                      <td className="px-4 py-3 font-bold">
+                        <Link href={`/administrator/contacts/${contact.id}`} className="hover:text-naranja hover:underline">
+                          {contact.name}
+                        </Link>
+                      </td>
                       <td className="px-4 py-3 text-marron-claro">{contact.company || '—'}</td>
                       <td className="px-4 py-3">
-                        <a href={`mailto:${contact.email}`} className="text-naranja hover:underline text-xs">
+                        <a href={`mailto:${contact.email}`} className="text-naranja hover:underline text-xs" onClick={(e) => e.stopPropagation()}>
                           {contact.email}
                         </a>
                       </td>
@@ -72,12 +77,12 @@ export default async function ContactsPage() {
                       </td>
                       <td className="px-4 py-3 text-center">
                         <span className={`px-2 py-0.5 text-xs font-bold uppercase ${
-                          contact.status === 'new' ? 'bg-yellow-100 text-yellow-700' :
-                          contact.status === 'replied' ? 'bg-green-100 text-green-700' :
-                          'bg-gray-100 text-gray-400'
-                        }`}>
-                          {statusLabels[contact.status] ?? contact.status}
-                        </span>
+                            contact.status === 'new' ? 'bg-yellow-100 text-yellow-700' :
+                            contact.status === 'replied' ? 'bg-green-100 text-green-700' :
+                            'bg-gray-100 text-gray-400'
+                          }`}>
+                            {statusLabels[contact.status] ?? contact.status}
+                          </span>
                       </td>
                     </tr>
                   ))
