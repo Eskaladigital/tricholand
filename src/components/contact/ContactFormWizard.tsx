@@ -72,6 +72,8 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
     setIsSubmitting(true)
     setError(null)
 
+    console.log('[Tricholand] Enviando contacto...', { name: form.name, type: form.contact_type })
+
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
@@ -93,9 +95,18 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
         }),
       })
 
+      const data = await res.json().catch(() => ({}))
+
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
+        console.error('[Tricholand] Error en contacto:', data.error || res.status)
         throw new Error(data.error || cf.error_send)
+      }
+
+      console.log('[Tricholand] Contacto guardado correctamente')
+      if (data.emails_sent) {
+        console.log('[Tricholand] Emails enviados a', form.email, 'y a info@tricholand.com')
+      } else {
+        console.warn('[Tricholand] Contacto guardado pero los emails no se pudieron enviar')
       }
 
       setSubmitted(true)

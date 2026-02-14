@@ -45,6 +45,8 @@ export function OrderForm({ locale }: OrderFormProps) {
     setIsSubmitting(true)
     setError(null)
 
+    console.log('[Tricholand] Enviando pedido...', { customer: customer.name, items: items.length })
+
     try {
       const res = await fetch('/api/orders', {
         method: 'POST',
@@ -71,9 +73,18 @@ export function OrderForm({ locale }: OrderFormProps) {
         }),
       })
 
+      const data = await res.json().catch(() => ({}))
+
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
+        console.error('[Tricholand] Error en pedido:', data.error || res.status)
         throw new Error(data.error || 'Error al enviar el pedido')
+      }
+
+      console.log('[Tricholand] Pedido creado:', data.order_number)
+      console.log('[Tricholand] Items guardados:', data.items_saved ? 'OK' : 'ERROR')
+      console.log('[Tricholand] Emails enviados:', data.emails_sent ? 'OK' : 'ERROR')
+      if (!data.items_saved) {
+        console.error('[Tricholand] Los items del pedido NO se guardaron en la base de datos')
       }
 
       setSubmitted(true)

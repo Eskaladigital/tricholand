@@ -88,13 +88,20 @@ export async function POST(request: NextRequest) {
     }
 
     const isPro = body.contact_type === 'professional'
-    sendMailPair(
-      `[Web] Nueva consulta de ${body.name}${isPro ? ' (Profesional)' : ''} — ${body.country}`,
-      contactAdminEmail(emailData),
-      body.email,
-      `Hemos recibido tu consulta — Tricholand`,
-      contactClientEmail(emailData),
-    ).catch((err) => console.error('Error enviando emails de contacto:', err))
+    let emailsSent = false
+    try {
+      await sendMailPair(
+        `[Web] Nueva consulta de ${body.name}${isPro ? ' (Profesional)' : ''} — ${body.country}`,
+        contactAdminEmail(emailData),
+        body.email,
+        `Hemos recibido tu consulta — Tricholand`,
+        contactClientEmail(emailData),
+      )
+      emailsSent = true
+      console.log(`Emails enviados para contacto de ${body.name}`)
+    } catch (err) {
+      console.error('Error enviando emails de contacto:', err)
+    }
 
     console.log('Nuevo contacto recibido:', {
       type: body.contact_type,
@@ -102,10 +109,11 @@ export async function POST(request: NextRequest) {
       email: body.email,
       country: body.country,
       inquiry: body.inquiry_type,
+      emailsSent,
     })
 
     return NextResponse.json(
-      { success: true, message: 'Contacto recibido correctamente' },
+      { success: true, emails_sent: emailsSent, message: 'Contacto recibido correctamente' },
       { status: 200 }
     )
   } catch (err) {

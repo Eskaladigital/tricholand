@@ -86,24 +86,38 @@ export async function POST(request: NextRequest) {
     }
 
     // Insertar todos los items en una sola operación batch
+    const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
     const itemsToInsert = body.items.map((item) => ({
       order_id: order.id,
-      product_id: item.product_id || null,
+      product_id: item.product_id && UUID_REGEX.test(item.product_id) ? item.product_id : null,
       product_name: item.product_name,
       product_sku: item.product_sku,
       quantity: item.quantity,
       unit_price_cents: item.unit_price_cents,
       total_cents: item.unit_price_cents * item.quantity,
-      notes: item.notes,
+      notes: item.notes || null,
     }))
 
+    console.log(`Insertando ${itemsToInsert.length} items para pedido ${order_number}:`, JSON.stringify(itemsToInsert))
+
+    let itemsInserted = false
     const { error: itemsError } = await supabase.from('order_items').insert(itemsToInsert)
 
     if (itemsError) {
-      console.error('Error guardando items del pedido:', itemsError.message, itemsError.details)
-      // El pedido ya se creó, registrar el error pero no fallar la respuesta al cliente
-      // El admin verá el pedido sin items y podrá añadirlos manualmente
-      console.error(`⚠️ Pedido ${order_number} creado pero sin items. Revisar en admin.`)
+      console.error('Error en batch insert de items:', itemsError.message, itemsError.details, itemsError.code)
+
+      // Fallback: reintentar sin product_id (por si falla la foreign key)
+      const itemsWithoutFk = itemsToInsert.map((item) => ({ ...item, product_id: null }))
+      const { error: retryError } = await supabase.from('order_items').insert(itemsWithoutFk)
+
+      if (retryError) {
+        console.error('Error en retry sin FK:', retryError.message, retryError.details, retryError.code)
+      } else {
+        itemsInserted = true
+        console.log(`Items insertados sin product_id (fallback) para pedido ${order_number}`)
+      }
+    } else {
+      itemsInserted = true
     }
 
     // Enviar emails (no bloquear la respuesta si falla)
@@ -128,13 +142,20 @@ export async function POST(request: NextRequest) {
       locale: body.locale || 'es',
     }
 
-    sendMailPair(
-      `[PEDIDO] ${order_number} — ${body.customer_name} (${body.customer_country})`,
-      orderAdminEmail(emailData),
-      body.customer_email,
-      `Tu solicitud de pedido ${order_number} — Tricholand`,
-      orderClientEmail(emailData),
-    ).catch((err) => console.error('Error enviando emails de pedido:', err))
+    let emailsSent = false
+    try {
+      await sendMailPair(
+        `[PEDIDO] ${order_number} — ${body.customer_name} (${body.customer_country})`,
+        orderAdminEmail(emailData),
+        body.customer_email,
+        `Tu solicitud de pedido ${order_number} — Tricholand`,
+        orderClientEmail(emailData),
+      )
+      emailsSent = true
+      console.log(`Emails enviados para pedido ${order_number}`)
+    } catch (err) {
+      console.error('Error enviando emails de pedido:', err)
+    }
 
     console.log('Nueva solicitud de pedido:', {
       order_number,
@@ -142,12 +163,16 @@ export async function POST(request: NextRequest) {
       email: body.customer_email,
       country: body.customer_country,
       items: body.items.length,
+      itemsInserted,
       subtotal: `${(subtotal_cents / 100).toFixed(2)}€`,
+      emailsSent,
     })
 
     return NextResponse.json({
       success: true,
       order_number,
+      items_saved: itemsInserted,
+      emails_sent: emailsSent,
       message: 'Solicitud de pedido recibida correctamente',
     })
   } catch (err) {
