@@ -13,8 +13,9 @@ function formatCents(cents: number): string {
 }
 
 export function PaymentButtons({ orderId, orderNumber, totalCents }: PaymentButtonsProps) {
-  const [loading, setLoading] = useState<'stripe' | 'redsys' | null>(null)
+  const [loading, setLoading] = useState<'stripe' | 'redsys' | 'transfer' | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [transferSent, setTransferSent] = useState(false)
 
   const handleStripe = async () => {
     setLoading('stripe')
@@ -81,6 +82,29 @@ export function PaymentButtons({ orderId, orderNumber, totalCents }: PaymentButt
     }
   }
 
+  const handleTransfer = async () => {
+    setLoading('transfer')
+    setError(null)
+    try {
+      const res = await fetch('/api/payments/transfer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id: orderId }),
+      })
+      const data = await res.json()
+      if (!res.ok || data.error) {
+        setError(data.error || 'Error solicitando datos bancarios')
+        setLoading(null)
+        return
+      }
+      setTransferSent(true)
+      setLoading(null)
+    } catch {
+      setError('Error de conexión. Inténtalo de nuevo.')
+      setLoading(null)
+    }
+  }
+
   return (
     <div className="bg-blanco border border-linea p-6 mb-6">
       <h2 className="text-sm font-bold font-[family-name:var(--font-archivo-narrow)] uppercase tracking-wide mb-4">
@@ -91,6 +115,12 @@ export function PaymentButtons({ orderId, orderNumber, totalCents }: PaymentButt
         Selecciona un método de pago:
       </p>
 
+      {transferSent && (
+        <div className="bg-green-50 border border-green-200 text-green-800 text-sm px-4 py-3 mb-4">
+          Te hemos enviado un email a tu correo con los datos bancarios para la transferencia. Revisa tu bandeja de entrada (y la carpeta de spam). Indica el número de pedido como concepto.
+        </div>
+      )}
+
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-800 text-sm px-4 py-3 mb-4">
           {error}
@@ -98,6 +128,14 @@ export function PaymentButtons({ orderId, orderNumber, totalCents }: PaymentButt
       )}
 
       <div className="space-y-3">
+        <button
+          onClick={handleTransfer}
+          disabled={loading !== null || transferSent}
+          className="w-full py-4 bg-verde text-white text-sm font-bold uppercase tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading === 'transfer' ? 'Enviando...' : transferSent ? 'Email enviado' : 'Pagar por transferencia bancaria'}
+        </button>
+
         <button
           onClick={handleRedsys}
           disabled={loading !== null}
@@ -115,7 +153,7 @@ export function PaymentButtons({ orderId, orderNumber, totalCents }: PaymentButt
         </button>
 
         <p className="text-xs text-marron-claro text-center mt-2">
-          Pago seguro. Serás redirigido a la pasarela de pago seleccionada.
+          Transferencia: recibirás los datos bancarios por email. TPV y Stripe: pago seguro en línea.
         </p>
       </div>
     </div>

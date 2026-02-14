@@ -633,3 +633,93 @@ Se ha generado la factura autom&aacute;ticamente y se ha enviado al cliente. El 
 
   return layout(content)
 }
+
+// ============================================
+// TRANSFERENCIA BANCARIA — Datos al cliente
+// ============================================
+
+interface TransferBankDetailsData {
+  order_number: string
+  customer_name: string
+  total_cents: number
+  locale?: string
+  iban: string
+  account_holder: string
+  bank_name: string
+  bic?: string
+}
+
+/** Email al cliente con datos bancarios para transferencia (en su idioma) */
+export function transferBankDetailsEmail(data: TransferBankDetailsData): string {
+  const locale = resolveLocale(data.locale)
+  const tr = t(locale)
+  const fmt = (c: number) => formatCentsLocalized(c, locale)
+
+  const bicRow = data.bic
+    ? `<tr>
+<td style="padding:4px 0;font-size:13px;color:${COLORS.marronClaro};">${tr.transferBIC}:</td>
+<td style="padding:4px 0;font-size:13px;font-family:monospace;">${data.bic}</td>
+</tr>`
+    : ''
+
+  const content = `
+<h1 style="margin:0 0 4px;font-size:20px;font-weight:bold;text-transform:uppercase;color:${COLORS.verde};">${tr.transferTitle}</h1>
+<p style="margin:0 0 24px;font-size:14px;color:${COLORS.marronClaro};">${tr.orderNumber} ${data.order_number}</p>
+
+<p style="margin:0 0 16px;font-size:14px;line-height:1.6;">
+${tr.transferHello} <strong>${data.customer_name}</strong>,
+</p>
+<p style="margin:0 0 24px;font-size:14px;line-height:1.6;">
+${tr.transferBody}
+</p>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
+<tr>
+<td style="padding:16px;background-color:${COLORS.crudo};border:1px solid ${COLORS.linea};">
+<p style="margin:0 0 12px;font-size:11px;font-weight:bold;text-transform:uppercase;color:${COLORS.marronClaro};letter-spacing:1px;">${tr.transferBankDetails}</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td style="padding:4px 0;font-size:13px;color:${COLORS.marronClaro};">${tr.transferAccountHolder}:</td>
+<td style="padding:4px 0;font-size:13px;font-weight:bold;">${data.account_holder}</td>
+</tr>
+<tr>
+<td style="padding:4px 0;font-size:13px;color:${COLORS.marronClaro};">${tr.transferIBAN}:</td>
+<td style="padding:4px 0;font-size:13px;font-family:monospace;">${data.iban}</td>
+</tr>
+<tr>
+<td style="padding:4px 0;font-size:13px;color:${COLORS.marronClaro};">${tr.transferBank}:</td>
+<td style="padding:4px 0;font-size:13px;">${data.bank_name}</td>
+</tr>
+${bicRow}
+<tr>
+<td style="padding:4px 0;font-size:13px;color:${COLORS.marronClaro};">${tr.transferReference}:</td>
+<td style="padding:4px 0;font-size:13px;font-weight:bold;">${data.order_number}</td>
+</tr>
+<tr>
+<td style="padding:4px 0;font-size:13px;color:${COLORS.marronClaro};">${tr.transferAmount}:</td>
+<td style="padding:4px 0;font-size:16px;font-weight:bold;color:${COLORS.naranja};">${fmt(data.total_cents)}</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
+<tr>
+<td style="padding:12px 16px;background-color:#fef9e7;border:1px solid #f0e6c8;">
+<p style="margin:0 0 4px;font-size:11px;font-weight:bold;text-transform:uppercase;color:${COLORS.marronClaro};">${tr.transferImportant}</p>
+<p style="margin:0;font-size:13px;line-height:1.5;">${tr.transferImportantNote.replace('{order}', data.order_number)}</p>
+</td>
+</tr>
+</table>
+
+<p style="margin:0;font-size:14px;line-height:1.6;">
+${tr.transferQuestion} <a href="mailto:info@tricholand.com" style="color:${COLORS.naranja};">info@tricholand.com</a>.
+</p>
+
+<p style="margin:24px 0 0;font-size:14px;line-height:1.6;">
+${tr.transferThanks}
+</p>`
+
+  return layout(content, locale)
+}

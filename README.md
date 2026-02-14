@@ -28,13 +28,33 @@ npm run dev
 - **Tienda B2B** con carrito, lotes mayoristas y solicitud de presupuesto
 - **Catálogo de variedades** con fichas detalladas
 - **Blog** con artículos técnicos
-- **Panel de administración** (productos, pedidos, contactos)
+- **Panel de administración** (productos, pedidos, clientes, contactos, blog, media, configuración)
+- **Pipeline automatizado de pedidos**: validación → proforma PDF → email al cliente → pago → factura
+- **Pagos**: transferencia bancaria, TPV Redsys, Stripe (infraestructura lista)
+- **Emails en idioma del cliente**: confirmación pedido, validación, pago confirmado, datos bancarios
 - **Sistema de traducciones** con Supabase + OpenAI
 - **SEO**: sitemap, robots, meta alternates por idioma
 - **Google Analytics** (GA4)
 - **Favicon** con logo sobre fondo blanco
 - **PWA** en panel administrator (instalable)
 - **Redirecciones** desde rutas legacy (Joomla)
+
+---
+
+## Flujo de pedidos y pagos
+
+1. **Cliente** hace pedido → recibe email de confirmación (en su idioma)
+2. **Admin** revisa, ajusta precios/descuentos/envío → pulsa **Validar pedido**
+3. Sistema genera **proforma PDF**, la sube a Supabase Storage, envía email al cliente con proforma adjunta y enlace a `/pedido/TRI-XXXX`
+4. Cliente entra en su página de pedido y elige método de pago:
+   - **Transferencia bancaria** → recibe email con datos bancarios (IBAN, titular, etc.)
+   - **TPV Redsys** o **Stripe** → redirección a pasarela de pago
+5. Tras el pago (webhook Stripe/Redsys o confirmación manual del admin para transferencias):
+   - Se genera **factura PDF**
+   - Se envía email al cliente con factura adjunta
+   - Se notifica al admin
+
+Los emails al cliente van en su idioma (locale del pedido). Los emails al admin siempre en español.
 
 ---
 
@@ -76,14 +96,12 @@ npm install
 
 ## Variables de entorno
 
-Crea un archivo `.env.local` en la raíz:
+Crea un archivo `.env.local` en la raíz (o copia `.env.example`):
 
 ```env
-# Supabase (obligatorio para traducciones y datos)
+# Supabase (obligatorio)
 NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key
-
-# Supabase Service Role (solo para scripts de traducción)
 SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
 
 # OpenAI (para scripts translate:ui y translate:content)
@@ -91,6 +109,32 @@ OPENAI_API_KEY=sk-...
 
 # Google Analytics (opcional)
 NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+
+# SMTP — Correo para emails (pedidos, contactos, proformas, facturas)
+SMTP_HOST=ssl0.ovh.net
+SMTP_PORT=465
+SMTP_USER=info@tricholand.com
+SMTP_PASS=tu_contraseña
+SMTP_FROM=Tricholand <info@tricholand.com>
+
+# URL del sitio (callbacks de pago, links en emails)
+NEXT_PUBLIC_SITE_URL=https://www.tricholand.com
+
+# Stripe (opcional — pago con tarjeta)
+# STRIPE_SECRET_KEY=sk_live_...
+# STRIPE_WEBHOOK_SECRET=whsec_...
+
+# Redsys TPV (opcional — pago con TPV virtual)
+# REDSYS_MERCHANT_CODE=...
+# REDSYS_TERMINAL=1
+# REDSYS_SECRET_KEY=...
+# REDSYS_ENVIRONMENT=test
+
+# Transferencia bancaria (opcional — datos se envían por email al cliente)
+# BANK_IBAN=ES12 3456 7890 1234 5678 9012
+# BANK_ACCOUNT_HOLDER=Tricholand
+# BANK_NAME=Nombre del banco
+# BANK_BIC=CAIXESBBXXX
 
 # Admin: login con usuarios de Supabase Auth (Authentication → Users)
 ```
@@ -109,7 +153,12 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
 | `npm run translate:content` | Sincronizar y traducir contenido (variedades, blog) a Supabase |
 | `npm run translate:all` | Ejecutar translate:ui + translate:content |
 | `npm run translate:dry` | Simular translate:content sin escribir |
+| `npm run translate:blog` | Traducir posts del blog a otros idiomas (OpenAI) |
 | `npm run favicon` | Regenerar favicon y apple-touch-icon desde logo |
+| `npm run seed:products` | Seed de productos de ejemplo |
+| `npm run seed:blog` | Seed de posts del blog |
+| `npm run import:blog` | Importar blog desde CSV |
+| `npm run migrate:customers` | Migrar datos a tabla customers |
 
 ---
 
@@ -133,7 +182,8 @@ tricholand-web/
 │   ├── app/                    # App Router (Next.js 15)
 │   │   ├── es/, en/, nl/, fr/, de/, it/, pt/   # 7 idiomas (variedades, tienda, blog, contacto...)
 │   │   ├── administrator/      # Panel admin (protegido)
-│   │   └── api/                # API routes (contact, orders, auth)
+│   │   ├── pedido/[order_number]  # Página pública del pedido (pago, factura)
+│   │   └── api/                # API routes (contact, orders, payments, webhooks, transfer)
 │   ├── components/
 │   │   ├── layout/             # Header, Footer
 │   │   ├── home/               # Hero, StatsBar, CatalogPreview, etc.
@@ -145,16 +195,26 @@ tricholand-web/
 │   ├── lib/
 │   │   ├── i18n/               # Diccionarios por idioma
 │   │   ├── shop/               # Cart context
+│   │   ├── email/              # Templates y i18n de emails
+│   │   ├── pdf/                # Generación proformas y facturas
+│   │   ├── storage/            # Supabase Storage (documentos)
+│   │   ├── payments/           # Redsys (Stripe vía SDK)
 │   │   └── translations.ts     # Integración Supabase traducciones
 │   └── types/
 ├── scripts/
 │   ├── translate-ui.mjs        # Traducción diccionarios
-│   ├── translate-content.mjs  # Traducción contenido → Supabase
+│   ├── translate-content.mjs   # Traducción contenido → Supabase
+│   ├── translate-blog-posts.mjs # Traducción posts del blog
 │   ├── generate-locales.mjs    # Generador de páginas por idioma
-│   └── generate-favicon.mjs     # Favicon desde logo (fondo blanco)
+│   ├── generate-favicon.mjs    # Favicon desde logo (fondo blanco)
+│   ├── seed-products.mjs       # Seed productos
+│   ├── seed-blog-posts.mjs     # Seed blog
+│   ├── import-blog-from-csv.mjs # Importar blog desde CSV
+│   └── migrate-customers.mjs   # Migrar a tabla customers
 ├── supabase/
 │   ├── schema.sql              # Schema principal (products, orders, contacts, settings)
-│   └── translations-schema.sql # Tablas content + translations
+│   ├── translations-schema.sql # Tablas content + translations
+│   └── storage-bucket.sql       # Bucket order-documents (proformas, facturas)
 └── public/
 │   ├── favicon.png             # Favicon 32×32
 │   ├── apple-touch-icon.png    # Icono iOS 180×180
@@ -170,7 +230,7 @@ Ejecuta los schemas **en este orden** en el SQL Editor de Supabase:
 
 1. **`supabase/schema.sql`** — Tablas principales:
    - `products` — catálogo tienda (variety_slug, SKU, precios, stock)
-   - `orders` — pedidos (customer_*, totales, estados, pago, envío)
+   - `orders` — pedidos (customer_*, totales, estados, pago, envío, locale, payment_method)
    - `order_items` — líneas de pedido
    - `contacts` — formulario contacto (professional_subtype, gdpr_consent, priority, status)
    - `settings` — key-value (company_name, min_order_units, etc.)
@@ -180,6 +240,22 @@ Ejecuta los schemas **en este orden** en el SQL Editor de Supabase:
    - `content` — contenido fuente (variety, blog, product)
    - `translations` — traducciones por locale
    - Vista `content_with_translations`
+
+3. **`supabase/blog-posts-schema.sql`** — Blog:
+   - `blog_posts` — artículos por locale (slug, source_slug, content, meta)
+   - RLS y políticas
+
+4. **`supabase/blog-posts-slug-migration.sql`** — Migración opcional si ya tienes blog_posts sin source_slug
+
+5. **`supabase/customers-schema.sql`** — Clientes unificados:
+   - `customers` — unifica contactos y pedidos (email, contadores, mailing_consent)
+   - RLS y políticas
+
+6. **`supabase/storage-bucket.sql`** — Bucket para documentos de pedidos:
+   - `order-documents` — proformas y facturas PDF
+   - Políticas de acceso (lectura pública, escritura service role)
+
+> **Nota**: `order-status-awaiting-transfer.sql` no se usa; las transferencias usan `payment_pending` + `payment_method = 'transfer'`.
 
 ---
 
@@ -196,8 +272,13 @@ Ejecuta los schemas **en este orden** en el SQL Editor de Supabase:
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://xxx.supabase.co` | Production, Preview |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | tu anon key | Production, Preview |
 | `SUPABASE_SERVICE_ROLE_KEY` | tu service_role key | Production, Preview |
+| `NEXT_PUBLIC_SITE_URL` | `https://www.tricholand.com` | Production |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` | Credenciales OVH/correo | Production |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | `G-NG0PKMVECG` | Production |
 | `OPENAI_API_KEY` | sk-... | Production (si usas translate) |
+| `BANK_IBAN`, `BANK_ACCOUNT_HOLDER`, `BANK_NAME`, `BANK_BIC` | Datos bancarios (transferencia) | Production |
+| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | Claves Stripe | Production (opcional) |
+| `REDSYS_*` | Claves Redsys | Production (opcional) |
 
 4. Cada push a `main` despliega automáticamente
 

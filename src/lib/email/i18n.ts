@@ -106,6 +106,23 @@ interface EmailTranslations {
   paymentConfirmedViewOrder: string
   paymentConfirmedShipping: string
   paymentConfirmedThanks: string
+
+  // transferBankDetailsEmail
+  subjectTransferDetails: string   // "Datos para transferencia — Pedido {order} | Tricholand"
+  transferTitle: string
+  transferHello: string
+  transferBody: string
+  transferBankDetails: string
+  transferAccountHolder: string
+  transferIBAN: string
+  transferBank: string
+  transferBIC: string
+  transferReference: string
+  transferAmount: string
+  transferImportant: string
+  transferImportantNote: string
+  transferQuestion: string
+  transferThanks: string
 }
 
 const translations: Record<EmailLocale, EmailTranslations> = {
@@ -156,6 +173,21 @@ const translations: Record<EmailLocale, EmailTranslations> = {
     paymentConfirmedViewOrder: 'Ver mi pedido',
     paymentConfirmedShipping: 'Te informaremos cuando tu pedido sea enviado. Si tienes alguna duda, escr&iacute;benos a',
     paymentConfirmedThanks: 'Gracias por tu compra en Tricholand.',
+    subjectTransferDetails: 'Datos para transferencia — Pedido {order} | Tricholand',
+    transferTitle: 'Pago por transferencia',
+    transferHello: 'Hola',
+    transferBody: 'Has elegido pagar por transferencia bancaria. A continuaci&oacute;n te indicamos los datos para realizar la transferencia:',
+    transferBankDetails: 'Datos bancarios',
+    transferAccountHolder: 'Titular',
+    transferIBAN: 'IBAN',
+    transferBank: 'Banco',
+    transferBIC: 'BIC/SWIFT',
+    transferReference: 'Concepto (obligatorio)',
+    transferAmount: 'Importe exacto',
+    transferImportant: 'Importante',
+    transferImportantNote: 'Indica el n&uacute;mero de pedido <strong>{order}</strong> como concepto de la transferencia. Confirmaremos el pago en un plazo de 1-3 d&iacute;as h&aacute;biles tras recibir la transferencia.',
+    transferQuestion: 'Si tienes alguna duda, contacta con nosotros en',
+    transferThanks: 'Gracias por confiar en Tricholand.',
   },
 
   en: {
@@ -205,6 +237,21 @@ const translations: Record<EmailLocale, EmailTranslations> = {
     paymentConfirmedViewOrder: 'View my order',
     paymentConfirmedShipping: 'We will notify you when your order is shipped. If you have any questions, write to us at',
     paymentConfirmedThanks: 'Thank you for your purchase at Tricholand.',
+    subjectTransferDetails: 'Bank details for transfer — Order {order} | Tricholand',
+    transferTitle: 'Bank transfer payment',
+    transferHello: 'Hello',
+    transferBody: 'You have chosen to pay by bank transfer. Below are the details to make the transfer:',
+    transferBankDetails: 'Bank details',
+    transferAccountHolder: 'Account holder',
+    transferIBAN: 'IBAN',
+    transferBank: 'Bank',
+    transferBIC: 'BIC/SWIFT',
+    transferReference: 'Reference (required)',
+    transferAmount: 'Exact amount',
+    transferImportant: 'Important',
+    transferImportantNote: 'Please include order number <strong>{order}</strong> as the transfer reference. We will confirm payment within 1-3 business days of receiving the transfer.',
+    transferQuestion: 'If you have any questions, contact us at',
+    transferThanks: 'Thank you for trusting Tricholand.',
   },
 
   de: {
@@ -254,6 +301,21 @@ const translations: Record<EmailLocale, EmailTranslations> = {
     paymentConfirmedViewOrder: 'Meine Bestellung ansehen',
     paymentConfirmedShipping: 'Wir benachrichtigen Sie, wenn Ihre Bestellung versandt wird. Bei Fragen schreiben Sie uns an',
     paymentConfirmedThanks: 'Vielen Dank f&uuml;r Ihren Einkauf bei Tricholand.',
+    subjectTransferDetails: 'Bankdaten f&uuml;r &Uuml;berweisung — Bestellung {order} | Tricholand',
+    transferTitle: 'Zahlung per &Uuml;berweisung',
+    transferHello: 'Hallo',
+    transferBody: 'Sie haben sich f&uuml;r die Zahlung per Bank&uuml;berweisung entschieden. Hier sind die Daten f&uuml;r die &Uuml;berweisung:',
+    transferBankDetails: 'Bankdaten',
+    transferAccountHolder: 'Kontoinhaber',
+    transferIBAN: 'IBAN',
+    transferBank: 'Bank',
+    transferBIC: 'BIC/SWIFT',
+    transferReference: 'Verwendungszweck (Pflicht)',
+    transferAmount: 'Exakter Betrag',
+    transferImportant: 'Wichtig',
+    transferImportantNote: 'Bitte geben Sie die Bestellnummer <strong>{order}</strong> als Verwendungszweck an. Wir best&auml;tigen die Zahlung innerhalb von 1-3 Werktagen nach Eingang.',
+    transferQuestion: 'Bei Fragen kontaktieren Sie uns unter',
+    transferThanks: 'Vielen Dank f&uuml;r Ihr Vertrauen in Tricholand.',
   },
 
   fr: {
@@ -303,6 +365,21 @@ const translations: Record<EmailLocale, EmailTranslations> = {
     paymentConfirmedViewOrder: 'Voir ma commande',
     paymentConfirmedShipping: 'Nous vous informerons lorsque votre commande sera exp&eacute;di&eacute;e. Pour toute question, &eacute;crivez-nous &agrave;',
     paymentConfirmedThanks: 'Merci pour votre achat chez Tricholand.',
+    subjectTransferDetails: 'Coordonn&eacute;es bancaires — Commande {order} | Tricholand',
+    transferTitle: 'Paiement par virement',
+    transferHello: 'Bonjour',
+    transferBody: 'Vous avez choisi de payer par virement bancaire. Voici les coordonn&eacute;es pour effectuer le virement :',
+    transferBankDetails: 'Coordonn&eacute;es bancaires',
+    transferAccountHolder: 'Titulaire du compte',
+    transferIBAN: 'IBAN',
+    transferBank: 'Banque',
+    transferBIC: 'BIC/SWIFT',
+    transferReference: 'R&eacute;f&eacute;rence (obligatoire)',
+    transferAmount: 'Montant exact',
+    transferImportant: 'Important',
+    transferImportantNote: 'Indiquez le num&eacute;ro de commande <strong>{order}</strong> comme r&eacute;f&eacute;rence du virement. Nous confirmerons le paiement sous 1 &agrave; 3 jours ouvr&eacute;s apr&egrave;s r&eacute;ception.',
+    transferQuestion: 'Pour toute question, contactez-nous &agrave;',
+    transferThanks: 'Merci de votre confiance en Tricholand.',
   },
 
   it: {
@@ -352,6 +429,21 @@ const translations: Record<EmailLocale, EmailTranslations> = {
     paymentConfirmedViewOrder: 'Vedi il mio ordine',
     paymentConfirmedShipping: 'Ti avviseremo quando il tuo ordine sar&agrave; spedito. Per qualsiasi domanda, scrivici a',
     paymentConfirmedThanks: 'Grazie per il tuo acquisto su Tricholand.',
+    subjectTransferDetails: 'Dati bancari per bonifico — Ordine {order} | Tricholand',
+    transferTitle: 'Pagamento con bonifico bancario',
+    transferHello: 'Ciao',
+    transferBody: 'Hai scelto di pagare con bonifico bancario. Di seguito i dati per effettuare il bonifico:',
+    transferBankDetails: 'Dati bancari',
+    transferAccountHolder: 'Intestatario',
+    transferIBAN: 'IBAN',
+    transferBank: 'Banca',
+    transferBIC: 'BIC/SWIFT',
+    transferReference: 'Causale (obbligatoria)',
+    transferAmount: 'Importo esatto',
+    transferImportant: 'Importante',
+    transferImportantNote: 'Indica il numero d\'ordine <strong>{order}</strong> come causale del bonifico. Confermeremo il pagamento entro 1-3 giorni lavorativi dal ricevimento.',
+    transferQuestion: 'Per domande, contattaci a',
+    transferThanks: 'Grazie per la fiducia in Tricholand.',
   },
 
   nl: {
@@ -401,6 +493,21 @@ const translations: Record<EmailLocale, EmailTranslations> = {
     paymentConfirmedViewOrder: 'Mijn bestelling bekijken',
     paymentConfirmedShipping: 'We laten u weten wanneer uw bestelling is verzonden. Voor vragen kunt u ons schrijven op',
     paymentConfirmedThanks: 'Bedankt voor uw aankoop bij Tricholand.',
+    subjectTransferDetails: 'Gegevens voor overschrijving — Bestelling {order} | Tricholand',
+    transferTitle: 'Betaling per overschrijving',
+    transferHello: 'Hallo',
+    transferBody: 'U heeft gekozen om per bankoverschrijving te betalen. Hieronder vindt u de gegevens voor de overschrijving:',
+    transferBankDetails: 'Bankgegevens',
+    transferAccountHolder: 'Rekeninghouder',
+    transferIBAN: 'IBAN',
+    transferBank: 'Bank',
+    transferBIC: 'BIC/SWIFT',
+    transferReference: 'Onderwerp (verplicht)',
+    transferAmount: 'Exact bedrag',
+    transferImportant: 'Belangrijk',
+    transferImportantNote: 'Vermeld het bestelnummer <strong>{order}</strong> als onderwerp van de overschrijving. We bevestigen de betaling binnen 1-3 werkdagen na ontvangst.',
+    transferQuestion: 'Bij vragen kunt u ons bereiken op',
+    transferThanks: 'Bedankt voor uw vertrouwen in Tricholand.',
   },
 
   pt: {
@@ -450,6 +557,21 @@ const translations: Record<EmailLocale, EmailTranslations> = {
     paymentConfirmedViewOrder: 'Ver o meu pedido',
     paymentConfirmedShipping: 'Informaremos quando o seu pedido for enviado. Se tiver alguma d&uacute;vida, escreva-nos para',
     paymentConfirmedThanks: 'Obrigado pela sua compra na Tricholand.',
+    subjectTransferDetails: 'Dados para transfer&ecirc;ncia — Pedido {order} | Tricholand',
+    transferTitle: 'Pagamento por transfer&ecirc;ncia',
+    transferHello: 'Ol&aacute;',
+    transferBody: 'Escolheu pagar por transfer&ecirc;ncia banc&aacute;ria. Seguem os dados para realizar a transfer&ecirc;ncia:',
+    transferBankDetails: 'Dados banc&aacute;rios',
+    transferAccountHolder: 'Titular',
+    transferIBAN: 'IBAN',
+    transferBank: 'Banco',
+    transferBIC: 'BIC/SWIFT',
+    transferReference: 'Refer&ecirc;ncia (obrigat&oacute;ria)',
+    transferAmount: 'Valor exato',
+    transferImportant: 'Importante',
+    transferImportantNote: 'Indique o n&uacute;mero do pedido <strong>{order}</strong> como refer&ecirc;ncia da transfer&ecirc;ncia. Confirmaremos o pagamento em 1-3 dias &uacute;teis ap&oacute;s recebermos.',
+    transferQuestion: 'Se tiver alguma d&uacute;vida, contacte-nos em',
+    transferThanks: 'Obrigado pela confian&ccedil;a na Tricholand.',
   },
 }
 

@@ -366,10 +366,13 @@ export async function validateOrder(orderId: string): Promise<ValidateOrderResul
     log.push('URL proforma guardada en orden')
   }
 
-  // 4. Enviar email al cliente con proforma adjunta
+  // 4. Enviar email al cliente con proforma adjunta (en su idioma)
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.tricholand.com'
+  const { resolveLocale, t: getTranslations } = await import('@/lib/email/i18n')
+  const orderLocale = resolveLocale(order.locale)
+  const tr = getTranslations(orderLocale)
 
-  log.push('Enviando email al cliente...')
+  log.push(`Enviando email al cliente (locale: ${orderLocale})...`)
   try {
     const { paymentEmail } = await import('@/lib/email/templates')
     const { sendMail } = await import('@/lib/email/transporter')
@@ -389,11 +392,12 @@ export async function validateOrder(orderId: string): Promise<ValidateOrderResul
       tax_cents: order.tax_cents ?? 0,
       total_cents: order.total_cents ?? 0,
       order_url: `${baseUrl}/pedido/${order.order_number}`,
+      locale: order.locale,
     })
 
     await sendMail(
       order.customer_email,
-      `Pedido ${order.order_number} validado — Ya puedes pagar | Tricholand`,
+      tr.subjectPaymentReady.replace('{order}', order.order_number),
       html,
       [{ filename: `proforma-${order.order_number}.pdf`, content: pdfBuffer }]
     )
@@ -542,8 +546,12 @@ export async function confirmPayment(
     }
   }
 
-  // 4. Enviar email al cliente con factura
+  // 4. Enviar email al cliente con factura (en su idioma)
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.tricholand.com'
+  const { resolveLocale: resLocale, t: getTr } = await import('@/lib/email/i18n')
+  const payLocale = resLocale(order.locale)
+  const payTr = getTr(payLocale)
+
   const emailData = {
     order_number: order.order_number,
     customer_name: order.customer_name,
@@ -552,9 +560,10 @@ export async function confirmPayment(
     payment_method: paymentMethod,
     paid_at: now,
     order_url: `${baseUrl}/pedido/${order.order_number}`,
+    locale: order.locale,
   }
 
-  log.push('Enviando email al cliente...')
+  log.push(`Enviando email al cliente (locale: ${payLocale})...`)
   try {
     const { paymentConfirmedEmail } = await import('@/lib/email/templates')
     const { sendMail } = await import('@/lib/email/transporter')
@@ -565,7 +574,7 @@ export async function confirmPayment(
 
     await sendMail(
       order.customer_email,
-      `Pago confirmado — Pedido ${order.order_number} | Tricholand`,
+      payTr.subjectPaymentConfirmed.replace('{order}', order.order_number),
       paymentConfirmedEmail(emailData),
       attachments
     )
