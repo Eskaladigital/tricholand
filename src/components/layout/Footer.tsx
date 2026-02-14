@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Dictionary } from '@/lib/i18n/types'
 
 function BackToTop() {
@@ -40,9 +41,13 @@ export function Footer({ locale, dict }: FooterProps) {
         {/* Brand */}
         <div>
           <Link href={`/${locale}`} className="flex items-center gap-3 mb-4">
-            <div className="w-11 h-11 bg-verde flex items-center justify-center font-black text-xl text-crudo">
-              T
-            </div>
+            <Image
+              src="/images/icons/logo_tricho_yellow_200_200.png"
+              alt="Tricholand"
+              width={64}
+              height={64}
+              className="w-16 h-16 object-contain shrink-0"
+            />
             <div className="flex flex-col">
               <span className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold tracking-wide uppercase">
                 Tricholand

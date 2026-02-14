@@ -3,6 +3,18 @@
 Web corporativa de **Tricholand** — vivero productor de Trichocereus y cactáceas columnares. Plataforma B2B para profesionales del sector con venta mayorista, catálogo de variedades y gestión de pedidos.
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
+[![Vercel](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)](https://vercel.com)
+
+### Inicio rápido
+
+```bash
+git clone https://github.com/Eskaladigital/tricholand.git
+cd tricholand
+npm install
+cp .env.example .env.local   # Editar con tus credenciales
+npm run dev
+```
+
 [![React](https://img.shields.io/badge/React-19-61dafb?logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178c6?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
@@ -20,6 +32,8 @@ Web corporativa de **Tricholand** — vivero productor de Trichocereus y cactác
 - **Sistema de traducciones** con Supabase + OpenAI
 - **SEO**: sitemap, robots, meta alternates por idioma
 - **Google Analytics** (GA4)
+- **Favicon** con logo sobre fondo blanco
+- **PWA** en panel administrator (instalable)
 - **Redirecciones** desde rutas legacy (Joomla)
 
 ---
@@ -97,6 +111,19 @@ ADMIN_PASSWORD=tricholand2025
 | `npm run translate:content` | Sincronizar y traducir contenido (variedades, blog) a Supabase |
 | `npm run translate:all` | Ejecutar translate:ui + translate:content |
 | `npm run translate:dry` | Simular translate:content sin escribir |
+| `npm run favicon` | Regenerar favicon y apple-touch-icon desde logo |
+
+---
+
+## Favicon
+
+El favicon se genera desde `public/images/icons/logo_tricho.png` con fondo blanco. Para regenerar:
+
+```bash
+npm run favicon
+```
+
+Genera `public/favicon.png` (32×32) y `public/apple-touch-icon.png` (180×180).
 
 ---
 
@@ -124,22 +151,37 @@ tricholand-web/
 │   └── types/
 ├── scripts/
 │   ├── translate-ui.mjs        # Traducción diccionarios
-│   ├── translate-content.mjs   # Traducción contenido → Supabase
-│   └── generate-locales.mjs     # Generador de páginas por idioma
+│   ├── translate-content.mjs  # Traducción contenido → Supabase
+│   ├── generate-locales.mjs    # Generador de páginas por idioma
+│   └── generate-favicon.mjs     # Favicon desde logo (fondo blanco)
 ├── supabase/
-│   ├── schema.sql              # Schema principal (products, orders, contacts)
+│   ├── schema.sql              # Schema principal (products, orders, contacts, settings)
 │   └── translations-schema.sql # Tablas content + translations
 └── public/
+│   ├── favicon.png             # Favicon 32×32
+│   ├── apple-touch-icon.png    # Icono iOS 180×180
+│   ├── administrator/          # PWA admin (manifest, icons, sw)
+│   └── images/
 ```
 
 ---
 
 ## Base de datos (Supabase)
 
-Ejecuta los schemas en el SQL Editor de Supabase:
+Ejecuta los schemas **en este orden** en el SQL Editor de Supabase:
 
-1. `supabase/schema.sql` — productos, pedidos, contactos
-2. `supabase/translations-schema.sql` — sistema de traducciones
+1. **`supabase/schema.sql`** — Tablas principales:
+   - `products` — catálogo tienda (variety_slug, SKU, precios, stock)
+   - `orders` — pedidos (customer_*, totales, estados, pago, envío)
+   - `order_items` — líneas de pedido
+   - `contacts` — formulario contacto (professional_subtype, gdpr_consent, priority, status)
+   - `settings` — key-value (company_name, min_order_units, etc.)
+   - RLS en todas las tablas
+
+2. **`supabase/translations-schema.sql`** — Sistema de traducciones:
+   - `content` — contenido fuente (variety, blog, product)
+   - `translations` — traducciones por locale
+   - Vista `content_with_translations`
 
 ---
 
@@ -176,6 +218,15 @@ Configura las mismas variables de entorno en el panel de tu proveedor.
 
 ---
 
+## SEO
+
+- **Sitemap**: `/sitemap.xml` (generado automáticamente)
+- **Robots**: `/robots.txt`
+- Meta alternates por idioma en todas las páginas
+- Incluye: home, variedades, tienda, blog, catálogo, contacto, etc.
+
+---
+
 ## Licencia
 
 Proyecto privado — Tricholand / Eskala Digital.
@@ -185,3 +236,9 @@ Proyecto privado — Tricholand / Eskala Digital.
 ## Repositorio
 
 [https://github.com/Eskaladigital/tricholand](https://github.com/Eskaladigital/tricholand)
+
+---
+
+## Historial de cambios
+
+Ver [CHANGELOG.md](./CHANGELOG.md)
