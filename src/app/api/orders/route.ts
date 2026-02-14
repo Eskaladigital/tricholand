@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/api'
+import { sendMailPair } from '@/lib/email/transporter'
+import { orderAdminEmail, orderClientEmail } from '@/lib/email/templates'
 
 interface OrderItem {
   product_id: string
@@ -104,23 +106,37 @@ export async function POST(request: NextRequest) {
       console.error(`⚠️ Pedido ${order_number} creado pero sin items. Revisar en admin.`)
     }
 
-    // TODO: Email de notificación al admin
-    // await resend.emails.send({
-    //   from: 'Tricholand <noreply@tricholand.com>',
-    //   to: 'info@tricholand.com',
-    //   subject: `[PEDIDO] ${order_number} — ${body.customer_name} (${body.customer_country})`,
-    //   html: `...resumen del pedido...`,
-    // })
+    // Enviar emails (no bloquear la respuesta si falla)
+    const emailData = {
+      order_number,
+      customer_name: body.customer_name,
+      customer_company: body.customer_company,
+      customer_email: body.customer_email,
+      customer_phone: body.customer_phone,
+      customer_country: body.customer_country,
+      customer_city: body.customer_city,
+      customer_vat_id: body.customer_vat_id,
+      customer_address: body.customer_address,
+      customer_notes: body.customer_notes,
+      items: body.items.map((item) => ({
+        product_name: item.product_name,
+        product_sku: item.product_sku,
+        quantity: item.quantity,
+        unit_price_cents: item.unit_price_cents,
+      })),
+      subtotal_cents,
+      locale: body.locale || 'es',
+    }
 
-    // TODO: Email de confirmación al cliente
-    // await resend.emails.send({
-    //   from: 'Tricholand <noreply@tricholand.com>',
-    //   to: body.customer_email,
-    //   subject: `Tu solicitud de pedido ${order_number} — Tricholand`,
-    //   html: `...confirmación...`,
-    // })
+    sendMailPair(
+      `[PEDIDO] ${order_number} — ${body.customer_name} (${body.customer_country})`,
+      orderAdminEmail(emailData),
+      body.customer_email,
+      `Tu solicitud de pedido ${order_number} — Tricholand`,
+      orderClientEmail(emailData),
+    ).catch((err) => console.error('Error enviando emails de pedido:', err))
 
-    console.log('📦 Nueva solicitud de pedido:', {
+    console.log('Nueva solicitud de pedido:', {
       order_number,
       customer: body.customer_name,
       email: body.customer_email,

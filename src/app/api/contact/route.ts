@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/api'
+import { sendMailPair } from '@/lib/email/transporter'
+import { contactAdminEmail, contactClientEmail } from '@/lib/email/templates'
 
 interface ContactPayload {
   contact_type: string
@@ -70,15 +72,31 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Error al guardar el contacto' }, { status: 500 })
     }
 
-    // TODO: Enviar email de notificación con Resend
-    // await resend.emails.send({
-    //   from: 'Tricholand Web <noreply@tricholand.com>',
-    //   to: 'info@tricholand.com',
-    //   subject: `[Web] Nueva consulta de ${body.name} (${body.contact_type})`,
-    //   html: `...`,
-    // })
+    // Enviar emails (no bloquear la respuesta si falla)
+    const emailData = {
+      name: body.name,
+      company: body.company || null,
+      email: body.email,
+      phone: body.phone || null,
+      country: body.country,
+      city: body.city || null,
+      contact_type: body.contact_type || 'particular',
+      professional_subtype: body.professional_subtype || null,
+      inquiry_type: body.inquiry_type || null,
+      message: body.message,
+      referral_source: body.referral_source || null,
+    }
 
-    console.log('📨 Nuevo contacto recibido:', {
+    const isPro = body.contact_type === 'professional'
+    sendMailPair(
+      `[Web] Nueva consulta de ${body.name}${isPro ? ' (Profesional)' : ''} — ${body.country}`,
+      contactAdminEmail(emailData),
+      body.email,
+      `Hemos recibido tu consulta — Tricholand`,
+      contactClientEmail(emailData),
+    ).catch((err) => console.error('Error enviando emails de contacto:', err))
+
+    console.log('Nuevo contacto recibido:', {
       type: body.contact_type,
       name: body.name,
       email: body.email,
