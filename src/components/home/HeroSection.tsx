@@ -13,7 +13,7 @@ export function HeroSection({ locale, dict }: HeroSectionProps) {
       {/* Image */}
       <div className="relative min-h-[400px] lg:min-h-0 order-first">
         <Image
-          src="https://images.unsplash.com/photo-1509587584298-0f3b3a3a1797?w=1200&q=80"
+          src="/images/vivero/productores_cactus_1.png"
           alt="Tricholand vivero de Trichocereus"
           fill
           className="object-cover"

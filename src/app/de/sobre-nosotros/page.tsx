@@ -49,14 +49,14 @@ export default function SobreNosotrosPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <Image
-              src="https://images.unsplash.com/photo-1509587584298-0f3b3a3a1797?w=500&q=80"
+              src="/images/vivero/productores_cactus_1.png"
               alt="Vivero Tricholand"
               width={500}
               height={350}
               className="w-full h-[200px] lg:h-full object-cover"
             />
             <Image
-              src="https://images.unsplash.com/photo-1446071103084-c257b5f70672?w=500&q=80"
+              src="/images/vivero/productores_cactus_2.png"
               alt="Cultivo de Trichocereus"
               width={500}
               height={350}

@@ -8,9 +8,13 @@ export const varietiesES: Variety[] = [
     scientificName: 'Echinopsis pachanoi',
     commonName: 'San Pedro',
     description: 'El Trichocereus pachanoi, comúnmente conocido como San Pedro, es una de las cactáceas columnares más emblemáticas y cultivadas del mundo. Originario de los Andes de Ecuador y Perú, donde crece entre los 2.000 y 3.000 metros de altitud, este cactus se caracteriza por su crecimiento vigoroso, sus costillas bien definidas (generalmente entre 6 y 8) y sus espinas cortas o, en muchas variedades, prácticamente ausentes. Su color verde azulado y su porte elegante lo convierten en una pieza ornamental de primer nivel para jardines, terrazas y proyectos de paisajismo. En condiciones óptimas puede alcanzar alturas superiores a los 6 metros, y produce flores blancas nocturnas de gran tamaño y belleza. Es una de las especies más demandadas por viveros y garden centers europeos tanto por su valor ornamental como por su facilidad de cultivo y adaptación al clima mediterráneo.',
-    image: 'https://images.unsplash.com/photo-1509587584298-0f3b3a3a1797?w=800&q=80',
+    image: '/images/varieties/Trichocereus_Pachanoi_1.png',
     imageAlt: 'Trichocereus Pachanoi - San Pedro cactus',
-    gallery: [],
+    gallery: [
+      '/images/varieties/Trichocereus_Pachanoi_2.png',
+      '/images/products/producto_trichocereus_pachanoi_1.png',
+      '/images/products/producto_trichocereus_pachanoi_bio_1.png',
+    ],
     sizeRange: '10–50 cm',
     stock: 'available',
     highlights: [
@@ -35,9 +39,11 @@ export const varietiesES: Variety[] = [
     scientificName: 'Echinopsis peruviana',
     commonName: 'Antorcha Peruana',
     description: 'El Trichocereus peruvianus, conocido como Antorcha Peruana, es un cactus columnar robusto originario de las vertientes occidentales de los Andes peruanos. Se distingue del pachanoi por sus espinas más largas y prominentes, sus costillas más profundas (típicamente 6-8, aunque algunos clones presentan hasta 10) y su tonalidad verde-grisácea con matices azulados. Es una especie de crecimiento vigoroso que puede superar los 4 metros de altura en su hábitat natural. Produce flores blancas grandes y muy perfumadas que se abren por la noche. El peruvianus es especialmente valorado en colecciones y viveros europeos por la gran variabilidad morfológica entre sus clones, ofreciendo una amplia gama de formas, colores y patrones de espinación que lo convierten en una pieza de coleccionismo muy apreciada.',
-    image: 'https://images.unsplash.com/photo-1446071103084-c257b5f70672?w=800&q=80',
+    image: '/images/varieties/Trichocereus_peruvianus_1.png',
     imageAlt: 'Trichocereus Peruvianus - Antorcha Peruana',
-    gallery: [],
+    gallery: [
+      '/images/products/producto_trichocereus_peruvianus_1.png',
+    ],
     sizeRange: '10–40 cm',
     stock: 'available',
     highlights: [
@@ -62,9 +68,12 @@ export const varietiesES: Variety[] = [
     scientificName: 'Echinopsis lageniformis',
     commonName: 'Achuma / Wachuma',
     description: 'El Trichocereus bridgesii, conocido como Achuma o Wachuma en su Bolivia natal, es un cactus columnar de crecimiento rápido que se distingue por sus costillas profundas y bien definidas (generalmente 4-8), sus espinas largas y su característica tonalidad verde oscura. Es una de las especies de Trichocereus más fáciles de identificar gracias a su morfología única, con secciones que se estrechan y ensanchan de forma característica. Originario de las tierras altas de Bolivia, entre los 2.500 y 3.500 metros de altitud, se ha adaptado perfectamente al cultivo en climas mediterráneos europeos. Su producción es más limitada que la del pachanoi, lo que lo convierte en una pieza especialmente buscada por coleccionistas y viveros especializados.',
-    image: 'https://images.unsplash.com/photo-1485841890310-6a055c88698a?w=800&q=80',
+    image: '/images/varieties/Trichocereus_Bridgessi_1.png',
     imageAlt: 'Trichocereus Bridgesii - Achuma cactus',
-    gallery: [],
+    gallery: [
+      '/images/varieties/Trichocereus_Bridgessi_2.png',
+      '/images/products/producto_trichocereus_bridgessi_1.png',
+    ],
     sizeRange: '10–30 cm',
     stock: 'limited',
     highlights: [
@@ -89,9 +98,12 @@ export const varietiesES: Variety[] = [
     scientificName: 'Echinopsis terscheckii',
     commonName: 'Cardón Grande',
     description: 'El Trichocereus terscheckii, conocido como Cardón Grande o Cardón de la Puna, es el gigante del género. Originario del noroeste argentino, donde forma bosques de cactus impresionantes en las provincias de Salta, Jujuy, Tucumán y Catamarca, puede alcanzar alturas de hasta 10-12 metros en su hábitat natural, convirtiéndose en el cactus más alto de Argentina. Se caracteriza por su tronco grueso y leñoso, sus múltiples brazos (en ejemplares maduros), sus numerosas costillas (14-17) y sus espinas robustas de color amarillo a marrón. Es una especie de crecimiento lento comparado con otras del género, pero de una longevidad excepcional, pudiendo vivir varios siglos. En Europa se cultiva como ejemplar ornamental de gran porte, ideal para jardines de estilo desértico y proyectos de paisajismo que requieran elementos arquitectónicos vegetales de impacto.',
-    image: 'https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?w=800&q=80',
+    image: '/images/varieties/Trichocereus_terscheckii_1.png',
     imageAlt: 'Trichocereus Terscheckii - Cardón Grande',
-    gallery: [],
+    gallery: [
+      '/images/varieties/Trichocereus_terscheckii_2.png',
+      '/images/varieties/Trichocereus_pasacana_1.png',
+    ],
     sizeRange: '20–100 cm',
     stock: 'available',
     highlights: [
@@ -116,9 +128,11 @@ export const varietiesES: Variety[] = [
     scientificName: 'Echinopsis macrogona',
     commonName: 'San Pedro Azul',
     description: 'El Trichocereus macrogonus, frecuentemente llamado San Pedro Azul por su distintiva tonalidad verde-azulada, es un cactus columnar originario de Bolivia y Perú. Se caracteriza por sus costillas pronunciadas y angulosas (generalmente 6-7), sus espinas cortas y su epidermis cerosa que le confiere ese brillo azulado tan apreciado. Es una especie de crecimiento moderado a rápido que puede alcanzar los 4-5 metros de altura. En el mercado viverístico europeo es muy apreciado por su color único, que aporta un contraste visual interesante cuando se combina con otras variedades de Trichocereus de tonos más verdes. Produce flores blancas de gran tamaño.',
-    image: 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=800&q=80',
+    image: '/images/vivero/vivero-010.jpg',
     imageAlt: 'Trichocereus Macrogonus - San Pedro Azul',
-    gallery: [],
+    gallery: [
+      '/images/vivero/vivero-011.jpg',
+    ],
     sizeRange: '15–35 cm',
     stock: 'available',
     highlights: [
@@ -143,9 +157,11 @@ export const varietiesES: Variety[] = [
     scientificName: 'Echinopsis spachiana',
     commonName: 'Antorcha Dorada',
     description: 'El Trichocereus spachianus, conocido como Antorcha Dorada, es un cactus columnar originario del norte de Argentina. Se distingue por sus espinas doradas que contrastan con su epidermis verde brillante, creando un efecto visual muy atractivo. Presenta costillas numerosas (10-15) y bien definidas, y una forma columnar limpia y recta. Es una de las especies más utilizadas como portainjerto profesional por su gran vigor y compatibilidad con otros cactus, lo que lo convierte en un producto estratégico para viveros que realizan injertos. Además de su uso como portainjerto, es valorado como planta ornamental por su porte elegante y sus espinas doradas. Produce flores blancas de tamaño mediano.',
-    image: 'https://images.unsplash.com/photo-1515150144380-bca9f1650ed9?w=800&q=80',
+    image: '/images/vivero/vivero-020.jpg',
     imageAlt: 'Trichocereus Spachianus - Antorcha Dorada',
-    gallery: [],
+    gallery: [
+      '/images/vivero/vivero-021.jpg',
+    ],
     sizeRange: '10–30 cm',
     stock: 'limited',
     highlights: [
@@ -170,9 +186,12 @@ export const varietiesES: Variety[] = [
     scientificName: 'Varias especies',
     commonName: 'Colección',
     description: 'Además de nuestras variedades principales de Trichocereus, cultivamos una selección de cactáceas columnares y globulares de interés para viveros y coleccionistas. Nuestra colección incluye híbridos selectos de Trichocereus, variedades raras y formas crestadas o monstruosas que son piezas únicas de alto valor para coleccionistas. Consulte disponibilidad y variedades concretas contactando con nuestro equipo comercial.',
-    image: 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=800&q=80',
+    image: '/images/varieties/Otros_cactus.png',
     imageAlt: 'Colección de cactus Tricholand',
-    gallery: [],
+    gallery: [
+      '/images/varieties/Otros_cactus_2.png',
+      '/images/products/producto_otros_pachanoi_crestado_1.png',
+    ],
     sizeRange: 'Variable',
     stock: 'available',
     highlights: [
