@@ -4,8 +4,8 @@ import { ShopGrid } from '@/components/shop/ShopGrid'
 import { CartButton } from '@/components/shop/CartButton'
 
 export const metadata: Metadata = {
-  title: 'Tienda B2B — Lotes al por mayor',
-  description: 'Tienda online B2B de Tricholand. Compra lotes de Trichocereus al por mayor con precios visibles. Solicita tu pedido y recibe presupuesto en 24h.',
+  title: 'B2B Winkel — Groothandelslotes',
+  description: 'Tricholand B2B online winkel. Koop Trichocereus-lotes in groothandel met zichtbare prijzen. Dien uw bestelling in en ontvang binnen 24u een offerte.',
 }
 
 export default function TiendaPage() {
@@ -18,14 +18,14 @@ export default function TiendaPage() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
               <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
-                Tienda B2B
+                B2B Winkel
               </h1>
               <p className="text-marron-claro mt-2">
-                Lotes al por mayor · Precios sin IVA · Pasaporte fito incluido
+                Groothandelslotes · Prijzen excl. btw · Fytosanitair paspoort inbegrepen
               </p>
             </div>
             <div className="bg-verde-claro text-verde px-4 py-2 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide">
-              Envío a toda la UE + UK
+              Levering in heel EU + VK
             </div>
           </div>
         </div>
@@ -33,9 +33,9 @@ export default function TiendaPage() {
         {/* Info bar */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           {[
-            { icon: '📦', text: 'Añade lotes a tu pedido y envíanos la solicitud' },
-            { icon: '📋', text: 'Revisamos tu pedido y te enviamos presupuesto final' },
-            { icon: '💳', text: 'Te enviamos link de pago seguro (Stripe / Redsys)' },
+            { icon: '📦', text: 'Voeg lotes toe aan uw bestelling en stuur ons het verzoek' },
+            { icon: '📋', text: 'Wij beoordelen uw bestelling en sturen u de definitieve offerte' },
+            { icon: '💳', text: 'Wij sturen u een veilige betaallink (Stripe / Redsys)' },
           ].map((step, i) => (
             <div key={i} className="bg-blanco border border-linea p-4 flex items-start gap-3">
               <span className="text-xl">{step.icon}</span>

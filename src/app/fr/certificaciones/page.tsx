@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Certificaciones fitosanitarias',
-  description: 'Certificaciones de Tricholand: pasaporte fitosanitario UE, documentación de exportación UK, cumplimiento normativo europeo para cactáceas.',
+  title: 'Certifications phytosanitaires',
+  description: 'Certifications Tricholand : passeport phytosanitaire UE, documentation export UK, conformité réglementaire européenne pour cactacées.',
 }
 
 export default function CertificacionesPage() {
@@ -14,10 +13,10 @@ export default function CertificacionesPage() {
       <div className="bg-verde text-blanco px-5 lg:px-8 py-12">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl lg:text-4xl font-bold uppercase mb-3">
-            Certificaciones fitosanitarias
+            Certifications phytosanitaires
           </h1>
           <p className="text-lg opacity-85 max-w-2xl mx-auto">
-            Todos nuestros envíos incluyen la documentación exigida por la normativa europea vigente
+            Tous nos envois incluent la documentation exigée par la réglementation européenne en vigueur
           </p>
         </div>
       </div>
@@ -27,39 +26,39 @@ export default function CertificacionesPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-12 mb-16">
           <div className="space-y-6 text-marron-claro leading-relaxed">
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-2xl font-bold uppercase text-negro">
-              Pasaporte fitosanitario <span className="text-naranja">UE</span>
+              Passeport phytosanitaire <span className="text-naranja">UE</span>
             </h2>
             <p>
-              El pasaporte fitosanitario es un documento oficial que certifica que las plantas cumplen
-              con los requisitos fitosanitarios de la Unión Europea. Es obligatorio para la
-              comercialización de plantas vivas dentro del territorio de la UE y garantiza que los
-              ejemplares están libres de plagas y enfermedades reguladas.
+              Le passeport phytosanitaire est un document officiel certifiant que les plantes respectent
+              les exigences phytosanitaires de l&apos;Union européenne. Il est obligatoire pour la
+              commercialisation de plantes vivantes sur le territoire de l&apos;UE et garantit que les
+              spécimens sont exempts de ravageurs et maladies réglementés.
             </p>
             <p>
-              En Tricholand, todos nuestros ejemplares incluyen pasaporte fitosanitario individual.
-              Nuestras instalaciones están registradas y sometidas a inspecciones periódicas por parte
-              de los servicios oficiales de sanidad vegetal de la Región de Murcia.
+              Chez Tricholand, tous nos spécimens incluent un passeport phytosanitaire individuel. Nos
+              installations sont enregistrées et soumises à des inspections périodiques par les
+              services officiels de santé des végétaux de la Région de Murcie.
             </p>
             <p>
-              El pasaporte fitosanitario incluye: código de operador autorizado, código de trazabilidad,
-              nombre científico de la especie, país de origen y, cuando procede, zona protegida de destino.
+              Le passeport phytosanitaire inclut : code d&apos;opérateur autorisé, code de traçabilité,
+              nom scientifique de l&apos;espèce, pays d&apos;origine et, le cas échéant, zone protégée de destination.
             </p>
 
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-2xl font-bold uppercase text-negro pt-4">
-              Exportación a <span className="text-naranja">Reino Unido</span>
+              Export vers le <span className="text-naranja">Royaume-Uni</span>
             </h2>
             <p>
-              Tras el Brexit, las exportaciones de plantas a Reino Unido requieren documentación
-              adicional. Tricholand gestiona toda la documentación necesaria para que tus envíos
-              lleguen sin incidencias:
+              Suite au Brexit, les exportations de plantes vers le Royaume-Uni nécessitent une documentation
+              supplémentaire. Tricholand gère toute la documentation nécessaire pour que vos envois
+              arrivent sans incident :
             </p>
             <ul className="space-y-2 ml-1">
               {[
-                'Certificado fitosanitario de exportación (emitido por las autoridades españolas)',
-                'Declaración aduanera de exportación',
-                'Pre-notificación al sistema IPAFFS británico',
-                'Etiquetado conforme a los requisitos de importación UK',
-                'Documentación de trazabilidad completa',
+                'Certificat phytosanitaire d\'exportation (délivré par les autorités espagnoles)',
+                'Déclaration douanière d\'exportation',
+                'Pré-notification au système IPAFFS britannique',
+                'Étiquetage conforme aux exigences d\'importation UK',
+                'Documentation de traçabilité complète',
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-3">
                   <span className="text-naranja font-bold mt-0.5">→</span>
@@ -74,23 +73,23 @@ export default function CertificacionesPage() {
             {[
               {
                 icon: '🇪🇺',
-                title: 'Pasaporte fitosanitario UE',
-                desc: 'Incluido en todos los envíos intracomunitarios. Cumplimiento del Reglamento (UE) 2016/2031.',
+                title: 'Passeport phytosanitaire UE',
+                desc: 'Inclus dans tous les envois intracommunautaires. Conformité au Règlement (UE) 2016/2031.',
               },
               {
                 icon: '🇬🇧',
-                title: 'Export docs UK',
-                desc: 'Certificado fitosanitario + documentación aduanera para importación al Reino Unido.',
+                title: 'Docs export UK',
+                desc: 'Certificat phytosanitaire + documentation douanière pour importation au Royaume-Uni.',
               },
               {
                 icon: '🔍',
-                title: 'Trazabilidad completa',
-                desc: 'Cada planta es trazable desde su origen en nuestro vivero hasta el punto de entrega.',
+                title: 'Traçabilité complète',
+                desc: 'Chaque plante est traçable de son origine dans notre pépinière au point de livraison.',
               },
               {
                 icon: '✓',
-                title: 'Inspecciones oficiales',
-                desc: 'Instalaciones registradas y sujetas a control periódico por sanidad vegetal.',
+                title: 'Inspections officielles',
+                desc: 'Installations enregistrées soumises à un contrôle phytosanitaire périodique.',
               },
             ].map((badge, i) => (
               <div key={i} className="bg-blanco border border-linea p-5">
@@ -107,25 +106,25 @@ export default function CertificacionesPage() {
         {/* FAQ */}
         <div className="mb-16">
           <h2 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mb-6 pb-3 border-b-2 border-negro">
-            Preguntas frecuentes
+            Questions fréquentes
           </h2>
           <div className="space-y-6">
             {[
               {
-                q: '¿Puedo comprar plantas sin pasaporte fitosanitario?',
-                a: 'No. La normativa europea exige que todas las plantas vivas comercializadas dentro de la UE incluyan pasaporte fitosanitario. Es una garantía sanitaria para el comprador y un requisito legal para el vendedor.',
+                q: 'Puis-je acheter des plantes sans passeport phytosanitaire ?',
+                a: 'Non. La réglementation européenne exige que toutes les plantes vivantes commercialisées dans l\'UE incluent un passeport phytosanitaire. C\'est une garantie sanitaire pour l\'acheteur et une exigence légale pour le vendeur.',
               },
               {
-                q: '¿El pasaporte fitosanitario tiene coste adicional?',
-                a: 'No. El pasaporte fitosanitario está incluido en el precio de todas nuestras plantas. No hay recargos ni costes ocultos.',
+                q: 'Le passeport phytosanitaire a-t-il un coût supplémentaire ?',
+                a: 'Non. Le passeport phytosanitaire est inclus dans le prix de toutes nos plantes. Pas de suppléments ni de coûts cachés.',
               },
               {
-                q: '¿Hacéis envíos fuera de la Unión Europea (además de UK)?',
-                a: 'Actualmente realizamos envíos a toda la UE y Reino Unido. Para otros destinos, consúltanos y estudiaremos la viabilidad y documentación necesaria caso por caso.',
+                q: 'Expédiez-vous en dehors de l\'Union européenne (hors UK) ?',
+                a: 'Nous expédions actuellement dans toute l\'UE et au Royaume-Uni. Pour d\'autres destinations, contactez-nous et nous évaluerons la faisabilité et la documentation nécessaire au cas par cas.',
               },
               {
-                q: '¿Qué ocurre si mi envío es retenido en aduanas?',
-                a: 'Nuestros envíos incluyen toda la documentación exigida, lo que minimiza el riesgo de retenciones. En el improbable caso de que ocurra, nuestro equipo te asistirá en la resolución.',
+                q: 'Que se passe-t-il si mon envoi est retenu en douane ?',
+                a: 'Nos envois incluent toute la documentation exigée, ce qui minimise le risque de rétention. En cas improbable, notre équipe vous assistera pour la résolution.',
               },
             ].map((faq, i) => (
               <div key={i}>
@@ -141,16 +140,16 @@ export default function CertificacionesPage() {
         {/* CTA */}
         <div className="bg-negro text-crudo p-8 lg:p-12 text-center">
           <h2 className="font-[family-name:var(--font-archivo-narrow)] text-2xl font-bold uppercase mb-3">
-            ¿Necesitas más información?
+            Besoin de plus d&apos;informations ?
           </h2>
           <p className="opacity-70 mb-6">
-            Si tienes dudas sobre documentación, requisitos de importación o certificaciones, contacta con nuestro equipo.
+            Si vous avez des questions sur la documentation, les exigences d&apos;importation ou les certifications, contactez notre équipe.
           </p>
           <Link
             href="/fr/contacto"
             className="inline-flex bg-naranja text-blanco px-8 py-3 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-verde transition-colors"
           >
-            Contactar →
+            Nous contacter →
           </Link>
         </div>
       </div>

@@ -4,14 +4,14 @@ import Link from 'next/link'
 import { varietiesES } from '@/content/varieties/es/data'
 
 export const metadata: Metadata = {
-  title: 'Variedades de Trichocereus',
-  description: 'Descubre todas las variedades de Trichocereus que cultivamos: Pachanoi, Peruvianus, Bridgesii, Terscheckii, Macrogonus, Spachianus y más.',
+  title: 'Trichocereus-Sorten',
+  description: 'Entdecken Sie alle Trichocereus-Sorten, die wir kultivieren: Pachanoi, Peruvianus, Bridgesii, Terscheckii, Macrogonus, Spachianus und mehr.',
 }
 
 const stockLabels = {
-  available: '● Disponible',
-  limited: '● Limitado',
-  out_of_stock: '● Agotado',
+  available: '● Verfügbar',
+  limited: '● Begrenzt',
+  out_of_stock: '● Ausverkauft',
 }
 
 const stockColors = {
@@ -26,10 +26,10 @@ export default function VariedadesPage() {
       {/* Header */}
       <div className="mb-8 pb-4 border-b-2 border-negro">
         <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
-          Variedades
+          Sorten
         </h1>
         <p className="text-marron-claro mt-2">
-          Todas las variedades de Trichocereus y cactáceas que producimos en nuestro vivero de Murcia
+          Alle Trichocereus- und Kakteensorten, die wir in unserer Gärtnerei in Murcia produzieren
         </p>
       </div>
 
@@ -72,7 +72,7 @@ export default function VariedadesPage() {
               </span>
               <span className="text-marron-claro">{v.sizeRange}</span>
               <span className="font-[family-name:var(--font-archivo-narrow)] text-[0.72rem] text-marron font-bold uppercase tracking-wide group-hover:text-naranja transition-colors">
-                Ficha →
+                Datenblatt →
               </span>
             </div>
           </Link>

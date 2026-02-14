@@ -4,7 +4,7 @@ import { BlogGrid } from '@/components/blog/BlogGrid'
 
 export const metadata: Metadata = {
   title: 'Blog',
-  description: 'Blog de Tricholand: guías técnicas sobre cultivo, cuidado, injertos y propagación de Trichocereus. Recursos para profesionales y aficionados.',
+  description: 'Tricholand Blog: technische Leitfäden zu Anbau, Pflege, Veredelung und Vermehrung von Trichocereus. Ressourcen für Fachleute und Enthusiasten.',
 }
 
 export default async function BlogPage() {
@@ -18,7 +18,7 @@ export default async function BlogPage() {
             Blog
           </h1>
           <p className="text-marron-claro mt-2 max-w-lg">
-            Guías técnicas, consejos de cultivo y novedades sobre Trichocereus para profesionales del sector
+            Technische Leitfäden, Anbautipps und Neuigkeiten über Trichocereus für Fachleute der Branche
           </p>
         </div>
 

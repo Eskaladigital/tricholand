@@ -32,6 +32,8 @@ export async function updateSession(request: NextRequest) {
   const isProtectedAdmin = [
     '/administrator/dashboard',
     '/administrator/products',
+    '/administrator/blog',
+    '/administrator/media',
     '/administrator/orders',
     '/administrator/customers',
     '/administrator/contacts',

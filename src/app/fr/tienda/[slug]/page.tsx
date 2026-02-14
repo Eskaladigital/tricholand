@@ -14,9 +14,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const product = getProductBySlug(slug)
-  if (!product) return { title: 'Producto no encontrado' }
+  if (!product) return { title: 'Produit non trouvé' }
   return {
-    title: `${product.name} — Tienda B2B`,
+    title: `${product.name} — Boutique B2B`,
     description: product.description.slice(0, 160),
   }
 }
@@ -33,9 +33,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <article className="px-5 lg:px-8 py-16 max-w-6xl mx-auto">
         {/* Breadcrumb */}
         <nav className="text-sm text-marron-claro mb-6">
-          <Link href="/fr" className="hover:text-naranja transition-colors">Inicio</Link>
+          <Link href="/fr" className="hover:text-naranja transition-colors">Accueil</Link>
           <span className="mx-2">›</span>
-          <Link href="/fr/tienda" className="hover:text-naranja transition-colors">Tienda B2B</Link>
+          <Link href="/fr/tienda" className="hover:text-naranja transition-colors">Boutique B2B</Link>
           <span className="mx-2">›</span>
           <span className="text-negro font-medium">{product.name}</span>
         </nav>
@@ -56,7 +56,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </span>
             {product.featured && (
               <span className="absolute top-4 right-4 bg-naranja text-blanco px-3 py-1.5 font-[family-name:var(--font-archivo-narrow)] text-[0.65rem] font-bold uppercase tracking-wide">
-                Destacado
+                En vedette
               </span>
             )}
           </div>
@@ -72,7 +72,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 href={`/fr/variedades/${product.variety_slug}`}
                 className="text-sm text-naranja font-semibold hover:underline"
               >
-                Ver ficha de variedad →
+                Voir la fiche variété →
               </Link>
             )}
 
@@ -84,13 +84,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 </span>
                 <span className="text-sm text-marron-claro">/ {product.unit_label}</span>
               </div>
-              <p className="text-xs text-marron-claro mt-1">Precio sin IVA · Pasaporte fitosanitario incluido</p>
+              <p className="text-xs text-marron-claro mt-1">Prix HT · Passeport phytosanitaire inclus</p>
 
               {product.stock_qty !== null && (
                 <p className={`text-sm mt-2 font-semibold ${isLowStock ? 'text-terracota' : 'text-verde'}`}>
                   {isLowStock
-                    ? `⚡ Solo quedan ${product.stock_qty} lotes disponibles`
-                    : `● ${product.stock_qty} lotes disponibles`}
+                    ? `⚡ Plus que ${product.stock_qty} lots disponibles`
+                    : `● ${product.stock_qty} lots disponibles`}
                 </p>
               )}
             </div>
@@ -101,7 +101,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {/* Specs */}
             <div className="mt-8">
               <h2 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide text-marron-claro mb-3">
-                Características
+                Caractéristiques
               </h2>
               <div className="grid grid-cols-2 gap-x-6 gap-y-2">
                 {product.specs.map((spec, i) => (
@@ -118,7 +118,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         {/* Description */}
         <div className="mt-12 max-w-3xl">
           <h2 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mb-4 pb-2 border-b-2 border-negro">
-            Descripción del producto
+            Description du produit
           </h2>
           <p className="text-marron-claro leading-relaxed">{product.description}</p>
         </div>

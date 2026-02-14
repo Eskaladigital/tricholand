@@ -15,7 +15,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const post = await getPostBySlug(slug, LOCALE)
-  if (!post) return { title: 'Bericht niet gevonden' }
+  if (!post) return { title: 'Post niet gevonden' }
 
   return {
     title: post.title,
@@ -64,7 +64,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         {/* Meta card */}
         <div className="bg-blanco border border-linea p-6 lg:p-8 mb-8">
           <nav className="text-sm text-marron-claro mb-4">
-            <Link href="/nl" className="hover:text-naranja transition-colors">Inicio</Link>
+            <Link href="/nl" className="hover:text-naranja transition-colors">Start</Link>
             <span className="mx-2">›</span>
             <Link href="/nl/blog" className="hover:text-naranja transition-colors">Blog</Link>
           </nav>
@@ -74,9 +74,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </h1>
 
           <div className="flex items-center gap-4 text-sm text-marron-claro">
-            <time>{formatDate(post.date, 'es')}</time>
+            <time>{formatDate(post.date, 'nl')}</time>
             <span>·</span>
-            <span>{post.readingTime} min de lectura</span>
+            <span>{post.readingTime} min leestijd</span>
           </div>
 
           <div className="flex flex-wrap gap-1.5 mt-3">
@@ -138,16 +138,16 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         {/* CTA */}
         <div className="bg-negro text-crudo p-6 lg:p-8 mb-12 text-center">
           <h3 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mb-2">
-            ¿Necesitas Trichocereus para tu negocio?
+            Heeft u Trichocereus nodig voor uw bedrijf?
           </h3>
           <p className="text-sm opacity-70 mb-4">
-            Presupuesto personalizado en menos de 24h laborables
+            Offerte op maat in minder dan 24 werkuren
           </p>
           <Link
             href="/nl/contacto"
             className="inline-flex bg-naranja text-blanco px-6 py-2.5 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-verde transition-colors"
           >
-            Solicitar presupuesto →
+            Offerte aanvragen →
           </Link>
         </div>
 
@@ -155,7 +155,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         {related.length > 0 && (
           <div>
             <h3 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold uppercase mb-4 pb-2 border-b-2 border-negro">
-              Posts relacionados
+              Gerelateerde berichten
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {related.map((r) => (
@@ -167,7 +167,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   <h4 className="font-[family-name:var(--font-archivo-narrow)] font-bold group-hover:text-naranja transition-colors">
                     {r.title}
                   </h4>
-                  <p className="text-xs text-marron-claro mt-1">{formatDate(r.date, 'es')} · {r.readingTime} min</p>
+                  <p className="text-xs text-marron-claro mt-1">{formatDate(r.date, 'nl')} · {r.readingTime} min</p>
                 </Link>
               ))}
             </div>
@@ -180,7 +180,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             href="/nl/blog"
             className="font-[family-name:var(--font-archivo-narrow)] text-sm text-naranja font-bold uppercase tracking-wide hover:underline"
           >
-            ← Volver al blog
+            ← Terug naar blog
           </Link>
         </div>
       </div>

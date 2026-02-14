@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Política de privacidad',
-  description: 'Política de privacidad y protección de datos personales de Tricholand.',
+  title: 'Politique de confidentialité',
+  description: 'Politique de confidentialité et protection des données personnelles de Tricholand.',
   robots: { index: false, follow: false },
 }
 
@@ -10,68 +10,68 @@ export default function PoliticaPrivacidadPage() {
   return (
     <section className="px-5 lg:px-8 py-16 max-w-3xl mx-auto">
       <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase mb-6">
-        Política de privacidad
+        Politique de confidentialité
       </h1>
 
       <div className="space-y-6 text-sm text-marron-claro leading-relaxed">
         <p>
-          <strong className="text-negro">Última actualización:</strong> Enero 2025
+          <strong className="text-negro">Dernière mise à jour :</strong> Janvier 2025
         </p>
 
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
-          1. Responsable del tratamiento
+          1. Responsable du traitement
         </h2>
         <p>
-          Tricholand · Murcia, España · info@tricholand.com
+          Tricholand · Murcie, Espagne · info@tricholand.com
         </p>
 
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
-          2. Datos que recopilamos
+          2. Données que nous collectons
         </h2>
         <p>
-          A través del formulario de contacto recogemos: nombre, email, teléfono (opcional), empresa (opcional),
-          país, ciudad (opcional) y el contenido de tu mensaje. También recogemos el tipo de consulta y cómo
-          nos has conocido para mejorar nuestro servicio.
+          Via le formulaire de contact, nous collectons : nom, e-mail, téléphone (optionnel), entreprise (optionnel),
+          pays, ville (optionnelle) et le contenu de votre message. Nous collectons également le type de demande et
+          comment vous nous avez connu pour améliorer notre service.
         </p>
 
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
-          3. Finalidad del tratamiento
+          3. Finalité du traitement
         </h2>
         <p>
-          Los datos se tratan con la finalidad de: gestionar las consultas recibidas a través de la web,
-          enviar presupuestos solicitados y dar respuesta a las peticiones de información.
+          Les données sont traitées pour : gérer les demandes reçues via le site, envoyer les devis demandés et
+          répondre aux demandes d&apos;information.
         </p>
 
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
-          4. Base legal
+          4. Base légale
         </h2>
         <p>
-          El tratamiento se basa en el consentimiento explícito del interesado, otorgado al aceptar
-          esta política y enviar el formulario de contacto.
+          Le traitement est basé sur le consentement explicite de la personne concernée, accordé en acceptant
+          cette politique et en soumettant le formulaire de contact.
         </p>
 
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
-          5. Conservación de datos
+          5. Conservation des données
         </h2>
         <p>
-          Los datos se conservarán mientras sea necesario para dar respuesta a la consulta y, en su caso,
-          durante el tiempo necesario para cumplir con las obligaciones legales aplicables.
+          Les données seront conservées le temps nécessaire pour répondre à la demande et, le cas échéant,
+          pendant le délai nécessaire pour respecter les obligations légales applicables.
         </p>
 
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
-          6. Derechos del interesado
+          6. Droits de la personne concernée
         </h2>
         <p>
-          Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación del
-          tratamiento y portabilidad de datos dirigiéndote a info@tricholand.com.
+          Vous pouvez exercer vos droits d&apos;accès, de rectification, d&apos;effacement, d&apos;opposition, de limitation du
+          traitement et de portabilité des données en contactant info@tricholand.com.
         </p>
 
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
           7. Cookies
         </h2>
         <p>
-          Este sitio web no utiliza cookies de terceros ni cookies de seguimiento. Solo se utilizan
-          cookies técnicas estrictamente necesarias para el funcionamiento de la web.
+          Ce site n&apos;utilise pas de cookies tiers ni de cookies de suivi. Seuls des cookies techniques strictement
+          nécessaires au fonctionnement du site sont utilisés.
         </p>
       </div>
     </section>

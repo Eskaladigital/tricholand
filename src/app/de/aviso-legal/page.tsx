@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Aviso legal',
-  description: 'Aviso legal y condiciones de uso del sitio web de Tricholand.',
+  title: 'Impressum',
+  description: 'Tricholand Impressum und Nutzungsbedingungen der Website.',
   robots: { index: false, follow: false },
 }
 
@@ -10,50 +10,49 @@ export default function AvisoLegalPage() {
   return (
     <section className="px-5 lg:px-8 py-16 max-w-3xl mx-auto">
       <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase mb-6">
-        Aviso legal
+        Impressum
       </h1>
 
       <div className="space-y-6 text-sm text-marron-claro leading-relaxed">
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
-          1. Datos identificativos
+          1. Identifikationsdaten
         </h2>
         <p>
-          Titular: Tricholand · Ubicación: Murcia, España · Email: info@tricholand.com
+          Inhaber: Tricholand · Standort: Murcia, Spanien · E-Mail: info@tricholand.com
         </p>
 
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
-          2. Objeto
+          2. Zweck
         </h2>
         <p>
-          El presente sitio web tiene como objeto proporcionar información sobre los productos y servicios
-          de Tricholand, vivero productor especializado en Trichocereus y cactáceas columnares para venta
-          mayorista B2B.
+          Diese Website dient der Bereitstellung von Informationen über Tricholand-Produkte und -Dienstleistungen, eine
+          Produzentengärtnerei, die auf Trichocereus und säulenförmige Kakteen für den B2B-Großhandel spezialisiert ist.
         </p>
 
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
-          3. Propiedad intelectual
+          3. Geistiges Eigentum
         </h2>
         <p>
-          Todos los contenidos de este sitio web (textos, fotografías, diseño gráfico, código fuente, logos,
-          marcas) son propiedad de Tricholand o de sus legítimos propietarios y están protegidos por las
-          leyes de propiedad intelectual e industrial.
+          Alle Inhalte dieser Website (Texte, Fotografien, Grafikdesign, Quellcode, Logos,
+          Marken) sind Eigentum von Tricholand oder seiner rechtmäßigen Inhaber und durch
+          Gesetze zum Schutz des geistigen und gewerblichen Eigentums geschützt.
         </p>
 
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
-          4. Condiciones de uso
+          4. Nutzungsbedingungen
         </h2>
         <p>
-          La información de este sitio web es de carácter orientativo. Los precios, disponibilidad y
-          condiciones de venta se proporcionan bajo solicitud y pueden variar sin previo aviso. Tricholand
-          se reserva el derecho de modificar el contenido del sitio web sin previo aviso.
+          Die Informationen auf dieser Website sind nur zur Orientierung. Preise, Verfügbarkeit und
+          Verkaufsbedingungen werden auf Anfrage bereitgestellt und können ohne vorherige Ankündigung variieren.
+          Tricholand behält sich das Recht vor, den Inhalt der Website ohne vorherige Ankündigung zu ändern.
         </p>
 
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
-          5. Ley aplicable
+          5. Anwendbares Recht
         </h2>
         <p>
-          Este sitio web se rige por la legislación española. Para cualquier controversia derivada del
-          uso de este sitio web, las partes se someten a los juzgados y tribunales de Murcia, España.
+          Diese Website unterliegt der spanischen Gesetzgebung. Für Streitigkeiten aus der Nutzung dieser
+          Website unterwerfen sich die Parteien den Gerichten von Murcia, Spanien.
         </p>
       </div>
     </section>

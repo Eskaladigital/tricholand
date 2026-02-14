@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { es } from '@/lib/i18n/es'
+import { de } from '@/lib/i18n/de'
 import { StatsBar } from '@/components/home/StatsBar'
 
 export const metadata: Metadata = {
-  title: 'Sobre nosotros',
-  description: 'Conoce Tricholand: vivero productor especializado en Trichocereus y cactáceas columnares en Murcia, España. Más de 50 variedades, 2.500 m² de cultivo.',
+  title: 'Über uns',
+  description: 'Lernen Sie Tricholand kennen: Produzentengärtnerei spezialisiert auf Trichocereus und säulenförmige Kakteen in Murcia, Spanien. Über 50 Sorten, 2.500 m² Anbaufläche.',
 }
 
 export default function SobreNosotrosPage() {
@@ -15,16 +15,16 @@ export default function SobreNosotrosPage() {
       <section className="px-5 lg:px-8 py-16">
         <div className="mb-8 pb-4 border-b-2 border-negro">
           <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
-            Sobre nosotros
+            Über uns
           </h1>
-          <p className="text-marron-claro mt-2">Vivero productor en Murcia, España</p>
+          <p className="text-marron-claro mt-2">Produzentengärtnerei in Murcia, Spanien</p>
         </div>
 
         {/* Intro */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           <div>
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-2xl font-bold uppercase mb-4">
-              Somos <span className="text-naranja">productores</span>
+              Wir sind <span className="text-naranja">Produzenten</span>
             </h2>
             <div className="space-y-4 text-marron-claro leading-relaxed">
               <p>
@@ -120,7 +120,7 @@ export default function SobreNosotrosPage() {
         </div>
       </section>
 
-      <StatsBar dict={es} />
+      <StatsBar dict={de} />
     </>
   )
 }

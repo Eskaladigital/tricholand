@@ -3,8 +3,8 @@ import { ContactFormWizard } from '@/components/contact/ContactFormWizard'
 import { nl } from '@/lib/i18n/nl'
 
 export const metadata: Metadata = {
-  title: 'Contacto',
-  description: 'Contacta con Tricholand para solicitar presupuesto de Trichocereus al por mayor. Respuesta en menos de 24h laborables.',
+  title: 'Contact',
+  description: 'Neem contact op met Tricholand voor een groothandelsofferte voor Trichocereus. Antwoord binnen 24 werkuren.',
 }
 
 export default function ContactoPage() {
@@ -13,10 +13,10 @@ export default function ContactoPage() {
       <div className="max-w-4xl mx-auto">
         <div className="mb-8 pb-4 border-b-2 border-negro">
           <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
-            Contacto
+            Contact
           </h1>
           <p className="text-marron-claro mt-2">
-            Solicita tu presupuesto o haznos cualquier consulta. Respondemos en menos de 24h laborables.
+            Vraag uw offerte aan of stel ons een vraag. We reageren binnen 24 werkuren.
           </p>
         </div>
 
@@ -29,7 +29,7 @@ export default function ContactoPage() {
             {/* Direct contact */}
             <div className="bg-negro text-crudo p-6">
               <h3 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide text-naranja mb-4">
-                Contacto directo
+                Direct contact
               </h3>
               <a
                 href="mailto:info@tricholand.com"
@@ -37,7 +37,7 @@ export default function ContactoPage() {
               >
                 info@tricholand.com
               </a>
-              <p className="text-sm opacity-60">Murcia, España</p>
+              <p className="text-sm opacity-60">Murcia, Spanje</p>
 
               <div className="flex gap-4 mt-4 pt-4 border-t border-white/10">
                 <a
@@ -62,27 +62,27 @@ export default function ContactoPage() {
             {/* FAQ mini */}
             <div className="bg-blanco border border-linea p-6">
               <h3 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide text-naranja mb-4">
-                Preguntas rápidas
+                Snelle vragen
               </h3>
               <div className="space-y-4 text-sm">
                 <div>
-                  <h4 className="font-bold mb-0.5">¿Cuál es el pedido mínimo?</h4>
-                  <p className="text-marron-claro">100 unidades por pedido.</p>
+                  <h4 className="font-bold mb-0.5">Wat is de minimale bestelling?</h4>
+                  <p className="text-marron-claro">100 stuks per bestelling.</p>
                 </div>
                 <div>
-                  <h4 className="font-bold mb-0.5">¿Hacéis envíos a particulares?</h4>
+                  <h4 className="font-bold mb-0.5">Leveren jullie aan particulieren?</h4>
                   <p className="text-marron-claro">
-                    Somos un vivero mayorista B2B. Para compras pequeñas, podemos orientarte a distribuidores en tu zona.
+                    Wij zijn een B2B-groothandelskwekerij. Voor kleine aankopen kunnen we u doorverwijzen naar distributeurs in uw regio.
                   </p>
                 </div>
                 <div>
-                  <h4 className="font-bold mb-0.5">¿Cuánto tardáis en responder?</h4>
-                  <p className="text-marron-claro">Menos de 24 horas laborables.</p>
+                  <h4 className="font-bold mb-0.5">Hoe snel reageren jullie?</h4>
+                  <p className="text-marron-claro">Binnen 24 werkuren.</p>
                 </div>
                 <div>
-                  <h4 className="font-bold mb-0.5">¿Enviáis a toda Europa?</h4>
+                  <h4 className="font-bold mb-0.5">Leveren jullie in heel Europa?</h4>
                   <p className="text-marron-claro">
-                    Sí. UE y Reino Unido con toda la documentación fitosanitaria incluida.
+                    Ja. EU en VK met volledige fytosanitaire documentatie inbegrepen.
                   </p>
                 </div>
               </div>

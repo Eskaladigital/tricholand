@@ -7,6 +7,7 @@
  *   node scripts/translate-blog-posts.mjs --locale en  (solo inglés)
  *   node scripts/translate-blog-posts.mjs --dry-run
  *   node scripts/translate-blog-posts.mjs --update-slugs (actualizar slugs de traducciones existentes)
+ *   node scripts/translate-blog-posts.mjs --fix-slug   (corregir slug EN del post enfermedades fúngicas)
  *
  * Requiere: OPENAI_API_KEY, NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
  */
@@ -37,8 +38,9 @@ if (existsSync(envPath)) {
 }
 
 const { OPENAI_API_KEY, NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env
+const fixSlugOnly = process.argv.includes('--fix-slug')
 
-if (!OPENAI_API_KEY) {
+if (!fixSlugOnly && !OPENAI_API_KEY) {
   console.error('❌ OPENAI_API_KEY no configurado en .env.local')
   process.exit(1)
 }
@@ -61,6 +63,13 @@ const TAGS_BY_LOCALE = {
   de: ['trichocereus', 'anbau', 'leitfaden'],
   it: ['trichocereus', 'coltivazione', 'guida'],
   pt: ['trichocereus', 'cultivo', 'guia'],
+}
+
+/** Slugs fijos por source_slug y locale (para URLs canónicas/SEO) */
+const SLUG_OVERRIDES = {
+  'guia-de-enfermedades-fungicas-en-cactus-como-prevenir-y-tratarlas': {
+    en: 'a-complete-guide-to-fungal-diseases-in-cacti-how-to-prevent-and-treat-them',
+  },
 }
 
 /** Genera slug URL-friendly desde el título traducido */
@@ -145,6 +154,24 @@ RULES:
 }
 
 async function main() {
+  const fixSlug = process.argv.includes('--fix-slug')
+  if (fixSlug) {
+    const sourceSlug = 'guia-de-enfermedades-fungicas-en-cactus-como-prevenir-y-tratarlas'
+    const newSlug = 'a-complete-guide-to-fungal-diseases-in-cacti-how-to-prevent-and-treat-them'
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .update({ slug: newSlug })
+      .eq('source_slug', sourceSlug)
+      .eq('locale', 'en')
+      .select()
+    if (error) {
+      console.error('❌ Error:', error.message)
+      process.exit(1)
+    }
+    console.log('✅ Slug EN actualizado:', data?.[0] ? `${data[0].slug}` : '(sin filas)')
+    return
+  }
+
   const dryRun = process.argv.includes('--dry-run')
   const updateSlugs = process.argv.includes('--update-slugs')
   const localeArg = process.argv.includes('--locale') ? process.argv[process.argv.indexOf('--locale') + 1] : null
@@ -197,11 +224,12 @@ async function main() {
       try {
         if (updateSlugs) {
           const existing = (existingRows || []).find((r) => r.source_slug === post.slug)
-          if (!existing || existing.slug === slugify(existing.title)) {
+          if (!existing) continue
+          const slugTr = SLUG_OVERRIDES[post.slug]?.[locale] ?? slugify(existing.title)
+          if (existing.slug === slugTr) {
             console.log(`   ⏭️ ${post.slug} — slug ya correcto`)
             continue
           }
-          const slugTr = slugify(existing.title)
           console.log(`   🔄 ${post.slug} → ${slugTr}`)
           const { error } = await supabase
             .from('blog_posts')
@@ -219,7 +247,7 @@ async function main() {
             translateText(post.content, 'content', locale),
           ])
 
-          const slugTr = slugify(titleTr)
+          const slugTr = SLUG_OVERRIDES[post.slug]?.[locale] ?? slugify(titleTr)
 
           const row = {
             source_slug: post.slug,

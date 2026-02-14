@@ -3,8 +3,8 @@ import { OrderForm } from '@/components/shop/OrderForm'
 import { CartButton } from '@/components/shop/CartButton'
 
 export const metadata: Metadata = {
-  title: 'Solicitud de pedido',
-  description: 'Revisa y envía tu solicitud de pedido B2B. Recibirás presupuesto final en menos de 24h.',
+  title: 'Bestelverzoek',
+  description: 'Bekijk en dien uw B2B-bestelverzoek in. U ontvangt binnen 24u de definitieve offerte.',
 }
 
 export default function PedidoPage() {
@@ -13,10 +13,10 @@ export default function PedidoPage() {
       <section className="px-5 lg:px-8 py-16 max-w-5xl mx-auto">
         <div className="mb-8 pb-4 border-b-2 border-negro">
           <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
-            Solicitud de pedido
+            Bestelverzoek
           </h1>
           <p className="text-marron-claro mt-2">
-            Revisa tu pedido, completa tus datos y envíanos la solicitud. Te enviaremos presupuesto final en menos de 24h.
+            Bekijk uw bestelling, vul uw gegevens in en stuur ons het verzoek. Wij sturen u binnen 24u de definitieve offerte.
           </p>
         </div>
 
