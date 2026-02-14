@@ -181,6 +181,43 @@ CREATE INDEX idx_contacts_created ON contacts(created_at DESC);
 
 
 -- =====================
+-- BLOG POSTS
+-- =====================
+CREATE TABLE blog_posts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+
+  slug TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT,
+  date DATE NOT NULL,
+  image TEXT,
+  image_alt TEXT,
+  tags TEXT[] DEFAULT '{}',
+  reading_time INTEGER DEFAULT 0,
+  content TEXT NOT NULL,
+
+  locale TEXT DEFAULT 'es',
+  status TEXT DEFAULT 'published' CHECK (status IN ('draft', 'published', 'archived')),
+
+  meta_title TEXT,
+  meta_description TEXT,
+
+  UNIQUE(slug, locale)
+);
+
+CREATE INDEX idx_blog_posts_slug ON blog_posts(slug);
+CREATE INDEX idx_blog_posts_locale ON blog_posts(locale);
+CREATE INDEX idx_blog_posts_status ON blog_posts(status);
+CREATE INDEX idx_blog_posts_date ON blog_posts(date DESC);
+
+CREATE TRIGGER blog_posts_updated_at
+  BEFORE UPDATE ON blog_posts
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
+
+-- =====================
 -- SETTINGS (key-value)
 -- =====================
 CREATE TABLE settings (
@@ -233,6 +270,15 @@ CREATE POLICY "Admin manages contacts" ON contacts FOR ALL USING (
 CREATE POLICY "Public can create orders" ON orders FOR INSERT WITH CHECK (true);
 CREATE POLICY "Public can create order items" ON order_items FOR INSERT WITH CHECK (true);
 CREATE POLICY "Public can create contacts" ON contacts FOR INSERT WITH CHECK (true);
+
+-- Blog posts: public read (published), admin write
+ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Blog posts visible when published" ON blog_posts FOR SELECT USING (
+  status = 'published' OR auth.role() = 'authenticated'
+);
+CREATE POLICY "Admin manages blog posts" ON blog_posts FOR ALL USING (
+  auth.role() = 'authenticated'
+);
 
 -- Settings: public read (company name, min order, etc.), admin write
 ALTER TABLE settings ENABLE ROW LEVEL SECURITY;

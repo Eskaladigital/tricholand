@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getPostsMeta } from '@/content/blog/es/data'
+import { getPostsMeta } from '@/lib/blog'
 import { formatDate } from '@/lib/utils'
 
 export const metadata: Metadata = {
@@ -9,8 +9,8 @@ export const metadata: Metadata = {
   description: 'Blog de Tricholand: guías técnicas sobre cultivo, cuidado, injertos y propagación de Trichocereus. Recursos para profesionales y aficionados.',
 }
 
-export default function BlogPage() {
-  const posts = getPostsMeta()
+export default async function BlogPage() {
+  const posts = await getPostsMeta('en')
 
   return (
     <section className="px-5 lg:px-8 py-16">
@@ -28,7 +28,7 @@ export default function BlogPage() {
         {posts.map((post) => (
           <Link
             key={post.slug}
-            href={`/es/blog/${post.slug}`}
+            href={`/en/blog/${post.slug}`}
             className="group bg-blanco border border-linea hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
           >
             <div className="relative overflow-hidden">
@@ -44,7 +44,7 @@ export default function BlogPage() {
             <div className="px-5 py-4">
               <div className="flex items-center gap-3 mb-2">
                 <time className="font-[family-name:var(--font-archivo-narrow)] text-xs text-marron-claro">
-                  {formatDate(post.date, 'es')}
+                  {formatDate(post.date, 'en')}
                 </time>
                 <span className="text-xs text-marron-claro">·</span>
                 <span className="font-[family-name:var(--font-archivo-narrow)] text-xs text-marron-claro">

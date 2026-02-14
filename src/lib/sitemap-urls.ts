@@ -1,5 +1,5 @@
 import { getAllVarietySlugs } from '@/content/varieties/es/data'
-import { getAllPostSlugs } from '@/content/blog/es/data'
+import { getAllPostSlugs } from '@/lib/blog'
 import { getActiveProducts } from '@/content/shop/products-demo'
 
 const BASE_URL = 'https://www.tricholand.com'
@@ -20,14 +20,17 @@ const STATIC_PATHS = [
   { path: '/aviso-legal', label: 'Aviso legal' },
 ]
 
-export function getSitemapUrls(): { url: string; label?: string }[] {
+export async function getSitemapUrls(): Promise<{ url: string; label?: string }[]> {
   const varietySlugs = getAllVarietySlugs()
-  const blogSlugs = getAllPostSlugs()
+  const blogSlugsByLocale = Object.fromEntries(
+    await Promise.all(LOCALES.map(async (l) => [l, await getAllPostSlugs(l)]))
+  )
   const products = getActiveProducts()
 
   const urls: { url: string; label?: string }[] = []
 
   for (const locale of LOCALES) {
+    const blogSlugs = blogSlugsByLocale[locale] || []
     for (const { path, label } of STATIC_PATHS) {
       urls.push({
         url: `${BASE_URL}/${locale}${path}`,
@@ -48,15 +51,18 @@ export function getSitemapUrls(): { url: string; label?: string }[] {
   return urls
 }
 
-export function getSitemapEntries() {
+export async function getSitemapEntries() {
   const now = new Date().toISOString()
   const varietySlugs = getAllVarietySlugs()
-  const blogSlugs = getAllPostSlugs()
+  const blogSlugsByLocale = Object.fromEntries(
+    await Promise.all(LOCALES.map(async (l) => [l, await getAllPostSlugs(l)]))
+  )
   const products = getActiveProducts()
 
   const entries: { url: string; lastModified: string; changeFrequency: 'weekly' | 'monthly'; priority: number }[] = []
 
   for (const locale of LOCALES) {
+    const blogSlugs = blogSlugsByLocale[locale] || []
     for (const { path } of STATIC_PATHS) {
       entries.push({
         url: `${BASE_URL}/${locale}${path}`,

@@ -1,26 +1,42 @@
 'use client'
 
-import { useState, use } from 'react'
+import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { notFound } from 'next/navigation'
 import { ProductForm } from '@/components/admin/ProductForm'
-import { getProductById } from '@/content/shop/products-demo'
+import { getProductById, updateProduct } from '@/lib/actions/products'
+import type { Product } from '@/types/shop'
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
-  const product = getProductById(id)
   const router = useRouter()
+  const [product, setProduct] = useState<Product | null>(null)
+  const [loading, setLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
+
+  useEffect(() => {
+    getProductById(id).then((p) => {
+      setProduct(p)
+      setLoading(false)
+    })
+  }, [id])
+
+  if (loading) {
+    return (
+      <div className="py-8 text-marron-claro">Cargando...</div>
+    )
+  }
 
   if (!product) notFound()
 
   async function handleSave(data: Record<string, unknown>) {
     setIsSaving(true)
-    // TODO: PUT a /api/admin/products/[id] (Supabase)
-    console.log('💾 Editar producto:', id, data)
-
-    await new Promise((r) => setTimeout(r, 800))
+    const { error } = await updateProduct(id, data)
     setIsSaving(false)
+    if (error) {
+      alert(error)
+      return
+    }
     router.push('/administrator/products')
   }
 

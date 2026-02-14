@@ -2,17 +2,20 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getPostBySlug, getAllPostSlugs, getPostsMeta } from '@/content/blog/es/data'
+import { getPostBySlug, getAllPostSlugs, getPostsMeta } from '@/lib/blog'
 import { formatDate } from '@/lib/utils'
 
+const LOCALE = 'en'
+
 export async function generateStaticParams() {
-  return getAllPostSlugs().map((slug) => ({ slug }))
+  const slugs = await getAllPostSlugs(LOCALE)
+  return slugs.map((slug) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const post = getPostBySlug(slug)
-  if (!post) return { title: 'Post no encontrado' }
+  const post = await getPostBySlug(slug, LOCALE)
+  if (!post) return { title: 'Post not found' }
 
   return {
     title: post.title,
@@ -29,12 +32,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const post = getPostBySlug(slug)
+  const post = await getPostBySlug(slug, LOCALE)
 
   if (!post) notFound()
 
   // Related posts (same tags, excluding current)
-  const allPosts = getPostsMeta()
+  const allPosts = await getPostsMeta(LOCALE)
   const related = allPosts
     .filter((p) => p.slug !== post.slug && p.tags.some((t) => post.tags.includes(t)))
     .slice(0, 2)
@@ -60,9 +63,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         {/* Meta card */}
         <div className="bg-blanco border border-linea p-6 lg:p-8 mb-8">
           <nav className="text-sm text-marron-claro mb-4">
-            <Link href="/en" className="hover:text-naranja transition-colors">Inicio</Link>
+            <Link href="/en" className="hover:text-naranja transition-colors">Home</Link>
             <span className="mx-2">›</span>
-            <Link href="/es/blog" className="hover:text-naranja transition-colors">Blog</Link>
+            <Link href="/en/blog" className="hover:text-naranja transition-colors">Blog</Link>
           </nav>
 
           <h1 className="font-[family-name:var(--font-archivo-narrow)] text-2xl lg:text-3xl font-bold uppercase leading-tight mb-3">
@@ -72,7 +75,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <div className="flex items-center gap-4 text-sm text-marron-claro">
             <time>{formatDate(post.date, 'es')}</time>
             <span>·</span>
-            <span>{post.readingTime} min de lectura</span>
+            <span>{post.readingTime} min read</span>
           </div>
 
           <div className="flex flex-wrap gap-1.5 mt-3">
@@ -140,7 +143,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             Presupuesto personalizado en menos de 24h laborables
           </p>
           <Link
-            href="/es/contacto"
+            href="/en/contacto"
             className="inline-flex bg-naranja text-blanco px-6 py-2.5 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-verde transition-colors"
           >
             Solicitar presupuesto →
@@ -157,13 +160,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               {related.map((r) => (
                 <Link
                   key={r.slug}
-                  href={`/es/blog/${r.slug}`}
+                  href={`/en/blog/${r.slug}`}
                   className="group bg-blanco border border-linea p-4 hover:-translate-y-0.5 hover:shadow transition-all"
                 >
                   <h4 className="font-[family-name:var(--font-archivo-narrow)] font-bold group-hover:text-naranja transition-colors">
                     {r.title}
                   </h4>
-                  <p className="text-xs text-marron-claro mt-1">{formatDate(r.date, 'es')} · {r.readingTime} min</p>
+                  <p className="text-xs text-marron-claro mt-1">{formatDate(r.date, 'en')} · {r.readingTime} min</p>
                 </Link>
               ))}
             </div>
@@ -173,10 +176,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         {/* Back */}
         <div className="mt-8">
           <Link
-            href="/es/blog"
+            href="/en/blog"
             className="font-[family-name:var(--font-archivo-narrow)] text-sm text-naranja font-bold uppercase tracking-wide hover:underline"
           >
-            ← Volver al blog
+            ← Back to blog
           </Link>
         </div>
       </div>

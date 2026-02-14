@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ProductForm } from '@/components/admin/ProductForm'
+import { createProduct } from '@/lib/actions/products'
 
 export default function NewProductPage() {
   const router = useRouter()
@@ -10,12 +11,12 @@ export default function NewProductPage() {
 
   async function handleSave(data: Record<string, unknown>) {
     setIsSaving(true)
-    // TODO: POST a /api/admin/products (Supabase)
-    console.log('📝 Nuevo producto:', data)
-
-    // Simular guardado
-    await new Promise((r) => setTimeout(r, 800))
+    const { error } = await createProduct(data)
     setIsSaving(false)
+    if (error) {
+      alert(error)
+      return
+    }
     router.push('/administrator/products')
   }
 

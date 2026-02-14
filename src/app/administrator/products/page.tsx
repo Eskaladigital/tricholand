@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import { productsDemo } from '@/content/shop/products-demo'
+import { getProducts } from '@/lib/actions/products'
 import { formatPrice } from '@/types/shop'
 
-export default function ProductsListPage() {
-  const products = productsDemo
+export default async function ProductsListPage() {
+  const products = await getProducts()
 
   return (
     <>
@@ -24,7 +24,6 @@ export default function ProductsListPage() {
           </Link>
         </div>
 
-        {/* Table */}
         <div className="bg-blanco border border-linea overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -51,56 +50,64 @@ export default function ProductsListPage() {
                 </tr>
               </thead>
               <tbody>
-                {products.map((product) => (
-                  <tr key={product.id} className="border-b border-linea/50 hover:bg-crudo/50 transition-colors">
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={product.images[0]?.url || ''}
-                          alt=""
-                          className="w-12 h-12 object-cover shrink-0"
-                        />
-                        <div>
-                          <span className="font-bold block">{product.name}</span>
-                          <span className="text-xs text-marron-claro">{product.unit_label}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 font-mono text-xs">{product.sku}</td>
-                    <td className="px-4 py-3 text-right font-bold text-naranja">
-                      {formatPrice(product.price_cents)}
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      {product.stock_qty !== null ? (
-                        <span className={`font-bold ${product.stock_qty <= 5 ? 'text-terracota' : 'text-verde'}`}>
-                          {product.stock_qty}
-                        </span>
-                      ) : (
-                        <span className="text-marron-claro">∞</span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <span className={`px-2 py-0.5 text-xs font-bold uppercase ${
-                        product.status === 'active' ? 'bg-green-100 text-green-700' :
-                        product.status === 'draft' ? 'bg-gray-100 text-gray-600' :
-                        product.status === 'out_of_stock' ? 'bg-red-100 text-red-600' :
-                        'bg-gray-100 text-gray-400'
-                      }`}>
-                        {product.status === 'active' ? 'Activo' :
-                         product.status === 'draft' ? 'Borrador' :
-                         product.status === 'out_of_stock' ? 'Agotado' : 'Archivado'}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <Link
-                        href={`/administrator/products/${product.id}`}
-                        className="text-naranja font-semibold hover:underline text-xs"
-                      >
-                        Editar
-                      </Link>
+                {products.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="px-4 py-8 text-center text-marron-claro">
+                      No hay productos. Crea el primero para empezar a vender.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  products.map((product) => (
+                    <tr key={product.id} className="border-b border-linea/50 hover:bg-crudo/50 transition-colors">
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={product.images[0]?.url || ''}
+                            alt=""
+                            className="w-12 h-12 object-cover shrink-0"
+                          />
+                          <div>
+                            <span className="font-bold block">{product.name}</span>
+                            <span className="text-xs text-marron-claro">{product.unit_label}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 font-mono text-xs">{product.sku}</td>
+                      <td className="px-4 py-3 text-right font-bold text-naranja">
+                        {formatPrice(product.price_cents)}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {product.stock_qty !== null ? (
+                          <span className={`font-bold ${product.stock_qty <= 5 ? 'text-terracota' : 'text-verde'}`}>
+                            {product.stock_qty}
+                          </span>
+                        ) : (
+                          <span className="text-marron-claro">∞</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <span className={`px-2 py-0.5 text-xs font-bold uppercase ${
+                          product.status === 'active' ? 'bg-green-100 text-green-700' :
+                          product.status === 'draft' ? 'bg-gray-100 text-gray-600' :
+                          product.status === 'out_of_stock' ? 'bg-red-100 text-red-600' :
+                          'bg-gray-100 text-gray-400'
+                        }`}>
+                          {product.status === 'active' ? 'Activo' :
+                           product.status === 'draft' ? 'Borrador' :
+                           product.status === 'out_of_stock' ? 'Agotado' : 'Archivado'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <Link
+                          href={`/administrator/products/${product.id}`}
+                          className="text-naranja font-semibold hover:underline text-xs"
+                        >
+                          Editar
+                        </Link>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

@@ -8,8 +8,8 @@ export const metadata: Metadata = {
   robots: 'index, follow',
 }
 
-export default function SitemapPage() {
-  const urls = getSitemapUrls()
+export default async function SitemapPage() {
+  const urls = await getSitemapUrls()
 
   return (
     <main className="min-h-screen bg-crudo px-5 lg:px-8 py-16">

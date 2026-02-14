@@ -11,7 +11,11 @@
     "translate:content": "node scripts/translate-content.mjs",
     "translate:all": "node scripts/translate-ui.mjs && node scripts/translate-content.mjs",
     "translate:dry": "node scripts/translate-content.mjs --dry-run",
-    "favicon": "node scripts/generate-favicon.mjs"
+    "favicon": "node scripts/generate-favicon.mjs",
+    "seed:products": "node scripts/seed-products.mjs",
+    "seed:blog": "node scripts/seed-blog-posts.mjs",
+    "import:blog": "node scripts/import-blog-from-csv.mjs",
+    "translate:blog": "node scripts/translate-blog-posts.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",
@@ -25,6 +29,7 @@
     "@types/node": "^22.10.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "csv-parse": "^6.1.0",
     "eslint": "^9.16.0",
     "eslint-config-next": "^15.1.0",
     "sharp": "^0.34.5",

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getPostsMeta } from '@/content/blog/es/data'
+import { getPostsMeta } from '@/lib/blog'
 import { formatDate } from '@/lib/utils'
 
 export const metadata: Metadata = {
@@ -9,8 +9,8 @@ export const metadata: Metadata = {
   description: 'Blog de Tricholand: guías técnicas sobre cultivo, cuidado, injertos y propagación de Trichocereus. Recursos para profesionales y aficionados.',
 }
 
-export default function BlogPage() {
-  const posts = getPostsMeta()
+export default async function BlogPage() {
+  const posts = await getPostsMeta('pt')
 
   return (
     <section className="px-5 lg:px-8 py-16">

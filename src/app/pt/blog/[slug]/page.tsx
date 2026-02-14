@@ -2,17 +2,20 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getPostBySlug, getAllPostSlugs, getPostsMeta } from '@/content/blog/es/data'
+import { getPostBySlug, getAllPostSlugs, getPostsMeta } from '@/lib/blog'
 import { formatDate } from '@/lib/utils'
 
+const LOCALE = 'pt'
+
 export async function generateStaticParams() {
-  return getAllPostSlugs().map((slug) => ({ slug }))
+  const slugs = await getAllPostSlugs(LOCALE)
+  return slugs.map((slug) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const post = getPostBySlug(slug)
-  if (!post) return { title: 'Post no encontrado' }
+  const post = await getPostBySlug(slug, LOCALE)
+  if (!post) return { title: 'Post não encontrado' }
 
   return {
     title: post.title,
@@ -29,12 +32,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const post = getPostBySlug(slug)
+  const post = await getPostBySlug(slug, LOCALE)
 
   if (!post) notFound()
 
   // Related posts (same tags, excluding current)
-  const allPosts = getPostsMeta()
+  const allPosts = await getPostsMeta(LOCALE)
   const related = allPosts
     .filter((p) => p.slug !== post.slug && p.tags.some((t) => post.tags.includes(t)))
     .slice(0, 2)
