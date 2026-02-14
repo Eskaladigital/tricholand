@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import type { OrderStatus, PaymentMethod } from '@/types/shop'
 import type { OrderRow, OrderItemRow } from '@/lib/actions/orders'
 import type { ProductOption } from '@/lib/actions/products'
@@ -10,6 +11,7 @@ import {
   addOrderItem,
   updateOrderItem,
   deleteOrderItem,
+  deleteOrder,
   recalcOrderTotals,
 } from '@/lib/actions/orders'
 
@@ -34,6 +36,7 @@ interface OrderDetailClientProps {
 }
 
 export function OrderDetailClient({ order: initialOrder, items: initialItems, products }: OrderDetailClientProps) {
+  const router = useRouter()
   const [order, setOrder] = useState(initialOrder)
   const [items, setItems] = useState(initialItems)
   const [status, setStatus] = useState<OrderStatus>(order.status)
@@ -48,6 +51,7 @@ export function OrderDetailClient({ order: initialOrder, items: initialItems, pr
   const [saving, setSaving] = useState(false)
   const [saveMsg, setSaveMsg] = useState<{ ok: boolean; text: string } | null>(null)
   const [editingItem, setEditingItem] = useState<string | null>(null)
+  const [deletingOrder, setDeletingOrder] = useState(false)
   const [addingProduct, setAddingProduct] = useState(false)
   const [newProductId, setNewProductId] = useState('')
   const [newProductQty, setNewProductQty] = useState(1)
@@ -150,6 +154,15 @@ export function OrderDetailClient({ order: initialOrder, items: initialItems, pr
     setEditingItem(null)
     await recalcOrderTotals(order.id)
     showMsg(true, 'Producto actualizado')
+  }
+
+  const handleDeleteOrder = async () => {
+    if (!confirm(`¿Borrar el pedido ${order.order_number}? Esta acción no se puede deshacer.`)) return
+    setDeletingOrder(true)
+    const { error } = await deleteOrder(order.id)
+    setDeletingOrder(false)
+    if (error) showMsg(false, error)
+    else router.push('/administrator/orders')
   }
 
   const handleDeleteItem = async (itemId: string) => {
@@ -625,6 +638,14 @@ export function OrderDetailClient({ order: initialOrder, items: initialItems, pr
               className="w-full py-2 border border-linea text-xs font-bold uppercase hover:bg-crudo transition-colors"
             >
               🧾 Generar factura
+            </button>
+            <button
+              type="button"
+              onClick={handleDeleteOrder}
+              disabled={deletingOrder}
+              className="w-full py-2 border border-linea text-xs font-bold uppercase hover:bg-crudo transition-colors disabled:opacity-50 text-marron-claro hover:text-red-600"
+            >
+              🗑️ Borrar pedido
             </button>
           </section>
         </div>

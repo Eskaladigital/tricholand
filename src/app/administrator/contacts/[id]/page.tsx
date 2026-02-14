@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getContactById } from '@/lib/actions/contacts'
+import { ContactDetailActions } from '@/components/admin/ContactDetailActions'
 
 const statusLabels: Record<string, string> = {
   new: 'Nuevo',
@@ -110,17 +111,11 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
           </section>
 
           {/* Acciones */}
-          <section className="bg-blanco border border-linea p-6 space-y-2">
-            <h2 className="font-[family-name:var(--font-archivo-narrow)] text-base font-bold uppercase mb-3">
-              Acciones
-            </h2>
-            <a
-              href={`mailto:${contact.email}?subject=Re: Tu consulta a Tricholand`}
-              className="block w-full py-2.5 text-center border border-linea text-xs font-bold uppercase hover:bg-crudo transition-colors"
-            >
-              📧 Responder por email
-            </a>
-          </section>
+          <ContactDetailActions
+            contactId={contact.id}
+            contactName={contact.name}
+            contactEmail={contact.email}
+          />
         </div>
       </div>
     </>

@@ -1,6 +1,6 @@
-import Link from 'next/link'
-import { getOrdersList } from '@/lib/actions/orders'
+import { getOrdersList, deleteOrder } from '@/lib/actions/orders'
 import { formatPrice } from '@/types/shop'
+import { TableActions } from '@/components/admin/TableActions'
 
 const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
   pending: { label: 'Pendiente', bg: 'bg-yellow-100', text: 'text-yellow-700' },
@@ -42,7 +42,7 @@ export default async function OrdersListPage() {
                   <th className="text-center px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">Items</th>
                   <th className="text-right px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">Subtotal</th>
                   <th className="text-center px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">Estado</th>
-                  <th className="text-center px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">Acción</th>
+                  <th className="text-center px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -77,10 +77,14 @@ export default async function OrdersListPage() {
                             {sc.label}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-center">
-                          <Link href={`/administrator/orders/${order.id}`} className="text-naranja font-semibold hover:underline text-xs">
-                            Ver
-                          </Link>
+                        <td className="px-4 py-3">
+                          <TableActions
+                            viewHref={`/administrator/orders/${order.id}`}
+                            editHref={`/administrator/orders/${order.id}`}
+                            deleteAction={deleteOrder}
+                            entityId={order.id}
+                            entityLabel={`el pedido ${order.order_number}`}
+                          />
                         </td>
                       </tr>
                     )

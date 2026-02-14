@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { getContacts } from '@/lib/actions/contacts'
+import { getContacts, deleteContact } from '@/lib/actions/contacts'
+import { TableActions } from '@/components/admin/TableActions'
 
 const statusLabels: Record<string, string> = {
   new: 'Nuevo',
@@ -41,12 +42,13 @@ export default async function ContactsPage() {
                   <th className="text-left px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">País</th>
                   <th className="text-center px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">Tipo</th>
                   <th className="text-center px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">Estado</th>
+                  <th className="text-center px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {contacts.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="px-4 py-8 text-center text-marron-claro">
+                    <td colSpan={8} className="px-4 py-8 text-center text-marron-claro">
                       No hay contactos. Los contactos del formulario aparecerán aquí.
                     </td>
                   </tr>
@@ -77,12 +79,21 @@ export default async function ContactsPage() {
                       </td>
                       <td className="px-4 py-3 text-center">
                         <span className={`px-2 py-0.5 text-xs font-bold uppercase ${
-                            contact.status === 'new' ? 'bg-yellow-100 text-yellow-700' :
-                            contact.status === 'replied' ? 'bg-green-100 text-green-700' :
-                            'bg-gray-100 text-gray-400'
-                          }`}>
-                            {statusLabels[contact.status] ?? contact.status}
-                          </span>
+                          contact.status === 'new' ? 'bg-yellow-100 text-yellow-700' :
+                          contact.status === 'replied' ? 'bg-green-100 text-green-700' :
+                          'bg-gray-100 text-gray-400'
+                        }`}>
+                          {statusLabels[contact.status] ?? contact.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <TableActions
+                          viewHref={`/administrator/contacts/${contact.id}`}
+                          editHref={`/administrator/contacts/${contact.id}`}
+                          deleteAction={deleteContact}
+                          entityId={contact.id}
+                          entityLabel={`el contacto de ${contact.name}`}
+                        />
                       </td>
                     </tr>
                   ))

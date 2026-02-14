@@ -43,3 +43,10 @@ export async function getContacts(): Promise<ContactRow[]> {
   if (error) return []
   return (data ?? []) as ContactRow[]
 }
+
+export async function deleteContact(id: string): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { error } = await supabase.from('contacts').delete().eq('id', id)
+  if (error) return { error: error.message }
+  return {}
+}

@@ -194,6 +194,14 @@ export async function deleteOrderItem(itemId: string): Promise<{ error?: string 
   return {}
 }
 
+export async function deleteOrder(id: string): Promise<{ error?: string }> {
+  if (!UUID_REGEX.test(id)) return { error: 'ID inválido' }
+  const supabase = await createClient()
+  const { error } = await supabase.from('orders').delete().eq('id', id)
+  if (error) return { error: error.message }
+  return {}
+}
+
 const DEFAULT_TAX_RATE = 21
 
 export async function recalcOrderTotals(orderId: string): Promise<{ error?: string }> {
