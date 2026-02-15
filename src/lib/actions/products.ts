@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { createApiClient } from '@/lib/supabase/api'
 import type { Product } from '@/types/shop'
 import { PRODUCT_TRANSLATIONS } from '@/content/shop/product-translations'
 import { resolveProductImageUrl } from '@/lib/storage'
@@ -64,10 +65,10 @@ export async function getProducts(): Promise<Product[]> {
   return (data ?? []).map(mapDbProductToProduct)
 }
 
-/** Producto por slug (para catálogo público). */
+/** Producto por slug (para catálogo público). Usa cliente sin cookies (funciona en build y runtime). */
 export async function getProductBySlug(slug: string): Promise<Product | null> {
   try {
-    const supabase = await createClient()
+    const supabase = createApiClient()
     const { data, error } = await supabase
       .from('products')
       .select('*')
@@ -82,10 +83,10 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   }
 }
 
-/** Productos activos ordenados (para catálogo público). */
+/** Productos activos ordenados (para catálogo público). Usa cliente sin cookies (funciona en build y runtime). */
 export async function getActiveProducts(): Promise<Product[]> {
   try {
-    const supabase = await createClient()
+    const supabase = createApiClient()
     const { data } = await supabase
       .from('products')
       .select('*')
@@ -95,7 +96,6 @@ export async function getActiveProducts(): Promise<Product[]> {
 
     return (data ?? []).map(mapDbProductToProduct)
   } catch {
-    // En build time (generateStaticParams) no hay cookies/request disponibles
     return []
   }
 }

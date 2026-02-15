@@ -31,12 +31,22 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 }
 
+export const dynamicParams = true
+export const revalidate = 60
+
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const product = await getProductForLocale(slug, LOCALE)
+  let product
+  try {
+    const { slug } = await params
+    product = await getProductForLocale(slug, LOCALE)
+  } catch {
+    notFound()
+  }
   if (!product) notFound()
 
   const isLowStock = product.stock_qty !== null && product.stock_qty <= 5
+  const imgUrl = product.images?.[0]?.url ?? ''
+  const imgAlt = product.images?.[0]?.alt || product.name
 
   return (
     <>

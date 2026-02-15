@@ -31,12 +31,22 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 }
 
+export const dynamicParams = true
+export const revalidate = 60
+
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const product = await getProductForLocale(slug, LOCALE)
+  let product
+  try {
+    const { slug } = await params
+    product = await getProductForLocale(slug, LOCALE)
+  } catch {
+    notFound()
+  }
   if (!product) notFound()
 
   const isLowStock = product.stock_qty !== null && product.stock_qty <= 5
+  const imgUrl = product.images?.[0]?.url ?? ''
+  const imgAlt = product.images?.[0]?.alt || product.name
 
   return (
     <>
@@ -53,10 +63,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* Image */}
           <div className="relative aspect-[4/3] bg-crudo">
-            {product.images[0]?.url ? (
+            {imgUrl ? (
               <Image
-                src={product.images[0].url}
-                alt={product.images[0]?.alt || product.name}
+                src={imgUrl}
+                alt={imgAlt}
                 fill
                 className="object-cover"
                 priority
