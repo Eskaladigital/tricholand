@@ -9,7 +9,7 @@ import { formatDate } from '@/lib/utils'
 const LOCALE = 'en'
 const BASE_URL = 'https://www.tricholand.com'
 
-export const revalidate = 60
+export const revalidate = 10
 
 export async function generateStaticParams() {
   const slugs = await getAllPostSlugs(LOCALE)

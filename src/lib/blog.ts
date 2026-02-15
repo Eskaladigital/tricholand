@@ -84,24 +84,57 @@ export async function getPostBySlug(slug: string, locale: string): Promise<BlogP
 
   const { data, error } = await supabase
     .from('blog_posts')
-    .select('slug, title, description, date, image, image_alt, tags, reading_time, content')
+    .select('slug, title, description, date, image, image_alt, tags, reading_time, content, source_slug')
     .eq('slug', slug)
     .eq('locale', effectiveLocale)
     .eq('status', 'published')
     .single()
 
-  if (!error && data) return rowToPost(data)
+  if (!error && data) {
+    const post = rowToPost(data)
+    // Fallback: si la traducción no tiene imagen, usar la del artículo ES (source)
+    if (!post.image && effectiveLocale !== 'es' && (data as { source_slug?: string }).source_slug) {
+      const { data: esPost } = await supabase
+        .from('blog_posts')
+        .select('image, image_alt')
+        .eq('source_slug', (data as { source_slug: string }).source_slug)
+        .eq('locale', 'es')
+        .eq('status', 'published')
+        .single()
+      if (esPost?.image && isSupabaseImage(esPost.image)) {
+        post.image = esPost.image
+        post.imageAlt = esPost.image_alt || post.imageAlt
+      }
+    }
+    return post
+  }
 
   // URL antigua: slug en español en idioma no-ES. Buscar por source_slug y redirigir al slug correcto.
   if (effectiveLocale !== 'es') {
     const { data: bySource } = await supabase
       .from('blog_posts')
-      .select('slug, title, description, date, image, image_alt, tags, reading_time, content')
+      .select('slug, title, description, date, image, image_alt, tags, reading_time, content, source_slug')
       .eq('source_slug', slug)
       .eq('locale', effectiveLocale)
       .eq('status', 'published')
       .single()
-    if (bySource) return rowToPost(bySource)
+    if (bySource) {
+      const post = rowToPost(bySource)
+      if (!post.image && (bySource as { source_slug?: string }).source_slug) {
+        const { data: esPost } = await supabase
+          .from('blog_posts')
+          .select('image, image_alt')
+          .eq('source_slug', (bySource as { source_slug: string }).source_slug)
+          .eq('locale', 'es')
+          .eq('status', 'published')
+          .single()
+        if (esPost?.image && isSupabaseImage(esPost.image)) {
+          post.image = esPost.image
+          post.imageAlt = esPost.image_alt || post.imageAlt
+        }
+      }
+      return post
+    }
   }
 
   return null
