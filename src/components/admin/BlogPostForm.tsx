@@ -125,11 +125,12 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
   const fieldClass = 'w-full px-4 py-2.5 border border-linea text-sm focus:outline-none focus:border-naranja transition-colors bg-blanco'
   const labelClass = 'block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1'
 
-  /** Convierte markdown a HTML si el contenido parece markdown (para TinyMCE) */
+  /** Contenido para TinyMCE. Formato estándar: HTML. Fallback: Markdown → HTML (legacy) */
   const contentForEditor = useMemo(() => {
     const raw = post?.content ?? ''
     if (!raw) return ''
-    const looksLikeMarkdown = (raw.includes('##') || raw.includes('**') || raw.includes('\n* ') || raw.startsWith('#')) && !raw.trim().startsWith('<')
+    if (raw.trim().startsWith('<')) return raw // HTML — TinyMCE trabaja nativamente con HTML
+    const looksLikeMarkdown = raw.includes('##') || raw.includes('**') || raw.includes('\n* ') || raw.startsWith('#')
     return looksLikeMarkdown ? (marked.parse(raw, { async: false }) as string) : raw
   }, [post?.content])
 
@@ -184,9 +185,13 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
                 <div
                   className="prose prose-sm max-w-none border border-linea p-4 bg-crudo/30"
                   dangerouslySetInnerHTML={{
-                    __html: (translationByLocale.content?.includes('##') || translationByLocale.content?.includes('**')) && !translationByLocale.content?.trim().startsWith('<')
-                      ? (marked.parse(translationByLocale.content, { async: false }) as string)
-                      : translationByLocale.content ?? '',
+                    __html: (() => {
+                      const c = translationByLocale.content ?? ''
+                      if (!c) return ''
+                      if (c.trim().startsWith('<')) return c // HTML
+                      const md = c.includes('##') || c.includes('**') || c.startsWith('#')
+                      return md ? (marked.parse(c, { async: false }) as string) : c
+                    })(),
                   }}
                 />
               </div>

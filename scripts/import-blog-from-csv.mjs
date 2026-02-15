@@ -54,36 +54,10 @@ function slugify(text) {
     .replace(/^-+|-+$/g, '')
 }
 
-function htmlToMarkdown(html) {
+/** Sanitiza HTML básico. El contenido se guarda como HTML (formato estándar para TinyMCE). */
+function sanitizeHtml(html) {
   if (!html || typeof html !== 'string') return ''
-  let md = html
-    .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '\n\n# $1\n\n')
-    .replace(/<h2[^>]*>(.*?)<\/h2>/gi, '\n\n## $1\n\n')
-    .replace(/<h3[^>]*>(.*?)<\/h3>/gi, '\n\n### $1\n\n')
-    .replace(/<h4[^>]*>(.*?)<\/h4>/gi, '\n\n#### $1\n\n')
-    .replace(/<p[^>]*>/gi, '\n\n')
-    .replace(/<\/p>/gi, '')
-    .replace(/<ul[^>]*>/gi, '\n\n')
-    .replace(/<\/ul>/gi, '\n\n')
-    .replace(/<ol[^>]*>/gi, '\n\n')
-    .replace(/<\/ol>/gi, '\n\n')
-    .replace(/<li[^>]*>/gi, '\n- ')
-    .replace(/<\/li>/gi, '')
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**')
-    .replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**')
-    .replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*')
-    .replace(/<i[^>]*>(.*?)<\/i>/gi, '*$1*')
-    .replace(/<[^>]+>/g, '')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/\n{3,}/g, '\n\n')
-    .trim()
-  return md
+  return html.trim()
 }
 
 function extractDescription(text, maxLen = 200) {
@@ -92,8 +66,9 @@ function extractDescription(text, maxLen = 200) {
   return plain.substring(0, maxLen).replace(/\s+\S*$/, '') + '...'
 }
 
-function estimateReadingTime(text) {
-  const words = text.split(/\s+/).filter(Boolean).length
+function estimateReadingTime(htmlOrText) {
+  const plain = (htmlOrText || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+  const words = plain.split(/\s+/).filter(Boolean).length
   return Math.max(1, Math.ceil(words / 200))
 }
 
@@ -137,9 +112,9 @@ async function main() {
       continue
     }
 
-    const contentMd = htmlToMarkdown(articulo)
+    const contentHtml = sanitizeHtml(articulo)
     const description = extractDescription(articulo)
-    const readingTime = estimateReadingTime(contentMd)
+    const readingTime = estimateReadingTime(articulo)
 
     const date = new Date(today)
     date.setDate(date.getDate() - totalDaysBack)
@@ -157,7 +132,7 @@ async function main() {
       image_alt: title,
       tags: ['trichocereus', 'cultivo', 'guía'],
       reading_time: readingTime,
-      content: contentMd,
+      content: contentHtml,
       locale: 'es',
       status: 'published',
     }
@@ -177,9 +152,9 @@ async function main() {
     if (ingles) {
       const h1Match = ingles.match(/<h1[^>]*>(.*?)<\/h1>/i)
       const titleEn = h1Match ? h1Match[1].replace(/<[^>]+>/g, '').trim() : ingles.split('\n')[0]?.replace(/<[^>]+>/g, '').trim() || title
-      const contentEn = htmlToMarkdown(ingles)
+      const contentEn = sanitizeHtml(ingles)
       const descriptionEn = extractDescription(ingles)
-      const readingTimeEn = estimateReadingTime(contentEn)
+      const readingTimeEn = estimateReadingTime(ingles)
 
       const slugEn = titleEn.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || slug
       const rowEn = {

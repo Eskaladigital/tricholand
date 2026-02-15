@@ -12,6 +12,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js'
+import { marked } from 'marked'
 import { readFileSync, existsSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
@@ -285,6 +286,9 @@ async function main() {
   console.log('📝 Insertando posts del blog en Supabase...\n')
 
   for (const p of POSTS) {
+    const contentHtml = typeof p.content === 'string' && p.content.trim().startsWith('<')
+      ? p.content
+      : (marked.parse(p.content, { async: false }))
     const { error } = await supabase.from('blog_posts').upsert(
       {
         slug: p.slug,
@@ -297,7 +301,7 @@ async function main() {
         image_alt: p.image_alt,
         tags: p.tags,
         reading_time: p.reading_time,
-        content: p.content,
+        content: contentHtml,
         status: p.status,
       },
       { onConflict: 'source_slug,locale' }

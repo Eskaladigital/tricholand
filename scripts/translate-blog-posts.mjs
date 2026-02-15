@@ -137,7 +137,7 @@ RULES:
 - DO NOT translate brand names (Tricholand)
 - DO NOT translate measurements (cm, m², °C, etc.)
 - For botanical/horticultural terms, use standard ${langName} terminology
-- If the text contains markdown, preserve the formatting exactly
+- Content may be HTML (h1, h2, p, strong, ul, li). Translate ONLY text inside tags, keep HTML tags exactly as-is
 - Output ONLY the translated text, nothing else`
 
   const chunks = splitIntoChunks(text)
