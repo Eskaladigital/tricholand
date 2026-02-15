@@ -7,6 +7,8 @@ import { getDictionary } from '@/lib/i18n'
 
 const LOCALE = 'pt'
 
+export const revalidate = 60
+
 export const metadata: Metadata = {
   title: 'Loja B2B — Lotes por atacado',
   description: 'Loja online B2B Tricholand. Compre lotes de Trichocereus por atacado com preços visíveis. Envie o seu pedido e receba orçamento em 24h.',

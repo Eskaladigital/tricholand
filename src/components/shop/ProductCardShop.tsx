@@ -45,16 +45,22 @@ export function ProductCardShop({ product, locale, t }: ProductCardShopProps) {
     <div className="group bg-blanco border border-linea hover:shadow-lg transition-all duration-300 flex flex-col">
       {/* Image */}
       <Link href={getFullPath(locale, 'shop', product.slug)} className="relative overflow-hidden">
-        <Image
-          src={product.images[0]?.url || ''}
-          alt={product.images[0]?.alt || product.name}
-          width={600}
-          height={240}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
-          quality={60}
-          className="w-full h-[220px] object-cover group-hover:scale-[1.04] transition-transform duration-400"
-          unoptimized
-        />
+        {product.images[0]?.url ? (
+          <Image
+            src={product.images[0].url}
+            alt={product.images[0]?.alt || product.name}
+            width={600}
+            height={240}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+            quality={60}
+            className="w-full h-[220px] object-cover group-hover:scale-[1.04] transition-transform duration-400"
+            unoptimized
+          />
+        ) : (
+          <div className="w-full h-[220px] bg-crudo flex items-center justify-center">
+            <span className="text-4xl opacity-30">🌵</span>
+          </div>
+        )}
         <span className="absolute top-3 left-3 bg-negro text-blanco px-2.5 py-1 font-[family-name:var(--font-archivo-narrow)] text-[0.72rem] font-semibold tracking-wide">
           {product.sku}
         </span>

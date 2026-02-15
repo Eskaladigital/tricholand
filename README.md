@@ -188,6 +188,32 @@ NEXT_PUBLIC_SITE_URL=https://www.tricholand.com
 - Las imágenes de **Supabase** SIEMPRE llevan `unoptimized` en `<Image>` (evita error 500 por proxy de Next.js).
 - Ver `src/lib/storage.ts` para los helpers de Supabase (`getPlantImageUrl`, `getBlogImageUrl`, `resolveProductImageUrl`).
 
+### Clientes Supabase (`createClient` vs `createApiClient`)
+
+| Cliente | Archivo | Cookies | Cuándo usar |
+|---------|---------|---------|-------------|
+| `createClient()` | `src/lib/supabase/server.ts` | Sí (`cookies()`) | Server Components en runtime, admin, mutaciones |
+| `createApiClient()` | `src/lib/supabase/api.ts` | No | `generateStaticParams`, API routes, lecturas públicas, build time |
+
+> **IMPORTANTE**: Las funciones de lectura pública (`getActiveProducts`, `getProductBySlug`) usan `createApiClient()`.
+> Si se cambian a `createClient()`, las páginas de producto dejan de generarse en build time y dan **error 500**.
+
+### Troubleshooting — Error 500 en páginas de producto
+
+Si las páginas de `/tienda/[slug]` (o equivalentes en otros idiomas) dan error 500:
+
+1. **Verificar que `getActiveProducts()` y `getProductBySlug()` usan `createApiClient()`** (no `createClient()`).
+   - `createClient()` necesita `cookies()` → falla en build time → `generateStaticParams` devuelve `[]` → 0 páginas generadas → 500.
+2. **Verificar que las imágenes llevan `unoptimized`** en el `<Image>`.
+   - Sin `unoptimized`, Next.js intenta proxy-ar la imagen de Supabase → si falla → 500.
+3. **Verificar el build**: en el output de `npm run build`, las rutas de producto deben listar los slugs:
+   ```
+   ├ ● /es/tienda/[slug]    2.56 kB    137 kB    1m    1y
+   ├   ├ /es/tienda/pack-mixto-5-variedades
+   ├   ├ /es/tienda/lote-pachanoi-15-20
+   ```
+   Si NO aparecen slugs debajo → `generateStaticParams` devuelve `[]` → revisar punto 1.
+
 ---
 
 ## Favicon

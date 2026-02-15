@@ -59,10 +59,51 @@ Estas secciones usan imágenes de Supabase Storage:
 | `getBlogImageUrl(path)` | Artículos del blog | `blog` |
 | `resolveProductImageUrl(url)` | Passthrough — devuelve URL tal cual | — |
 
+## Clientes Supabase — `createClient` vs `createApiClient`
+
+Este proyecto tiene **dos clientes Supabase** y es CRÍTICO usar el correcto:
+
+| Cliente | Archivo | ¿Necesita cookies? | Usar en... |
+|---------|---------|---------------------|------------|
+| `createClient()` | `src/lib/supabase/server.ts` | SÍ (usa `cookies()`) | Server Components en **runtime** (con request HTTP), admin |
+| `createApiClient()` | `src/lib/supabase/api.ts` | NO | `generateStaticParams`, API routes, **build time**, lecturas públicas |
+
+### Por qué importa (causa de ERROR 500)
+
+`generateStaticParams()` se ejecuta en **build time**, donde NO hay request HTTP ni cookies.
+Si una función dentro de `generateStaticParams` usa `createClient()` (con cookies), falla silenciosamente
+y devuelve `[]`. Resultado: **0 páginas de producto generadas** → el usuario visita la URL → 500.
+
+**Regla:** Las funciones de **lectura pública** (getActiveProducts, getProductBySlug, etc.) DEBEN usar
+`createApiClient()` para que funcionen tanto en build como en runtime.
+
+```typescript
+// CORRECTO — lectura pública, funciona en build time
+export async function getActiveProducts() {
+  const supabase = createApiClient()  // ← SIN cookies
+  // ...
+}
+
+// INCORRECTO — falla en build time (generateStaticParams)
+export async function getActiveProducts() {
+  const supabase = await createClient()  // ← NECESITA cookies → falla en build
+  // ...
+}
+```
+
+### Configuración SSG para páginas de producto
+
+Las páginas de detalle de producto llevan estas exports para generarse estáticas con revalidación:
+
+```typescript
+export const dynamicParams = true   // Permitir slugs no pre-generados (ISR)
+export const revalidate = 60        // Revalidar cada 60 segundos
+```
+
 ## Resumen rápido
 
-| Sección | Origen | ¿Supabase? |
-|---------|--------|------------|
-| Home, Variedades, Sobre nosotros, Logo, OG | `public/images/` | NO |
-| Tienda (productos) | Supabase `plants` | SÍ |
-| Blog (artículos) | Supabase `blog` | SÍ |
+| Sección | Origen imágenes | ¿Supabase? | Cliente Supabase |
+|---------|-----------------|------------|------------------|
+| Home, Variedades, Sobre nosotros, Logo, OG | `public/images/` | NO | — |
+| Tienda (productos) | Supabase `plants` | SÍ | `createApiClient()` |
+| Blog (artículos) | Supabase `blog` | SÍ | Según contexto |

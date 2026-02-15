@@ -7,6 +7,8 @@ import { getDictionary } from '@/lib/i18n'
 
 const LOCALE = 'nl'
 
+export const revalidate = 60
+
 export const metadata: Metadata = {
   title: 'B2B Winkel — Groothandelslotes',
   description: 'Tricholand B2B online winkel. Koop Trichocereus-lotes in groothandel met zichtbare prijzen. Dien uw bestelling in en ontvang binnen 24u een offerte.',

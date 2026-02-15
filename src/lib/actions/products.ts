@@ -1,5 +1,17 @@
 'use server'
 
+/**
+ * Funciones de productos.
+ *
+ * IMPORTANTE — Clientes Supabase:
+ *   • createApiClient()  → para lecturas PÚBLICAS (getActiveProducts, getProductBySlug, etc.)
+ *                           NO necesita cookies. Funciona en build time (generateStaticParams).
+ *   • createClient()     → para operaciones que necesitan AUTH/cookies (admin: create, update).
+ *
+ * Si cambias las lecturas públicas a createClient(), generateStaticParams falla
+ * silenciosamente en build time (cookies() no existe) → devuelve [] → 0 páginas
+ * de producto generadas → ERROR 500 en producción.
+ */
 import { createClient } from '@/lib/supabase/server'
 import { createApiClient } from '@/lib/supabase/api'
 import type { Product } from '@/types/shop'
@@ -219,6 +231,29 @@ export async function updateProduct(id: string, data: Record<string, unknown>): 
     featured: data.featured ?? false,
     sort_order: data.sort_order ?? 0,
   }).eq('id', id)
+  if (error) return { error: error.message }
+  return {}
+}
+
+/** Cambiar estado de un producto (active ↔ draft). Usa createClient (necesita auth). */
+export async function toggleProductStatus(id: string, currentStatus: string): Promise<{ error?: string }> {
+  const newStatus = currentStatus === 'active' ? 'draft' : 'active'
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('products')
+    .update({ status: newStatus })
+    .eq('id', id)
+  if (error) return { error: error.message }
+  return {}
+}
+
+/** Eliminar un producto. Usa createClient (necesita auth). */
+export async function deleteProduct(id: string): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('products')
+    .delete()
+    .eq('id', id)
   if (error) return { error: error.message }
   return {}
 }

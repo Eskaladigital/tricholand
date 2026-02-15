@@ -7,6 +7,8 @@ import { getDictionary } from '@/lib/i18n'
 
 const LOCALE = 'de'
 
+export const revalidate = 60
+
 export const metadata: Metadata = {
   title: 'B2B-Shop — Großhandelslose',
   description: 'Tricholand B2B-Online-Shop. Kaufen Sie Trichocereus-Lose im Großhandel mit sichtbaren Preisen. Senden Sie Ihre Bestellung und erhalten Sie innerhalb von 24h ein Angebot.',
