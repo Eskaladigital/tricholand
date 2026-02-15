@@ -1,4 +1,5 @@
 import type { BlogPost } from '@/types/blog'
+import { getBlogImageUrl } from '@/lib/storage'
 
 export const postsES: BlogPost[] = [
   {
@@ -6,7 +7,7 @@ export const postsES: BlogPost[] = [
     title: 'Guía completa de cultivo de Trichocereus',
     description: 'Todo lo que necesitas saber para cultivar Trichocereus con éxito: sustrato, riego, luz, temperatura y prevención de plagas.',
     date: '2024-12-15',
-    image: '/images/blog/Tricholand_blog_1.webp',
+    image: getBlogImageUrl('Tricholand_blog_1.webp'),
     imageAlt: 'Cultivo de Trichocereus en vivero',
     tags: ['cultivo', 'guía', 'cuidados'],
     readingTime: 8,
@@ -37,7 +38,7 @@ Las plagas más comunes son la cochinilla algodonosa y los ácaros. Inspeccionar
     title: 'Cómo injertar Trichocereus: técnicas y consejos',
     description: 'Aprende las técnicas de injerto más efectivas para Trichocereus, incluyendo injerto plano y de cuña. Guía paso a paso con fotos.',
     date: '2024-11-28',
-    image: '/images/blog/Tricholand_blog_2.webp',
+    image: getBlogImageUrl('Tricholand_blog_2.webp'),
     imageAlt: 'Técnicas de injerto en cactus',
     tags: ['injertos', 'técnicas', 'propagación'],
     readingTime: 6,
@@ -64,7 +65,7 @@ Mantener la planta injertada en sombra parcial durante 1-2 semanas. No regar dur
     title: 'Diferencias entre T. Pachanoi, T. Peruvianus y T. Bridgesii',
     description: 'Aprende a distinguir las tres especies principales de Trichocereus: Pachanoi (San Pedro), Peruvianus (Antorcha Peruana) y Bridgesii (Achuma).',
     date: '2024-11-10',
-    image: '/images/blog/Tricholand_blog_3.webp',
+    image: getBlogImageUrl('Tricholand_blog_3.webp'),
     imageAlt: 'Comparativa de especies de Trichocereus',
     tags: ['variedades', 'identificación', 'comparativa'],
     readingTime: 7,
