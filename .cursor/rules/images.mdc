@@ -1,0 +1,68 @@
+---
+description: Regla obligatoria sobre el origen de imágenes en el proyecto. Leer SIEMPRE antes de tocar cualquier imagen o componente <Image>.
+globs:
+  - src/**/*.tsx
+  - src/**/*.ts
+  - src/lib/storage.ts
+  - src/content/**
+  - src/components/**
+alwaysApply: true
+---
+
+# REGLA DE ORO — ORIGEN DE IMÁGENES
+
+Este proyecto tiene **dos orígenes de imágenes** que NO se deben mezclar jamás.
+
+## LOCAL — `public/images/`
+
+Estas secciones usan imágenes estáticas servidas desde `public/images/`:
+
+- **Home** → `HeroSection.tsx`, `CatalogPreview.tsx`
+- **Variedades** → `src/content/varieties/es/data.ts` (paths `/images/varieties/...`, `/images/vivero/...`, `/images/products/...`)
+- **Sobre nosotros** → 7 páginas de idioma (`sobre-nosotros`, `about-us`, `uber-uns`, etc.)
+- **Logo** → Header.tsx y Footer.tsx (`/images/icons/logo_tricho_yellow_200_200.webp`)
+- **OG Image** → layouts (`/images/og-image.webp`)
+
+**NO mover estas imágenes a Supabase.**
+
+## SUPABASE STORAGE — URLs remotas
+
+Estas secciones usan imágenes de Supabase Storage:
+
+- **Tienda (productos)** → Las URLs vienen de la base de datos (`products.images`), bucket `plants`. Se procesan con `resolveProductImageUrl()` en `src/lib/actions/products.ts`.
+- **Blog (artículos)** → Usan `getBlogImageUrl()` de `src/lib/storage.ts`, bucket `blog`.
+
+**NO mover estas imágenes a `public/`.**
+
+## Regla de `<Image>` y `unoptimized`
+
+- Todas las imágenes de **Supabase** (tienda y blog) DEBEN llevar `unoptimized` (sin condiciones).
+- Si no se pone `unoptimized`, Next.js intenta optimizar la imagen remota a través de su proxy, y si falla → **ERROR 500**.
+- Las imágenes locales de `public/` también llevan `unoptimized` en este proyecto.
+
+```tsx
+// CORRECTO — imagen de producto (Supabase)
+<Image src={product.images[0].url} alt="..." fill unoptimized />
+
+// CORRECTO — imagen local (public/)
+<Image src="/images/varieties/Trichocereus_Pachanoi_1.webp" alt="..." fill unoptimized />
+
+// INCORRECTO — NUNCA hacer esto con imágenes de Supabase
+<Image src={product.images[0].url} alt="..." fill unoptimized={url.startsWith('http')} />
+```
+
+## Helpers en `src/lib/storage.ts`
+
+| Función | Uso | Bucket |
+|---------|-----|--------|
+| `getPlantImageUrl(path)` | Productos de tienda (cuando no viene URL completa) | `plants` |
+| `getBlogImageUrl(path)` | Artículos del blog | `blog` |
+| `resolveProductImageUrl(url)` | Passthrough — devuelve URL tal cual | — |
+
+## Resumen rápido
+
+| Sección | Origen | ¿Supabase? |
+|---------|--------|------------|
+| Home, Variedades, Sobre nosotros, Logo, OG | `public/images/` | NO |
+| Tienda (productos) | Supabase `plants` | SÍ |
+| Blog (artículos) | Supabase `blog` | SÍ |

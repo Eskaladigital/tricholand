@@ -167,7 +167,30 @@ NEXT_PUBLIC_SITE_URL=https://www.tricholand.com
 
 ---
 
-## Favicon e imágenes
+## Imágenes — REGLA DE ORO
+
+> **MUY IMPORTANTE**: Las imágenes tienen **dos orígenes distintos** según la sección.
+> No mezclarlos. Seguir esta tabla siempre.
+
+| Sección | Origen | Ruta / Método | `<Image>` |
+|---------|--------|---------------|-----------|
+| **Home** (Hero, CatalogPreview) | `public/images/` | `/images/products/...`, `/images/varieties/...` | `unoptimized` |
+| **Variedades** (`/variedades`) | `public/images/` | `/images/varieties/...`, `/images/vivero/...` | `unoptimized` |
+| **Sobre nosotros** (7 idiomas) | `public/images/` | `/images/vivero/productores_cactus_*.webp` | `unoptimized` |
+| **Logo** (Header, Footer) | `public/images/` | `/images/icons/logo_tricho_yellow_200_200.webp` | `unoptimized` |
+| **OG image** (layouts) | `public/images/` | `https://www.tricholand.com/images/og-image.webp` | — |
+| **Tienda** (productos) | **Supabase Storage** (bucket `plants`) | URL completa `https://xxx.supabase.co/...` vía BD | **`unoptimized` siempre** |
+| **Blog** (artículos) | **Supabase Storage** (bucket `blog`) | `getBlogImageUrl()` en `storage.ts` | **`unoptimized` siempre** |
+
+### Reglas:
+- **NUNCA** mover imágenes de Home/Variedades/Sobre nosotros a Supabase. Están en `public/`.
+- **NUNCA** mover imágenes de Tienda/Blog a `public/`. Están en Supabase Storage.
+- Las imágenes de **Supabase** SIEMPRE llevan `unoptimized` en `<Image>` (evita error 500 por proxy de Next.js).
+- Ver `src/lib/storage.ts` para los helpers de Supabase (`getPlantImageUrl`, `getBlogImageUrl`, `resolveProductImageUrl`).
+
+---
+
+## Favicon
 
 El favicon se genera desde `public/images/icons/logo_tricho.webp` con fondo blanco. Para regenerar:
 

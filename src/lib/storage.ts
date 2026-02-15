@@ -1,7 +1,30 @@
 /**
  * Helper para construir URLs públicas de Supabase Storage.
  *
- * Bucket «plants»: imágenes de variedades, productos y vivero.
+ * ╔══════════════════════════════════════════════════════════════════════╗
+ * ║  REGLA DE ORO — ORIGEN DE IMÁGENES (¡NO TOCAR SIN LEER ESTO!)    ║
+ * ╠══════════════════════════════════════════════════════════════════════╣
+ * ║                                                                    ║
+ * ║  LOCAL (public/images/):                                           ║
+ * ║    • Home (HeroSection, CatalogPreview)                            ║
+ * ║    • Variedades (/variedades) — src/content/varieties/es/data.ts   ║
+ * ║    • Sobre nosotros (7 idiomas)                                    ║
+ * ║    • Logo (Header, Footer) — /images/icons/                        ║
+ * ║    • OG image (layouts) — /images/og-image.webp                    ║
+ * ║    → Usan paths tipo "/images/varieties/...", "/images/vivero/..." ║
+ * ║    → Next.js <Image> con unoptimized (estáticas)                   ║
+ * ║                                                                    ║
+ * ║  SUPABASE STORAGE:                                                 ║
+ * ║    • Tienda — productos (bucket "plants", vía BD → products.images)║
+ * ║    • Blog — artículos (bucket "blog", vía getBlogImageUrl)         ║
+ * ║    → URLs https://xxx.supabase.co/storage/v1/object/public/...     ║
+ * ║    → Next.js <Image> SIEMPRE con unoptimized                       ║
+ * ║                                                                    ║
+ * ║  NUNCA mover imágenes de Home/Variedades a Supabase.               ║
+ * ║  NUNCA mover imágenes de Tienda/Blog a public/.                    ║
+ * ╚══════════════════════════════════════════════════════════════════════╝
+ *
+ * Bucket «plants»: imágenes de productos de tienda.
  *   Estructura de carpetas dentro del bucket:
  *     Pachanoi/  Peruvianus/  Bridgesii/  Terscheckii/  Macrogonus/  Spachianus/  Otros/  Vivero/
  *
