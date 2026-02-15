@@ -64,7 +64,6 @@ export async function POST(request: NextRequest) {
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-zA-Z0-9._-]/g, '_')
-      .toLowerCase()
     if (!safeName) return NextResponse.json({ error: 'Nombre de carpeta no válido' }, { status: 400 })
     const filePath = folder ? `${folder}/${safeName}/.keep` : `${safeName}/.keep`
     const { supabase } = ctx
