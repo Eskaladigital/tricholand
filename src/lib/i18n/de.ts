@@ -9,7 +9,6 @@ export const de: Dictionary = {
   nav: {
     home: 'Startseite',
     varieties: 'Sorten',
-    catalog: 'Katalog',
     shop: 'B2B-Shop',
     services: 'Dienstleistungen',
     about: 'Über uns',
@@ -106,7 +105,7 @@ export const de: Dictionary = {
   },
   footer: {
     description: 'Spezialisierter Produzent von Trichocereus und säulenförmigen Kakteen. Exklusiver B2B-Verkauf für Fachleute.',
-    catalog_title: 'Katalog',
+    varieties_title: 'Sorten',
     company_title: 'Unternehmen',
     company_links: [
       { label: 'Dienstleistungen', href: '/de/servicios' },

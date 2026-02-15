@@ -9,7 +9,6 @@ export const it: Dictionary = {
   nav: {
     home: 'Inizio',
     varieties: 'Varietà',
-    catalog: 'Catalogo',
     shop: 'Negozio B2B',
     services: 'Servizi',
     about: 'Chi siamo',
@@ -106,7 +105,7 @@ export const it: Dictionary = {
   },
   footer: {
     description: 'Vivaio produttore specializzato in Trichocereus e cactacee colonnari. Vendita esclusiva B2B per professionisti del settore.',
-    catalog_title: 'Catalogo',
+    varieties_title: 'Varietà',
     company_title: 'Azienda',
     company_links: [
       { label: 'Servizi', href: '/it/servizi' },

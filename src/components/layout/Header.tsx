@@ -64,7 +64,6 @@ export function Header({ locale, dict }: HeaderProps) {
 
   const navLinks = [
     { label: dict.nav.varieties, href: getFullPath(locale, 'varieties') },
-    { label: dict.nav.catalog, href: getFullPath(locale, 'catalog') },
     { label: dict.nav.shop, href: getFullPath(locale, 'shop'), highlight: true },
     { label: dict.nav.services, href: getFullPath(locale, 'services') },
     { label: dict.nav.blog, href: `/${locale}/blog` },

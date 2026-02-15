@@ -23,6 +23,11 @@ const nextConfig: NextConfig = {
         destination: '/es/blog',
         permanent: true,
       },
+      {
+        source: '/es/catalogo',
+        destination: '/es/variedades',
+        permanent: true,
+      },
 
       // === INGLÉS — Redirects 301 para preservar SEO (URLs antiguas bien posicionadas) ===
       {
@@ -75,10 +80,15 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
 
-      // === CATÁLOGO → CATALOG ===
+      // === CATÁLOGO → VARIEDADES (eliminado, redirigir a variedades) ===
       {
         source: '/en/catalogo',
-        destination: '/en/catalog',
+        destination: '/en/varieties',
+        permanent: true,
+      },
+      {
+        source: '/en/catalog',
+        destination: '/en/varieties',
         permanent: true,
       },
 
@@ -127,7 +137,8 @@ const nextConfig: NextConfig = {
       // === ALEMÁN (DE) ===
       { source: '/de/variedades', destination: '/de/sorten', permanent: true },
       { source: '/de/variedades/:slug', destination: '/de/sorten/:slug', permanent: true },
-      { source: '/de/catalogo', destination: '/de/katalog', permanent: true },
+      { source: '/de/catalogo', destination: '/de/sorten', permanent: true },
+      { source: '/de/katalog', destination: '/de/sorten', permanent: true },
       { source: '/de/tienda', destination: '/de/shop', permanent: true },
       { source: '/de/tienda/pedido', destination: '/de/shop/bestellung', permanent: true },
       { source: '/de/tienda/:slug', destination: '/de/shop/:slug', permanent: true },
@@ -141,7 +152,8 @@ const nextConfig: NextConfig = {
       // === FRANCÉS (FR) ===
       { source: '/fr/variedades', destination: '/fr/varietes', permanent: true },
       { source: '/fr/variedades/:slug', destination: '/fr/varietes/:slug', permanent: true },
-      { source: '/fr/catalogo', destination: '/fr/catalogue', permanent: true },
+      { source: '/fr/catalogo', destination: '/fr/varietes', permanent: true },
+      { source: '/fr/catalogue', destination: '/fr/varietes', permanent: true },
       { source: '/fr/tienda', destination: '/fr/boutique', permanent: true },
       { source: '/fr/tienda/pedido', destination: '/fr/boutique/commande', permanent: true },
       { source: '/fr/tienda/:slug', destination: '/fr/boutique/:slug', permanent: true },
@@ -153,6 +165,7 @@ const nextConfig: NextConfig = {
       { source: '/fr/aviso-legal', destination: '/fr/mentions-legales', permanent: true },
 
       // === ITALIANO (IT) ===
+      { source: '/it/catalogo', destination: '/it/varieta', permanent: true },
       { source: '/it/variedades', destination: '/it/varieta', permanent: true },
       { source: '/it/variedades/:slug', destination: '/it/varieta/:slug', permanent: true },
       { source: '/it/tienda', destination: '/it/shop', permanent: true },
@@ -168,7 +181,8 @@ const nextConfig: NextConfig = {
       // === HOLANDÉS (NL) ===
       { source: '/nl/variedades', destination: '/nl/varieteiten', permanent: true },
       { source: '/nl/variedades/:slug', destination: '/nl/varieteiten/:slug', permanent: true },
-      { source: '/nl/catalogo', destination: '/nl/catalogus', permanent: true },
+      { source: '/nl/catalogo', destination: '/nl/varieteiten', permanent: true },
+      { source: '/nl/catalogus', destination: '/nl/varieteiten', permanent: true },
       { source: '/nl/tienda', destination: '/nl/winkel', permanent: true },
       { source: '/nl/tienda/pedido', destination: '/nl/winkel/bestelling', permanent: true },
       { source: '/nl/tienda/:slug', destination: '/nl/winkel/:slug', permanent: true },
@@ -180,6 +194,7 @@ const nextConfig: NextConfig = {
       { source: '/nl/aviso-legal', destination: '/nl/juridische-informatie', permanent: true },
 
       // === PORTUGUÉS (PT) ===
+      { source: '/pt/catalogo', destination: '/pt/variedades', permanent: true },
       { source: '/pt/tienda', destination: '/pt/loja', permanent: true },
       { source: '/pt/tienda/pedido', destination: '/pt/loja/pedido', permanent: true },
       { source: '/pt/tienda/:slug', destination: '/pt/loja/:slug', permanent: true },

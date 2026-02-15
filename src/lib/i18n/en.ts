@@ -9,7 +9,6 @@ export const en: Dictionary = {
   nav: {
     home: 'Home',
     varieties: 'Varieties',
-    catalog: 'Catalog',
     shop: 'B2B Shop',
     services: 'Services',
     about: 'About Us',
@@ -106,7 +105,7 @@ export const en: Dictionary = {
   },
   footer: {
     description: 'Producer nursery specialized in Trichocereus and columnar cacti. Exclusive B2B sales for industry professionals.',
-    catalog_title: 'Catalog',
+    varieties_title: 'Varieties',
     company_title: 'Company',
     company_links: [
       { label: 'Services', href: '/en/services' },

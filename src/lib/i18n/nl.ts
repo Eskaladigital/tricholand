@@ -9,7 +9,6 @@ export const nl: Dictionary = {
   nav: {
     home: 'Start',
     varieties: 'Variëteiten',
-    catalog: 'Catalogus',
     shop: 'B2B Winkel',
     services: 'Diensten',
     about: 'Over ons',
@@ -106,7 +105,7 @@ export const nl: Dictionary = {
   },
   footer: {
     description: 'Producentenkwekerij gespecialiseerd in Trichocereus en kolomvormige cactussen. Exclusieve B2B verkoop voor professionals in de sector.',
-    catalog_title: 'Catalogus',
+    varieties_title: 'Variëteiten',
     company_title: 'Bedrijf',
     company_links: [
       { label: 'Diensten', href: '/nl/servicios' },

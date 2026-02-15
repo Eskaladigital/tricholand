@@ -4,7 +4,6 @@
  */
 const DEFAULT_PATHS = {
   varieties: 'variedades',
-  catalog: 'catalogo',
   shop: 'tienda',
   shopOrder: 'tienda/pedido',
   services: 'servicios',
@@ -17,7 +16,6 @@ const DEFAULT_PATHS = {
 
 const EN_PATHS = {
   varieties: 'varieties',
-  catalog: 'catalog',
   shop: 'shop',
   shopOrder: 'shop/order',
   services: 'services',
@@ -30,7 +28,6 @@ const EN_PATHS = {
 
 const DE_PATHS = {
   varieties: 'sorten',
-  catalog: 'katalog',
   shop: 'shop',
   shopOrder: 'shop/bestellung',
   services: 'dienstleistungen',
@@ -43,7 +40,6 @@ const DE_PATHS = {
 
 const FR_PATHS = {
   varieties: 'varietes',
-  catalog: 'catalogue',
   shop: 'boutique',
   shopOrder: 'boutique/commande',
   services: 'services',
@@ -56,7 +52,6 @@ const FR_PATHS = {
 
 const IT_PATHS = {
   varieties: 'varieta',
-  catalog: 'catalogo',
   shop: 'shop',
   shopOrder: 'shop/ordine',
   services: 'servizi',
@@ -69,7 +64,6 @@ const IT_PATHS = {
 
 const NL_PATHS = {
   varieties: 'varieteiten',
-  catalog: 'catalogus',
   shop: 'winkel',
   shopOrder: 'winkel/bestelling',
   services: 'diensten',
@@ -82,7 +76,6 @@ const NL_PATHS = {
 
 const PT_PATHS = {
   varieties: 'variedades',
-  catalog: 'catalogo',
   shop: 'loja',
   shopOrder: 'loja/pedido',
   services: 'servicos',
@@ -153,7 +146,6 @@ export function getPathForLocaleSwitch(
     'shopOrder',
     'shop',
     'varieties',
-    'catalog',
     'services',
     'about',
     'contact',

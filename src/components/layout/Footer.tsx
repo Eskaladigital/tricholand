@@ -86,10 +86,10 @@ export function Footer({ locale, dict }: FooterProps) {
           </div>
         </div>
 
-        {/* Catálogo */}
+        {/* Variedades */}
         <div>
           <h4 className="font-[family-name:var(--font-archivo-narrow)] text-[0.68rem] uppercase tracking-[0.15em] text-naranja mb-5">
-            {dict.footer.catalog_title}
+            {dict.footer.varieties_title}
           </h4>
           <ul className="space-y-2">
             {varieties.map((v) => (

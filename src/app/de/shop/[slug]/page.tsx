@@ -16,13 +16,18 @@ export async function generateStaticParams() {
 const LOCALE = 'de'
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params
-  const product = await getProductForLocale(slug, LOCALE)
-  if (!product) return { title: 'Produkt nicht gefunden' }
-  return {
-    title: `${product.name} — B2B-Shop`,
-    description: product.description.slice(0, 160),
-    alternates: getAlternatesMetadata(LOCALE, 'shop', slug),
+  try {
+    const { slug } = await params
+    const product = await getProductForLocale(slug, LOCALE)
+    if (!product) return { title: 'Produkt nicht gefunden' }
+    const desc = typeof product.description === 'string' ? product.description.slice(0, 160) : ''
+    return {
+      title: `${product.name ?? 'Produkt'} — B2B-Shop`,
+      description: desc || undefined,
+      alternates: getAlternatesMetadata(LOCALE, 'shop', slug),
+    }
+  } catch {
+    return { title: 'Produkt nicht gefunden' }
   }
 }
 
@@ -110,7 +115,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 Spezifikationen
               </h2>
               <div className="grid grid-cols-2 gap-x-6 gap-y-2">
-                {product.specs.map((spec, i) => (
+                {(Array.isArray(product.specs) ? product.specs : []).map((spec, i) => (
                   <div key={i} className="flex justify-between py-1.5 border-b border-linea/50 text-sm">
                     <span className="text-marron-claro">{spec.label}</span>
                     <span className="font-semibold">{spec.value}</span>
@@ -125,7 +130,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <h2 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mb-4 pb-2 border-b-2 border-negro">
             Produktbeschreibung
           </h2>
-          <p className="text-marron-claro leading-relaxed">{product.description}</p>
+          <p className="text-marron-claro leading-relaxed">{product.description ?? ''}</p>
         </div>
       </article>
 

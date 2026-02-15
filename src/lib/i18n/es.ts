@@ -9,7 +9,6 @@ export const es: Dictionary = {
   nav: {
     home: 'Inicio',
     varieties: 'Variedades',
-    catalog: 'Catálogo',
     shop: 'Tienda B2B',
     services: 'Servicios',
     about: 'Sobre nosotros',
@@ -106,7 +105,7 @@ export const es: Dictionary = {
   },
   footer: {
     description: 'Vivero productor especializado en Trichocereus y cactáceas columnares. Venta exclusiva B2B para profesionales del sector.',
-    catalog_title: 'Catálogo',
+    varieties_title: 'Variedades',
     company_title: 'Empresa',
     company_links: [
       { label: 'Servicios', href: '/es/servicios' },

@@ -7,7 +7,6 @@ export interface Dictionary {
   nav: {
     home: string
     varieties: string
-    catalog: string
     shop: string
     services: string
     about: string
@@ -89,7 +88,7 @@ export interface Dictionary {
   }
   footer: {
     description: string
-    catalog_title: string
+    varieties_title: string
     company_title: string
     company_links: Array<{ label: string; href: string }>
     contact_title: string

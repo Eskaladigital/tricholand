@@ -9,7 +9,6 @@ export const fr: Dictionary = {
   nav: {
     home: 'Accueil',
     varieties: 'Variétés',
-    catalog: 'Catalogue',
     shop: 'Boutique B2B',
     services: 'Services',
     about: 'À propos de nous',
@@ -106,7 +105,7 @@ export const fr: Dictionary = {
   },
   footer: {
     description: 'Pépinière productrice spécialisée en Trichocereus et cactacées colonnaires. Vente exclusive B2B pour les professionnels du secteur.',
-    catalog_title: 'Catalogue',
+    varieties_title: 'Variétés',
     company_title: 'Entreprise',
     company_links: [
       { label: 'Services', href: '/fr/services' },

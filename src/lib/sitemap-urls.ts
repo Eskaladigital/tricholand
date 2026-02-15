@@ -11,7 +11,6 @@ const LOCALES = ['es', 'en', 'nl', 'fr', 'de', 'it', 'pt'] as const
 const STATIC_PATH_KEYS = [
   { key: '' as const, label: 'Inicio' },
   { key: 'varieties' as const, label: 'Variedades' },
-  { key: 'catalog' as const, label: 'Catálogo' },
   { key: 'services' as const, label: 'Servicios' },
   { key: 'about' as const, label: 'Sobre nosotros' },
   { key: 'contact' as const, label: 'Contacto' },
