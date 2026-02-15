@@ -70,7 +70,7 @@ export default async function ProductsListPage() {
                                 width={48}
                                 height={48}
                                 className="object-cover w-full h-full"
-                                unoptimized={product.images[0].url.startsWith('http')}
+                                unoptimized
                               />
                             </div>
                           ) : (

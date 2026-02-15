@@ -131,7 +131,7 @@ export function BlogGrid({ posts, locale }: BlogGridProps) {
                   sizes="(max-width: 768px) 100vw, 50vw"
                   quality={70}
                   className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                  unoptimized={getPostImageSrc(featured)!.startsWith('http')}
+                  unoptimized
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center text-marron-claro/60 text-sm font-[family-name:var(--font-archivo-narrow)] uppercase tracking-wide">
@@ -191,7 +191,7 @@ export function BlogGrid({ posts, locale }: BlogGridProps) {
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   quality={60}
                   className="object-cover group-hover:scale-[1.04] transition-transform duration-400"
-                  unoptimized={getPostImageSrc(post)!.startsWith('http')}
+                  unoptimized
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center text-marron-claro/50 text-xs font-[family-name:var(--font-archivo-narrow)] uppercase tracking-wide">

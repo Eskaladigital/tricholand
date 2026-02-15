@@ -58,7 +58,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 fill
                 className="object-cover"
                 priority
-                unoptimized={product.images[0].url.startsWith('http')}
+                unoptimized
               />
             ) : (
               <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-marron-claro">

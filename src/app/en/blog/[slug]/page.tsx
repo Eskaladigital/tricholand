@@ -70,7 +70,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             fill
             className="object-cover"
             priority
-            unoptimized={post.image.startsWith('http')}
+            unoptimized
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-marron-claro/50 text-sm font-[family-name:var(--font-archivo-narrow)] uppercase tracking-wide">
