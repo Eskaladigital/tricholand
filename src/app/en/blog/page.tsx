@@ -3,6 +3,8 @@ import { getPostsMeta } from '@/lib/blog'
 import { BlogGrid } from '@/components/blog/BlogGrid'
 import { getBlogIndexAlternates } from '@/lib/i18n/paths'
 
+export const revalidate = 60
+
 export const metadata: Metadata = {
   title: 'Blog',
   description: 'Tricholand blog: technical guides on cultivation, care, grafting and propagation of Trichocereus. Resources for professionals and enthusiasts.',

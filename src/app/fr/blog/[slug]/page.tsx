@@ -10,6 +10,8 @@ import { getFullPath } from '@/lib/i18n/paths'
 const LOCALE = 'fr'
 const BASE_URL = 'https://www.tricholand.com'
 
+export const revalidate = 60
+
 export async function generateStaticParams() {
   const slugs = await getAllPostSlugs(LOCALE)
   return slugs.map((slug) => ({ slug }))

@@ -39,8 +39,6 @@ interface ProductCardShopProps {
 }
 
 export function ProductCardShop({ product, locale, t }: ProductCardShopProps) {
-  const isLowStock = product.stock_qty !== null && product.stock_qty <= 5
-
   return (
     <div className="group bg-blanco border border-linea hover:shadow-lg transition-all duration-300 flex flex-col">
       {/* Image */}
@@ -87,15 +85,6 @@ export function ProductCardShop({ product, locale, t }: ProductCardShopProps) {
           </span>
           <span className="text-xs text-marron-claro">/ {product.unit_label}</span>
         </div>
-
-        {/* Stock */}
-        {product.stock_qty !== null && (
-          <p className={`text-xs mt-1 font-semibold ${isLowStock ? 'text-terracota' : 'text-verde'}`}>
-            {isLowStock
-              ? `⚡ ${t.onlyXLotsLeft} ${product.stock_qty} ${t.lotsLeft}`
-              : `● ${product.stock_qty} ${t.lotsAvailable}`}
-          </p>
-        )}
       </div>
 
       {/* Add to cart */}
