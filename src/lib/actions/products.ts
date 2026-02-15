@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import type { Product } from '@/types/shop'
 import { PRODUCT_TRANSLATIONS } from '@/content/shop/product-translations'
+import { resolveProductImageUrl } from '@/lib/storage'
 
 export interface ProductOption {
   id: string
@@ -32,12 +33,15 @@ function mapDbProductToProduct(row: Record<string, unknown>): Product {
     unit_label: (row.unit_label as string) ?? 'lotes',
     size_range: (row.size_range as string) ?? '',
     specs: Array.isArray(specs) ? specs : [],
-    images: Array.isArray(images) ? images.map((img: unknown, i: number) => ({
-      id: (img as Record<string, unknown>)?.id as string ?? `img_${i}`,
-      url: (img as Record<string, unknown>)?.url as string ?? '',
-      alt: (img as Record<string, unknown>)?.alt as string ?? '',
-      order: (img as Record<string, unknown>)?.order as number ?? i,
-    })) : [],
+    images: Array.isArray(images) ? images.map((img: unknown, i: number) => {
+      const rawUrl = (img as Record<string, unknown>)?.url as string ?? ''
+      return {
+        id: (img as Record<string, unknown>)?.id as string ?? `img_${i}`,
+        url: resolveProductImageUrl(rawUrl),
+        alt: (img as Record<string, unknown>)?.alt as string ?? '',
+        order: (img as Record<string, unknown>)?.order as number ?? i,
+      }
+    }) : [],
     status: (row.status as Product['status']) ?? 'draft',
     stock_qty: (row.stock_qty as number) ?? null,
     meta_title: (row.meta_title as string) ?? null,

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 interface MediaFile {
   name: string
@@ -63,18 +64,21 @@ export default function MediaPage() {
     const fileList = e.target.files
     if (!fileList?.length) return
     setUploading(true)
+    const supabase = createClient()
 
     for (let i = 0; i < fileList.length; i++) {
-      const formData = new FormData()
-      formData.append('file', fileList[i])
-      formData.append('bucket', bucket)
-      if (folder) formData.append('folder', folder)
-
-      const res = await fetch('/api/media', { method: 'POST', body: formData })
-      const json = await res.json()
-      if (json.error) {
-        alert(`Error subiendo ${fileList[i].name}: ${json.error}`)
-      }
+      const file = fileList[i]
+      const safeName = file.name
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9._-]/g, '_')
+        .toLowerCase()
+      const filePath = folder ? `${folder}/${safeName}` : safeName
+      const { error } = await supabase.storage.from(bucket).upload(filePath, file, {
+        cacheControl: '31536000',
+        upsert: false,
+      })
+      if (error) alert(`Error subiendo ${file.name}: ${error.message}`)
     }
 
     setUploading(false)
