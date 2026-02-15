@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import Image from 'next/image'
 import { Editor } from '@tinymce/tinymce-react'
 import { marked } from 'marked'
+import { renderBlogContent } from '@/lib/blog-content'
 import type { AdminBlogPost } from '@/lib/actions/blog'
 import { getBlogPostsBySourceSlug } from '@/lib/actions/blog'
 import { MediaPickerModal } from './MediaPickerModal'
@@ -199,16 +200,8 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
                   </div>
                 )}
                 <div
-                  className="prose prose-sm max-w-none border border-linea p-4 bg-crudo/30"
-                  dangerouslySetInnerHTML={{
-                    __html: (() => {
-                      const c = translationByLocale.content ?? ''
-                      if (!c) return ''
-                      if (c.trim().startsWith('<')) return c // HTML
-                      const md = c.includes('##') || c.includes('**') || c.startsWith('#')
-                      return md ? (marked.parse(c, { async: false }) as string) : c
-                    })(),
-                  }}
+                  className="prose-tricholand prose prose-sm max-w-none border border-linea p-4 bg-crudo/30 [&_h2]:font-[family-name:var(--font-archivo-narrow)] [&_h2]:text-lg [&_h2]:font-bold [&_h2]:uppercase [&_h2]:mt-4 [&_h2]:mb-2 [&_h2]:pt-3 [&_h2]:border-t [&_h2]:border-linea [&_h3]:font-[family-name:var(--font-archivo-narrow)] [&_h3]:font-bold [&_p]:text-marron-claro [&_a]:text-naranja [&_a]:underline [&_ul]:space-y-1 [&_li]:text-marron-claro"
+                  dangerouslySetInnerHTML={{ __html: renderBlogContent(translationByLocale.content ?? '') }}
                 />
               </div>
             </div>
