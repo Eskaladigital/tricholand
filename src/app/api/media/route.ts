@@ -67,7 +67,11 @@ export async function POST(request: NextRequest) {
     if (!safeName) return NextResponse.json({ error: 'Nombre de carpeta no válido' }, { status: 400 })
     const filePath = folder ? `${folder}/${safeName}/.keep` : `${safeName}/.keep`
     const { supabase } = ctx
-    const { error } = await supabase.storage.from(bucket).upload(filePath, new Blob([]), {
+    // Usar un PNG 1x1 transparente (los buckets blog/plants solo permiten imágenes)
+    const png1x1 = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64')
+    const blob = new Blob([png1x1], { type: 'image/png' })
+    const { error } = await supabase.storage.from(bucket).upload(filePath, blob, {
+      contentType: 'image/png',
       cacheControl: '0',
       upsert: false,
     })
