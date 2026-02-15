@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Dictionary } from '@/lib/i18n/types'
 import { getFullPath } from '@/lib/i18n/paths'
-import { getPlantImageUrl } from '@/lib/storage'
+
 
 interface HeroSectionProps {
   locale: string
@@ -15,8 +15,8 @@ export function HeroSection({ locale, dict }: HeroSectionProps) {
       {/* Image */}
       <div className="relative min-h-[400px] lg:min-h-0 order-first">
         <Image
-          src={getPlantImageUrl('Vivero/productores_cactus_1.webp')}
-          alt="Tricholand vivero de Trichocereus"
+          src="/images/products/producto_trichocereus_pachanoi_bio_2.webp"
+          alt="Trichocereus Pachanoi Bio - Tricholand"
           fill
           sizes="(max-width: 1024px) 100vw, 55vw"
           quality={65}

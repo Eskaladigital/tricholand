@@ -111,7 +111,7 @@ export function CatalogGrid({ locale, varieties, t }: CatalogGridProps) {
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
                   quality={60}
                   className="w-full h-[200px] object-cover group-hover:scale-[1.04] transition-transform duration-400"
-                  unoptimized={v.image.startsWith('http')}
+                  unoptimized
                 />
                 <span className="absolute top-3 left-3 bg-negro text-blanco px-2.5 py-1 font-[family-name:var(--font-archivo-narrow)] text-[0.72rem] font-semibold tracking-wide">
                   {v.code}

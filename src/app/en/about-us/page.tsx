@@ -4,8 +4,6 @@ import Link from 'next/link'
 import { en } from '@/lib/i18n/en'
 import { StatsBar } from '@/components/home/StatsBar'
 import { getAlternatesMetadata } from '@/lib/i18n/paths'
-import { getPlantImageUrl } from '@/lib/storage'
-
 export const metadata: Metadata = {
   title: 'About Us',
   description: 'Meet Tricholand: producer nursery specialized in Trichocereus and columnar cacti in Murcia, Spain. Over 50 varieties, 2,500 m² of cultivation.',
@@ -51,7 +49,7 @@ export default function SobreNosotrosPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <Image
-              src={getPlantImageUrl('Vivero/productores_cactus_1.webp')}
+              src="/images/vivero/productores_cactus_1.webp"
               alt="Tricholand nursery"
               width={500}
               height={350}
@@ -61,7 +59,7 @@ export default function SobreNosotrosPage() {
               className="w-full h-[200px] lg:h-full object-cover"
             />
             <Image
-              src={getPlantImageUrl('Vivero/productores_cactus_2.webp')}
+              src="/images/vivero/productores_cactus_2.webp"
               alt="Trichocereus cultivation"
               width={500}
               height={350}

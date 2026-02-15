@@ -4,8 +4,6 @@ import Link from 'next/link'
 import { de } from '@/lib/i18n/de'
 import { getFullPath, getAlternatesMetadata } from '@/lib/i18n/paths'
 import { StatsBar } from '@/components/home/StatsBar'
-import { getPlantImageUrl } from '@/lib/storage'
-
 export const metadata: Metadata = {
   title: 'Über uns',
   description: 'Lernen Sie Tricholand kennen: Produzentengärtnerei spezialisiert auf Trichocereus und säulenförmige Kakteen in Murcia, Spanien. Über 50 Sorten, 2.500 m² Anbaufläche.',
@@ -52,7 +50,7 @@ export default function SobreNosotrosPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <Image
-              src={getPlantImageUrl('Vivero/productores_cactus_1.webp')}
+              src="/images/vivero/productores_cactus_1.webp"
               alt="Vivero Tricholand"
               width={500}
               height={350}
@@ -62,7 +60,7 @@ export default function SobreNosotrosPage() {
               className="w-full h-[200px] lg:h-full object-cover"
             />
             <Image
-              src={getPlantImageUrl('Vivero/productores_cactus_2.webp')}
+              src="/images/vivero/productores_cactus_2.webp"
               alt="Cultivo de Trichocereus"
               width={500}
               height={350}

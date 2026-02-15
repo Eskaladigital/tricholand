@@ -4,8 +4,6 @@ import Link from 'next/link'
 import { pt } from '@/lib/i18n/pt'
 import { getFullPath, getAlternatesMetadata } from '@/lib/i18n/paths'
 import { StatsBar } from '@/components/home/StatsBar'
-import { getPlantImageUrl } from '@/lib/storage'
-
 export const metadata: Metadata = {
   title: 'Sobre nós',
   description: 'Conheça a Tricholand: viveiro produtor especializado em Trichocereus e cactáceas colunares em Múrcia, Espanha. Mais de 50 variedades, 2.500 m² de cultivo.',
@@ -51,7 +49,7 @@ export default function SobreNosotrosPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <Image
-              src={getPlantImageUrl('Vivero/productores_cactus_1.webp')}
+              src="/images/vivero/productores_cactus_1.webp"
               alt="Viveiro Tricholand"
               width={500}
               height={350}
@@ -61,7 +59,7 @@ export default function SobreNosotrosPage() {
               className="w-full h-[200px] lg:h-full object-cover"
             />
             <Image
-              src={getPlantImageUrl('Vivero/productores_cactus_2.webp')}
+              src="/images/vivero/productores_cactus_2.webp"
               alt="Cultivo Trichocereus"
               width={500}
               height={350}

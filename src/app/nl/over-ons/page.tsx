@@ -4,8 +4,6 @@ import Link from 'next/link'
 import { getFullPath, getAlternatesMetadata } from '@/lib/i18n/paths'
 import { nl } from '@/lib/i18n/nl'
 import { StatsBar } from '@/components/home/StatsBar'
-import { getPlantImageUrl } from '@/lib/storage'
-
 export const metadata: Metadata = {
   title: 'Over ons',
   description: 'Maak kennis met Tricholand: producentenkwekerij gespecialiseerd in Trichocereus en kolomvormige cactussen in Murcia, Spanje. Meer dan 50 variëteiten, 2.500 m² teelt.',
@@ -51,7 +49,7 @@ export default function SobreNosotrosPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <Image
-              src={getPlantImageUrl('Vivero/productores_cactus_1.webp')}
+              src="/images/vivero/productores_cactus_1.webp"
               alt="Tricholand kwekerij"
               width={500}
               height={350}
@@ -61,7 +59,7 @@ export default function SobreNosotrosPage() {
               className="w-full h-[200px] lg:h-full object-cover"
             />
             <Image
-              src={getPlantImageUrl('Vivero/productores_cactus_2.webp')}
+              src="/images/vivero/productores_cactus_2.webp"
               alt="Trichocereus teelt"
               width={500}
               height={350}
