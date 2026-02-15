@@ -66,7 +66,7 @@ export async function getPostsMeta(locale: string): Promise<BlogPostMeta[]> {
 
   const { data, error } = await supabase
     .from('blog_posts')
-    .select('slug, title, description, date, image, image_alt, tags, reading_time')
+    .select('slug, title, description, date, image, image_alt, tags, reading_time, source_slug')
     .eq('locale', effectiveLocale)
     .eq('status', 'published')
     .order('date', { ascending: false })
@@ -76,7 +76,40 @@ export async function getPostsMeta(locale: string): Promise<BlogPostMeta[]> {
     return []
   }
 
-  return (data || []).map(rowToMeta)
+  const rows = (data || []) as Array<{ slug: string; title: string; description: string | null; date: string; image: string | null; image_alt: string | null; tags: string[] | null; reading_time: number; source_slug?: string }>
+
+  // Fallback: traducciones sin imagen → usar imagen del artículo ES (misma lógica que getPostBySlug)
+  if (effectiveLocale !== 'es') {
+    const missingSourceSlugs = [...new Set(
+      rows
+        .filter((r) => !r.image || !isSupabaseImage(r.image))
+        .map((r) => r.source_slug)
+        .filter((s): s is string => !!s)
+    )]
+    if (missingSourceSlugs.length > 0) {
+      const { data: esPosts } = await supabase
+        .from('blog_posts')
+        .select('source_slug, image, image_alt')
+        .eq('locale', 'es')
+        .eq('status', 'published')
+        .in('source_slug', missingSourceSlugs)
+      const imageBySource: Record<string, { image: string; image_alt?: string }> = {}
+      for (const p of esPosts || []) {
+        if (p.image && isSupabaseImage(p.image)) {
+          imageBySource[p.source_slug] = { image: p.image, image_alt: p.image_alt ?? undefined }
+        }
+      }
+      for (const row of rows) {
+        if ((!row.image || !isSupabaseImage(row.image)) && row.source_slug && imageBySource[row.source_slug]) {
+          const fallback = imageBySource[row.source_slug]
+          row.image = fallback.image
+          row.image_alt = row.image_alt || fallback.image_alt || null
+        }
+      }
+    }
+  }
+
+  return rows.map(rowToMeta)
 }
 
 export async function getPostBySlug(slug: string, locale: string): Promise<BlogPost | null> {
