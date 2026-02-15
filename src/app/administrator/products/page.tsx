@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { getProducts } from '@/lib/actions/products'
 import { formatPrice } from '@/types/shop'
 
@@ -61,11 +62,22 @@ export default async function ProductsListPage() {
                     <tr key={product.id} className="border-b border-linea/50 hover:bg-crudo/50 transition-colors">
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
-                          <img
-                            src={product.images[0]?.url || ''}
-                            alt=""
-                            className="w-12 h-12 object-cover shrink-0"
-                          />
+                          {product.images[0]?.url ? (
+                            <div className="relative w-12 h-12 shrink-0 rounded overflow-hidden bg-crudo">
+                              <Image
+                                src={product.images[0].url}
+                                alt={product.images[0]?.alt || product.name}
+                                width={48}
+                                height={48}
+                                className="object-cover w-full h-full"
+                                unoptimized={product.images[0].url.startsWith('http')}
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-12 h-12 rounded bg-linea/30 flex items-center justify-center text-marron-claro text-xs shrink-0">
+                              —
+                            </div>
+                          )}
                           <div>
                             <span className="font-bold block">{product.name}</span>
                             <span className="text-xs text-marron-claro">{product.unit_label}</span>

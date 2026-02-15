@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { getBlogPosts, setBlogPostStatusFromForm } from '@/lib/actions/blog'
+import { getBlogPostsEs, setBlogPostStatusFromForm } from '@/lib/actions/blog'
 
 const STATUS_LABEL: Record<string, { text: string; cls: string }> = {
   published: { text: 'Publicado', cls: 'bg-green-100 text-green-700' },
@@ -8,12 +8,8 @@ const STATUS_LABEL: Record<string, { text: string; cls: string }> = {
   archived: { text: 'Archivado', cls: 'bg-gray-100 text-gray-400' },
 }
 
-const LOCALE_FLAG: Record<string, string> = {
-  es: '🇪🇸', en: '🇬🇧', nl: '🇳🇱', fr: '🇫🇷', de: '🇩🇪', it: '🇮🇹', pt: '🇵🇹',
-}
-
 export default async function BlogListPage() {
-  const posts = await getBlogPosts()
+  const posts = await getBlogPostsEs()
 
   return (
     <>
@@ -46,9 +42,6 @@ export default async function BlogListPage() {
                   Título
                 </th>
                 <th className="text-center px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">
-                  Idioma
-                </th>
-                <th className="text-center px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">
                   Fecha
                 </th>
                 <th className="text-center px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">
@@ -71,7 +64,7 @@ export default async function BlogListPage() {
             <tbody>
               {posts.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="px-4 py-8 text-center text-marron-claro">
+                  <td colSpan={8} className="px-4 py-8 text-center text-marron-claro">
                     No hay artículos. Crea el primero para empezar.
                   </td>
                 </tr>
@@ -100,11 +93,8 @@ export default async function BlogListPage() {
                       <td className="px-4 py-3">
                         <div>
                           <span className="font-bold block">{post.title}</span>
-                          <span className="text-xs text-marron-claro">/{post.locale}/blog/{post.slug}</span>
+                          <span className="text-xs text-marron-claro">/es/blog/{post.slug}</span>
                         </div>
-                      </td>
-                      <td className="px-4 py-3 text-center text-lg">
-                        {LOCALE_FLAG[post.locale] ?? post.locale}
                       </td>
                       <td className="px-4 py-3 text-center text-xs text-marron-claro">
                         {post.date}

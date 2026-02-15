@@ -11,13 +11,14 @@ export default function NewBlogPostPage() {
 
   async function handleSave(data: Record<string, unknown>) {
     setIsSaving(true)
-    const { error } = await createBlogPost(data)
+    const { error, id } = await createBlogPost(data)
     setIsSaving(false)
     if (error) {
       alert(error)
       return
     }
-    router.push('/administrator/blog')
+    if (id) router.push(`/administrator/blog/${id}`)
+    else router.push('/administrator/blog')
   }
 
   return (

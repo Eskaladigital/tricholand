@@ -40,6 +40,35 @@ export async function getBlogPosts(): Promise<AdminBlogPost[]> {
   return (data ?? []) as AdminBlogPost[]
 }
 
+/** Solo artículos en español (para el listado del admin) */
+export async function getBlogPostsEs(): Promise<AdminBlogPost[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select(COLUMNS)
+    .eq('locale', 'es')
+    .order('date', { ascending: false })
+
+  if (error) {
+    console.error('getBlogPostsEs error:', error)
+    return []
+  }
+  return (data ?? []) as AdminBlogPost[]
+}
+
+/** Todas las versiones de un artículo por source_slug */
+export async function getBlogPostsBySourceSlug(sourceSlug: string): Promise<AdminBlogPost[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select(COLUMNS)
+    .eq('source_slug', sourceSlug)
+    .order('locale')
+
+  if (error) return []
+  return (data ?? []) as AdminBlogPost[]
+}
+
 export async function getBlogPostById(id: string): Promise<AdminBlogPost | null> {
   const supabase = await createClient()
   const { data, error } = await supabase

@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import type { Product, ProductSpec, ProductStatus } from '@/types/shop'
+import { MediaPickerModal } from './MediaPickerModal'
 
 interface ProductFormProps {
   product?: Product
@@ -37,6 +39,7 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
   const [imageUrl, setImageUrl] = useState(product?.images[0]?.url || '')
   const [imageAlt, setImageAlt] = useState(product?.images[0]?.alt || '')
   const [varietySlug, setVarietySlug] = useState(product?.variety_slug || '')
+  const [mediaPickerOpen, setMediaPickerOpen] = useState(false)
 
   const [specs, setSpecs] = useState<ProductSpec[]>(product?.specs || [
     { label: '', value: '' },
@@ -173,20 +176,49 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className={labelClass}>URL de la imagen</label>
-            <input type="url" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} className={fieldClass} placeholder="https://..." />
+            <label className={labelClass}>Imagen</label>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setMediaPickerOpen(true)}
+                className="px-4 py-2.5 bg-naranja text-blanco font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase whitespace-nowrap hover:bg-verde transition-colors"
+              >
+                Gestor de medios
+              </button>
+            </div>
+            {imageUrl && (
+              <div className="mt-3 relative w-48 h-36 rounded overflow-hidden border border-linea bg-crudo group">
+                <Image
+                  src={imageUrl}
+                  alt={imageAlt}
+                  fill
+                  className="object-cover"
+                  sizes="192px"
+                  unoptimized={imageUrl.startsWith('http')}
+                />
+                <button
+                  type="button"
+                  onClick={() => setMediaPickerOpen(true)}
+                  className="absolute inset-0 bg-negro/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-blanco font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase"
+                >
+                  Cambiar
+                </button>
+              </div>
+            )}
           </div>
           <div>
             <label className={labelClass}>Texto alt</label>
             <input type="text" value={imageAlt} onChange={(e) => setImageAlt(e.target.value)} className={fieldClass} placeholder="Descripción de la imagen" />
           </div>
         </div>
-        {imageUrl && (
-          <div className="mt-3">
-            <img src={imageUrl} alt={imageAlt} className="w-48 h-36 object-cover border border-linea" />
-          </div>
-        )}
       </section>
+
+      <MediaPickerModal
+        open={mediaPickerOpen}
+        onClose={() => setMediaPickerOpen(false)}
+        onSelect={(url) => { setImageUrl(url); setMediaPickerOpen(false) }}
+        title="Seleccionar imagen del producto"
+      />
 
       {/* Características */}
       <section className="bg-blanco border border-linea p-6">

@@ -1,9 +1,11 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { Editor } from '@tinymce/tinymce-react'
 import type { AdminBlogPost } from '@/lib/actions/blog'
+import { getBlogPostsBySourceSlug } from '@/lib/actions/blog'
+import { MediaPickerModal } from './MediaPickerModal'
 
 interface BlogPostFormProps {
   post?: AdminBlogPost
@@ -31,6 +33,10 @@ const LOCALES = [
   { code: 'pt', label: 'Português' },
 ]
 
+const LOCALE_FLAG: Record<string, string> = {
+  es: '🇪🇸', en: '🇬🇧', nl: '🇳🇱', fr: '🇫🇷', de: '🇩🇪', it: '🇮🇹', pt: '🇵🇹',
+}
+
 export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormProps) {
   const [title, setTitle] = useState(post?.title ?? '')
   const [slug, setSlug] = useState(post?.slug ?? '')
@@ -41,12 +47,48 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
   const [imageAlt, setImageAlt] = useState(post?.image_alt ?? '')
   const [tagsStr, setTagsStr] = useState((post?.tags ?? []).join(', '))
   const [readingTime, setReadingTime] = useState(post?.reading_time ?? 5)
-  const [locale, setLocale] = useState(post?.locale ?? 'es')
   const [status, setStatus] = useState(post?.status ?? 'draft')
   const [metaTitle, setMetaTitle] = useState(post?.meta_title ?? '')
   const [metaDescription, setMetaDescription] = useState(post?.meta_description ?? '')
 
   const editorRef = useRef<{ getContent: () => string } | null>(null)
+  const [mediaPickerOpen, setMediaPickerOpen] = useState<'featured' | 'editor' | null>(null)
+  const tinymceFilePickerRef = useRef<((url: string, meta?: { alt?: string }) => void) | null>(null)
+  const [translations, setTranslations] = useState<AdminBlogPost[]>([])
+  const [selectedLocale, setSelectedLocale] = useState('es')
+  const [isGenerating, setIsGenerating] = useState(false)
+
+  useEffect(() => {
+    if (post?.source_slug) {
+      getBlogPostsBySourceSlug(post.source_slug).then(setTranslations)
+    } else {
+      setTranslations([])
+    }
+  }, [post?.source_slug])
+
+  const translationByLocale = translations.find((t) => t.locale === selectedLocale)
+  const isEditingEs = selectedLocale === 'es'
+  const hasTranslation = !!translationByLocale
+
+  async function handleGenerateTranslations() {
+    if (!post?.source_slug) return
+    setIsGenerating(true)
+    try {
+      const res = await fetch('/api/blog/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ source_slug: post.source_slug }),
+      })
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.error ?? 'Error al generar')
+      const updated = await getBlogPostsBySourceSlug(post.source_slug)
+      setTranslations(updated)
+      alert(`Traducciones generadas: ${(json.created ?? []).join(', ')}${json.errors?.length ? `\nErrores: ${json.errors.join(', ')}` : ''}`)
+    } catch (err) {
+      alert((err as Error).message)
+    }
+    setIsGenerating(false)
+  }
 
   const autoSlug = !post
   function handleTitleChange(value: string) {
@@ -72,7 +114,7 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
       tags: tagsStr.split(',').map((t) => t.trim()).filter(Boolean),
       reading_time: readingTime,
       content,
-      locale,
+      locale: 'es',
       status,
       meta_title: metaTitle || null,
       meta_description: metaDescription || null,
@@ -83,7 +125,76 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
   const labelClass = 'block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1'
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <div className="space-y-6">
+      {/* Selector de idioma + Generar traducciones (solo al editar) */}
+      {post && (
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-crudo border border-linea">
+          <div className="flex flex-wrap gap-1">
+            {LOCALES.map((l) => (
+              <button
+                key={l.code}
+                type="button"
+                onClick={() => setSelectedLocale(l.code)}
+                className={`px-3 py-1.5 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase border transition-colors ${
+                  selectedLocale === l.code
+                    ? 'bg-negro text-crudo border-negro'
+                    : 'bg-blanco border-linea hover:border-naranja'
+                }`}
+              >
+                {LOCALE_FLAG[l.code] ?? l.code} {l.code}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={handleGenerateTranslations}
+            disabled={isGenerating}
+            className="px-4 py-2 bg-verde text-blanco font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase hover:bg-naranja transition-colors disabled:opacity-50"
+          >
+            {isGenerating ? 'Generando...' : 'Generar traducciones'}
+          </button>
+        </div>
+      )}
+
+      {/* Vista solo lectura para traducciones */}
+      {post && !isEditingEs && (
+        <div className="bg-blanco border border-linea p-6">
+          {hasTranslation ? (
+            <div className="space-y-4">
+              <p className="text-sm text-marron-claro">
+                Vista de solo lectura. Las traducciones se generan automáticamente desde el español.
+              </p>
+              <div>
+                <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold uppercase mb-2">{translationByLocale.title}</h2>
+                <p className="text-sm text-marron-claro mb-4">{translationByLocale.description}</p>
+                {translationByLocale.image && (
+                  <div className="relative w-48 h-36 rounded overflow-hidden border border-linea mb-4">
+                    <Image src={translationByLocale.image} alt={translationByLocale.image_alt ?? ''} fill className="object-cover" sizes="192px" unoptimized={translationByLocale.image.startsWith('http')} />
+                  </div>
+                )}
+                <div className="prose prose-sm max-w-none border border-linea p-4 bg-crudo/30" dangerouslySetInnerHTML={{ __html: translationByLocale.content }} />
+              </div>
+            </div>
+          ) : (
+            <div className="py-8 text-center">
+              <p className="text-marron-claro mb-4">No hay traducción en {LOCALES.find((l) => l.code === selectedLocale)?.label ?? selectedLocale}.</p>
+              <p className="text-sm text-marron-claro mb-4">Guarda los cambios en español y pulsa «Generar traducciones» para crearla.</p>
+              <button
+                type="button"
+                onClick={handleGenerateTranslations}
+                disabled={isGenerating}
+                className="px-5 py-2.5 bg-verde text-blanco font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase hover:bg-naranja transition-colors disabled:opacity-50"
+              >
+                {isGenerating ? 'Generando...' : 'Generar traducciones'}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Formulario editable (solo español o nuevo) */}
+      {(isEditingEs || !post) && (
+      <form onSubmit={handleSubmit} className="space-y-8">
       {/* Información básica */}
       <section className="bg-blanco border border-linea p-6">
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-base font-bold uppercase mb-4 pb-2 border-b border-linea">
@@ -115,14 +226,6 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
             <input type="number" min={1} value={readingTime} onChange={(e) => setReadingTime(parseInt(e.target.value) || 5)} className={fieldClass} />
           </div>
           <div>
-            <label className={labelClass}>Idioma</label>
-            <select value={locale} onChange={(e) => setLocale(e.target.value)} className={fieldClass}>
-              {LOCALES.map((l) => (
-                <option key={l.code} value={l.code}>{l.label}</option>
-              ))}
-            </select>
-          </div>
-          <div>
             <label className={labelClass}>Estado</label>
             <select value={status} onChange={(e) => setStatus(e.target.value)} className={fieldClass}>
               <option value="draft">Borrador</option>
@@ -145,7 +248,16 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className={labelClass}>URL de la imagen</label>
-            <input type="text" value={image} onChange={(e) => setImage(e.target.value)} className={fieldClass} placeholder="/images/blog/..." />
+            <div className="flex gap-2">
+              <input type="text" value={image} onChange={(e) => setImage(e.target.value)} className={fieldClass} placeholder="/images/blog/..." />
+              <button
+                type="button"
+                onClick={() => setMediaPickerOpen('featured')}
+                className="px-4 py-2.5 bg-naranja text-blanco font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase whitespace-nowrap hover:bg-verde transition-colors"
+              >
+                Gestor de medios
+              </button>
+            </div>
           </div>
           <div>
             <label className={labelClass}>Texto alt</label>
@@ -165,6 +277,23 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
           </div>
         )}
       </section>
+
+      <MediaPickerModal
+        open={mediaPickerOpen === 'featured'}
+        onClose={() => setMediaPickerOpen(null)}
+        onSelect={(url) => { setImage(url); setMediaPickerOpen(null) }}
+        title="Seleccionar imagen destacada"
+      />
+      <MediaPickerModal
+        open={mediaPickerOpen === 'editor'}
+        onClose={() => { setMediaPickerOpen(null); tinymceFilePickerRef.current = null }}
+        onSelect={(url) => {
+          tinymceFilePickerRef.current?.(url, { alt: '' })
+          tinymceFilePickerRef.current = null
+          setMediaPickerOpen(null)
+        }}
+        title="Insertar imagen en el contenido"
+      />
 
       {/* Content Editor */}
       <section className="bg-blanco border border-linea p-6">
@@ -233,6 +362,12 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
             `,
             branding: false,
             promotion: false,
+            file_picker_callback: (callback, _value, meta) => {
+              if (meta.filetype === 'image') {
+                tinymceFilePickerRef.current = callback
+                setMediaPickerOpen('editor')
+              }
+            },
           }}
         />
       </section>
@@ -280,5 +415,7 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
         </div>
       </div>
     </form>
+      )}
+    </div>
   )
 }
