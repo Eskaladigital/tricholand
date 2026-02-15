@@ -2,6 +2,24 @@
 
 Todos los cambios notables del proyecto Tricholand Web.
 
+## [1.2.2] - 2026-02
+
+### Añadido
+
+- **Script `ai-blog-perfect.mjs`**: limpieza y optimización SEO con OpenAI; opción `--translate` para traducir a 6 idiomas
+- **Fallback de imagen en blog**: traducciones (EN, NL, FR, etc.) sin imagen usan la del artículo ES — en detalle (`getPostBySlug`) y en listado (`getPostsMeta`)
+
+### Modificado
+
+- **Blog**: detección Markdown más amplia en `renderBlogContent` (###, __, listas numeradas, híbrido HTML+Markdown)
+- **Blog**: `revalidate = 10` en todas las páginas de artículo (7 idiomas) para actualizaciones más frecuentes
+- **Admin BlogPostForm**: usa `renderBlogContent` en vista de solo lectura de traducciones — renderiza igual que el blog público
+- **Admin BlogPostForm**: fallback Markdown/híbrido en editor TinyMCE; `key` por `updated_at` para forzar remontaje tras guardar
+- **Admin blog.ts**: `unstable_noStore()` en `getBlogPostById` para evitar caché y datos frescos en el editor
+- **Fix build**: comentario con `**/` rompía bloque de comentario; tipo TypeScript en `replace` de entidades HTML
+
+---
+
 ## [1.2.1] - 2026-02
 
 ### Añadido

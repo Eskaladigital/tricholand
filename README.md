@@ -165,6 +165,21 @@ NEXT_PUBLIC_SITE_URL=https://www.tricholand.com
 | `npm run import:blog` | Importar blog desde CSV |
 | `npm run migrate:customers` | Migrar datos a tabla customers |
 
+**Scripts de blog (ejecutar con `node`):**
+- `node scripts/migrate-blog-markdown-to-html.mjs` — Convierte contenido Markdown → HTML en blog_posts
+- `node scripts/ai-blog-perfect.mjs` — Limpia y optimiza HTML con OpenAI; `--translate` traduce a 6 idiomas
+- `node scripts/ai-blog-perfect.mjs --slug mi-articulo` — Procesar un artículo por slug
+- `node scripts/ai-blog-perfect.mjs --dry-run` — Simular sin guardar
+
+---
+
+## Blog — Contenido e imágenes
+
+- **Renderizado**: `renderBlogContent()` en `src/lib/blog-content.ts` convierte Markdown o HTML híbrido a HTML (público y admin).
+- **Fallback de imagen**: Las traducciones (EN, NL, FR, etc.) sin imagen usan la del artículo ES (`getPostBySlug` y `getPostsMeta`).
+- **Revalidación**: Páginas de blog con `revalidate = 10` (todos los idiomas).
+- **API de traducción**: `POST /api/blog/translate` con `source_slug` genera traducciones desde el artículo ES.
+
 ---
 
 ## Imágenes — REGLA DE ORO
@@ -265,6 +280,8 @@ tricholand-web/
 │   ├── translate-ui.mjs        # Traducción diccionarios
 │   ├── translate-content.mjs   # Traducción contenido → Supabase
 │   ├── translate-blog-posts.mjs # Traducción posts del blog
+│   ├── migrate-blog-markdown-to-html.mjs # Markdown → HTML en blog_posts
+│   ├── ai-blog-perfect.mjs     # Limpieza SEO + traducción con OpenAI
 │   ├── generate-locales.mjs    # Generador de páginas por idioma
 │   ├── generate-favicon.mjs    # Favicon desde logo (fondo blanco)
 │   ├── convert-images-to-webp.mjs   # Conversión PNG/JPG → WebP

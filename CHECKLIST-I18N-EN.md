@@ -2,6 +2,8 @@
 
 Revisión de contenido hardcodeado en español en la versión inglesa. Usar este checklist para EN y replicar la revisión en nl, fr, de, it, pt.
 
+> **Estado (2026-02)**: La mayoría de secciones han sido migradas a i18n o traducidas. El blog usa traducciones automáticas desde ES (API `/api/blog/translate`). Este checklist sirve como referencia para revisiones puntuales.
+
 ---
 
 ## Resumen EN — Contenido en español detectado
