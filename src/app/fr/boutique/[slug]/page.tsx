@@ -52,6 +52,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               height={600}
               className="w-full aspect-[4/3] object-cover"
               priority
+              unoptimized={(product.images[0]?.url || '').startsWith('http')}
             />
             <span className="absolute top-4 left-4 bg-negro text-blanco px-3 py-1.5 font-[family-name:var(--font-archivo-narrow)] text-xs font-semibold tracking-wide">
               {product.sku}

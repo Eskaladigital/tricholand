@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { en } from '@/lib/i18n/en'
 import { StatsBar } from '@/components/home/StatsBar'
 import { getAlternatesMetadata } from '@/lib/i18n/paths'
+import { getPlantImageUrl } from '@/lib/storage'
 
 export const metadata: Metadata = {
   title: 'About Us',
@@ -50,21 +51,23 @@ export default function SobreNosotrosPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <Image
-              src="/images/vivero/productores_cactus_1.webp"
+              src={getPlantImageUrl('Vivero/productores_cactus_1.webp')}
               alt="Tricholand nursery"
               width={500}
               height={350}
               sizes="(max-width: 1024px) 50vw, 25vw"
               quality={65}
+              unoptimized
               className="w-full h-[200px] lg:h-full object-cover"
             />
             <Image
-              src="/images/vivero/productores_cactus_2.webp"
+              src={getPlantImageUrl('Vivero/productores_cactus_2.webp')}
               alt="Trichocereus cultivation"
               width={500}
               height={350}
               sizes="(max-width: 1024px) 50vw, 25vw"
               quality={65}
+              unoptimized
               className="w-full h-[200px] lg:h-full object-cover"
             />
           </div>

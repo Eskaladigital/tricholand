@@ -45,6 +45,11 @@ if (!url || !serviceKey) {
 
 const supabase = createClient(url, serviceKey)
 
+/** Construye URL pública del bucket plants */
+function plantUrl(path) {
+  return `${url}/storage/v1/object/public/plants/${path}`
+}
+
 const PRODUCTS = [
   {
     name: 'Lote T. Pachanoi 15-20 cm',
@@ -66,7 +71,7 @@ const PRODUCTS = [
       { label: 'Unidades por lote', value: '100' },
       { label: 'Pasaporte fito', value: 'Incluido' },
     ],
-    images: [{ id: 'img_001', url: '/images/products/producto_trichocereus_pachanoi_1.webp', alt: 'Lote T. Pachanoi 15-20cm', order: 0 }],
+    images: [{ id: 'img_001', url: plantUrl('Pachanoi/producto_trichocereus_pachanoi_1.webp'), alt: 'Lote T. Pachanoi 15-20cm', order: 0 }],
     status: 'active',
     stock_qty: 25,
     category: 'trichocereus',
@@ -94,7 +99,7 @@ const PRODUCTS = [
       { label: 'Unidades por lote', value: '50' },
       { label: 'Pasaporte fito', value: 'Incluido' },
     ],
-    images: [{ id: 'img_002', url: '/images/products/producto_trichocereus_pachanoi_2.webp', alt: 'Lote T. Pachanoi 25-35cm', order: 0 }],
+    images: [{ id: 'img_002', url: plantUrl('Pachanoi/producto_trichocereus_pachanoi_2.webp'), alt: 'Lote T. Pachanoi 25-35cm', order: 0 }],
     status: 'active',
     stock_qty: 15,
     category: 'trichocereus',
@@ -122,7 +127,7 @@ const PRODUCTS = [
       { label: 'Unidades por lote', value: '100' },
       { label: 'Pasaporte fito', value: 'Incluido' },
     ],
-    images: [{ id: 'img_003', url: '/images/products/producto_trichocereus_peruvianus_1.webp', alt: 'Lote T. Peruvianus 10-15cm', order: 0 }],
+    images: [{ id: 'img_003', url: plantUrl('Peruvianus/producto_trichocereus_peruvianus_1.webp'), alt: 'Lote T. Peruvianus 10-15cm', order: 0 }],
     status: 'active',
     stock_qty: 18,
     category: 'trichocereus',
@@ -150,7 +155,7 @@ const PRODUCTS = [
       { label: 'Unidades por lote', value: '50' },
       { label: 'Pasaporte fito', value: 'Incluido' },
     ],
-    images: [{ id: 'img_004', url: '/images/products/producto_trichocereus_bridgessi_1.webp', alt: 'Lote T. Bridgesii 10-15cm', order: 0 }],
+    images: [{ id: 'img_004', url: plantUrl('Bridgesii/producto_trichocereus_bridgessi_1.webp'), alt: 'Lote T. Bridgesii 10-15cm', order: 0 }],
     status: 'active',
     stock_qty: 6,
     category: 'trichocereus',
@@ -178,7 +183,7 @@ const PRODUCTS = [
       { label: 'Unidades por lote', value: '25' },
       { label: 'Pasaporte fito', value: 'Incluido' },
     ],
-    images: [{ id: 'img_005', url: '/images/varieties/Trichocereus_terscheckii_1.webp', alt: 'Lote T. Terscheckii 20-30cm', order: 0 }],
+    images: [{ id: 'img_005', url: plantUrl('Terscheckii/Trichocereus_terscheckii_1.webp'), alt: 'Lote T. Terscheckii 20-30cm', order: 0 }],
     status: 'active',
     stock_qty: 10,
     category: 'trichocereus',
@@ -206,7 +211,7 @@ const PRODUCTS = [
       { label: 'Unidades por lote', value: '100' },
       { label: 'Pasaporte fito', value: 'Incluido' },
     ],
-    images: [{ id: 'img_006', url: '/images/vivero/vivero-020.webp', alt: 'Lote T. Spachianus portainjerto', order: 0 }],
+    images: [{ id: 'img_006', url: plantUrl('Spachianus/vivero-020.webp'), alt: 'Lote T. Spachianus portainjerto', order: 0 }],
     status: 'active',
     stock_qty: 8,
     category: 'trichocereus',
@@ -234,7 +239,7 @@ const PRODUCTS = [
       { label: 'Total unidades', value: '50' },
       { label: 'Pasaporte fito', value: 'Incluido' },
     ],
-    images: [{ id: 'img_007', url: '/images/vivero/vivero_mayorista_cactus.webp', alt: 'Pack mixto 5 variedades', order: 0 }],
+    images: [{ id: 'img_007', url: plantUrl('Vivero/vivero_mayorista_cactus.webp'), alt: 'Pack mixto 5 variedades', order: 0 }],
     status: 'active',
     stock_qty: 20,
     category: 'packs',

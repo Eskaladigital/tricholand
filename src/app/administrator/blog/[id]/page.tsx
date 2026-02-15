@@ -13,6 +13,7 @@ export default function EditBlogPostPage({ params }: { params: Promise<{ id: str
   const [post, setPost] = useState<AdminBlogPost | null>(null)
   const [loading, setLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
+  const [saveSuccess, setSaveSuccess] = useState(false)
 
   useEffect(() => {
     getBlogPostById(id).then((p) => {
@@ -29,13 +30,18 @@ export default function EditBlogPostPage({ params }: { params: Promise<{ id: str
 
   async function handleSave(data: Record<string, unknown>) {
     setIsSaving(true)
+    setSaveSuccess(false)
     const { error } = await updateBlogPost(id, data)
     setIsSaving(false)
     if (error) {
       alert(error)
       return
     }
-    router.push('/administrator/blog')
+    // Refrescar el post con los nuevos datos y quedarnos en la página
+    const updated = await getBlogPostById(id)
+    if (updated) setPost(updated)
+    setSaveSuccess(true)
+    setTimeout(() => setSaveSuccess(false), 3000)
   }
 
   async function handleDelete() {
@@ -52,9 +58,16 @@ export default function EditBlogPostPage({ params }: { params: Promise<{ id: str
   return (
     <>
       <div className="mb-8">
-        <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
-          Editar artículo
-        </h1>
+        <div className="flex items-center gap-4">
+          <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
+            Editar artículo
+          </h1>
+          {saveSuccess && (
+            <span className="px-3 py-1 bg-verde/10 text-verde border border-verde/30 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase animate-pulse">
+              ✓ Guardado correctamente
+            </span>
+          )}
+        </div>
         <p className="text-sm text-marron-claro mt-1">
           {post.title} · {post.locale.toUpperCase()}
         </p>

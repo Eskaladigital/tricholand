@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import Image from 'next/image'
 import { Editor } from '@tinymce/tinymce-react'
+import { marked } from 'marked'
 import type { AdminBlogPost } from '@/lib/actions/blog'
 import { getBlogPostsBySourceSlug } from '@/lib/actions/blog'
 import { MediaPickerModal } from './MediaPickerModal'
@@ -124,6 +125,14 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
   const fieldClass = 'w-full px-4 py-2.5 border border-linea text-sm focus:outline-none focus:border-naranja transition-colors bg-blanco'
   const labelClass = 'block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1'
 
+  /** Convierte markdown a HTML si el contenido parece markdown (para TinyMCE) */
+  const contentForEditor = useMemo(() => {
+    const raw = post?.content ?? ''
+    if (!raw) return ''
+    const looksLikeMarkdown = (raw.includes('##') || raw.includes('**') || raw.includes('\n* ') || raw.startsWith('#')) && !raw.trim().startsWith('<')
+    return looksLikeMarkdown ? (marked.parse(raw, { async: false }) as string) : raw
+  }, [post?.content])
+
   return (
     <div className="space-y-6">
       {/* Selector de idioma + Generar traducciones (solo al editar) */}
@@ -172,7 +181,14 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
                     <Image src={translationByLocale.image} alt={translationByLocale.image_alt ?? ''} fill className="object-cover" sizes="192px" unoptimized={translationByLocale.image.startsWith('http')} />
                   </div>
                 )}
-                <div className="prose prose-sm max-w-none border border-linea p-4 bg-crudo/30" dangerouslySetInnerHTML={{ __html: translationByLocale.content }} />
+                <div
+                  className="prose prose-sm max-w-none border border-linea p-4 bg-crudo/30"
+                  dangerouslySetInnerHTML={{
+                    __html: (translationByLocale.content?.includes('##') || translationByLocale.content?.includes('**')) && !translationByLocale.content?.trim().startsWith('<')
+                      ? (marked.parse(translationByLocale.content, { async: false }) as string)
+                      : translationByLocale.content ?? '',
+                  }}
+                />
               </div>
             </div>
           ) : (
@@ -278,23 +294,6 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
         )}
       </section>
 
-      <MediaPickerModal
-        open={mediaPickerOpen === 'featured'}
-        onClose={() => setMediaPickerOpen(null)}
-        onSelect={(url) => { setImage(url); setMediaPickerOpen(null) }}
-        title="Seleccionar imagen destacada"
-      />
-      <MediaPickerModal
-        open={mediaPickerOpen === 'editor'}
-        onClose={() => { setMediaPickerOpen(null); tinymceFilePickerRef.current = null }}
-        onSelect={(url) => {
-          tinymceFilePickerRef.current?.(url, { alt: '' })
-          tinymceFilePickerRef.current = null
-          setMediaPickerOpen(null)
-        }}
-        title="Insertar imagen en el contenido"
-      />
-
       {/* Content Editor */}
       <section className="bg-blanco border border-linea p-6">
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-base font-bold uppercase mb-4 pb-2 border-b border-linea">
@@ -302,7 +301,7 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
         </h2>
         <Editor
           onInit={(_evt, editor) => { editorRef.current = editor }}
-          initialValue={post?.content ?? ''}
+          initialValue={contentForEditor}
           apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
           licenseKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY ? undefined : 'gpl'}
           init={{
@@ -416,6 +415,24 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
       </div>
     </form>
       )}
+
+      {/* Media modals — FUERA del <form> para evitar submits accidentales */}
+      <MediaPickerModal
+        open={mediaPickerOpen === 'featured'}
+        onClose={() => setMediaPickerOpen(null)}
+        onSelect={(url) => { setImage(url); setMediaPickerOpen(null) }}
+        title="Seleccionar imagen destacada"
+      />
+      <MediaPickerModal
+        open={mediaPickerOpen === 'editor'}
+        onClose={() => { setMediaPickerOpen(null); tinymceFilePickerRef.current = null }}
+        onSelect={(url) => {
+          tinymceFilePickerRef.current?.(url, { alt: '' })
+          tinymceFilePickerRef.current = null
+          setMediaPickerOpen(null)
+        }}
+        title="Insertar imagen en el contenido"
+      />
     </div>
   )
 }

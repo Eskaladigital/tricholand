@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import Image from 'next/image'
 
 interface MediaFile {
@@ -69,17 +70,23 @@ export function MediaPickerModal({ open, onClose, onSelect, title = 'Seleccionar
   }, [open, fetchFiles])
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    e.preventDefault()
+    e.stopPropagation()
     const fileList = e.target.files
     if (!fileList?.length) return
     setUploading(true)
-    for (let i = 0; i < fileList.length; i++) {
-      const formData = new FormData()
-      formData.append('file', fileList[i])
-      formData.append('bucket', bucket)
-      if (folder) formData.append('folder', folder)
-      const res = await fetch('/api/media', { method: 'POST', body: formData })
-      const json = await res.json()
-      if (json.error) alert(`Error subiendo ${fileList[i].name}: ${json.error}`)
+    try {
+      for (let i = 0; i < fileList.length; i++) {
+        const formData = new FormData()
+        formData.append('file', fileList[i])
+        formData.append('bucket', bucket)
+        if (folder) formData.append('folder', folder)
+        const res = await fetch('/api/media', { method: 'POST', body: formData })
+        const json = await res.json()
+        if (json.error) alert(`Error subiendo ${fileList[i].name}: ${json.error}`)
+      }
+    } catch (err) {
+      alert('Error de red al subir')
     }
     setUploading(false)
     if (inputRef.current) inputRef.current.value = ''
@@ -130,8 +137,12 @@ export function MediaPickerModal({ open, onClose, onSelect, title = 'Seleccionar
 
   if (!open) return null
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-negro/60" onClick={onClose}>
+  const modalContent = (
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-negro/60"
+      onClick={onClose}
+      onSubmit={(e) => { e.preventDefault(); e.stopPropagation() }}
+    >
       <div
         className="bg-blanco border border-linea w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-xl"
         onClick={(e) => e.stopPropagation()}
@@ -153,6 +164,7 @@ export function MediaPickerModal({ open, onClose, onSelect, title = 'Seleccionar
           <div className="flex gap-3">
             {BUCKETS.map((b) => (
               <button
+                type="button"
                 key={b.id}
                 onClick={() => { setBucket(b.id); setFolder('') }}
                 className={`px-4 py-2 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide border transition-colors ${
@@ -165,13 +177,14 @@ export function MediaPickerModal({ open, onClose, onSelect, title = 'Seleccionar
           </div>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-sm">
-              <button onClick={() => setFolder('')} className="text-naranja font-semibold hover:underline">
+              <button type="button" onClick={() => setFolder('')} className="text-naranja font-semibold hover:underline">
                 {bucket}/
               </button>
               {folder && folder.split('/').map((part, i, arr) => (
                 <span key={i} className="flex items-center gap-1">
                   <span className="text-marron-claro">/</span>
                   <button
+                    type="button"
                     onClick={() => setFolder(arr.slice(0, i + 1).join('/'))}
                     className="text-naranja font-semibold hover:underline"
                   >
@@ -180,7 +193,7 @@ export function MediaPickerModal({ open, onClose, onSelect, title = 'Seleccionar
                 </span>
               ))}
               {folder && (
-                <button onClick={goUp} className="ml-2 text-xs text-marron-claro hover:text-naranja">
+                <button type="button" onClick={goUp} className="ml-2 text-xs text-marron-claro hover:text-naranja">
                   ↑ Subir
                 </button>
               )}
@@ -212,6 +225,7 @@ export function MediaPickerModal({ open, onClose, onSelect, title = 'Seleccionar
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
                   {folders.map((f) => (
                     <button
+                      type="button"
                       key={f.name}
                       onClick={() => enterFolder(f.name)}
                       className="flex items-center gap-2 p-2 bg-crudo border border-linea hover:border-naranja text-left"
@@ -288,4 +302,6 @@ export function MediaPickerModal({ open, onClose, onSelect, title = 'Seleccionar
       </div>
     </div>
   )
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : null
 }

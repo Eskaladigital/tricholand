@@ -93,6 +93,7 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
   const labelClass = 'block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1'
 
   return (
+    <>
     <form onSubmit={handleSubmit} className="space-y-8">
       {/* Básicos */}
       <section className="bg-blanco border border-linea p-6">
@@ -213,13 +214,6 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
         </div>
       </section>
 
-      <MediaPickerModal
-        open={mediaPickerOpen}
-        onClose={() => setMediaPickerOpen(false)}
-        onSelect={(url) => { setImageUrl(url); setMediaPickerOpen(false) }}
-        title="Seleccionar imagen del producto"
-      />
-
       {/* Características */}
       <section className="bg-blanco border border-linea p-6">
         <div className="flex justify-between items-center mb-4 pb-2 border-b border-linea">
@@ -282,5 +276,12 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
         </button>
       </div>
     </form>
+    <MediaPickerModal
+      open={mediaPickerOpen}
+      onClose={() => setMediaPickerOpen(false)}
+      onSelect={(url) => { setImageUrl(url); setMediaPickerOpen(false) }}
+      title="Seleccionar imagen del producto"
+    />
+    </>
   )
 }

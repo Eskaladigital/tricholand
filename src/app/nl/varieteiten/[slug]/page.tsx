@@ -58,6 +58,7 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
           fill
           className="object-cover"
           priority
+          unoptimized={variety.image.startsWith('http')}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-negro/60 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 px-5 lg:px-8 pb-8">

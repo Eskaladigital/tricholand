@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { getPostBySlug, getAllPostSlugs, getPostsMeta, getSlugsByLocaleForArticle } from '@/lib/blog'
+import { renderBlogContent } from '@/lib/blog-content'
 import { formatDate } from '@/lib/utils'
 import { getFullPath } from '@/lib/i18n/paths'
 
@@ -57,8 +58,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     .filter((p) => p.slug !== post.slug && p.tags.some((t) => post.tags.includes(t)))
     .slice(0, 2)
 
-  // Simple markdown-to-JSX for content
-  const paragraphs = post.content.split('\n\n')
+  const htmlContent = renderBlogContent(post.content)
 
   return (
     <article className="pb-16">
@@ -113,48 +113,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </div>
 
         {/* Content */}
-        <div className="prose-tricholand space-y-4 mb-12">
-          {paragraphs.map((para, i) => {
-            if (para.startsWith('## ')) {
-              return (
-                <h2
-                  key={i}
-                  className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mt-8 mb-3 pt-4 border-t border-linea"
-                >
-                  {para.replace('## ', '')}
-                </h2>
-              )
-            }
-            if (para.startsWith('### ')) {
-              return (
-                <h3
-                  key={i}
-                  className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold mt-6 mb-2"
-                >
-                  {para.replace('### ', '')}
-                </h3>
-              )
-            }
-            if (para.startsWith('- ')) {
-              const items = para.split('\n').filter((l) => l.startsWith('- '))
-              return (
-                <ul key={i} className="space-y-2 my-4">
-                  {items.map((item, j) => (
-                    <li key={j} className="flex items-start gap-3 text-marron-claro">
-                      <span className="text-naranja font-bold mt-0.5">→</span>
-                      <span>{item.replace('- ', '')}</span>
-                    </li>
-                  ))}
-                </ul>
-              )
-            }
-            return (
-              <p key={i} className="text-base text-marron-claro leading-relaxed">
-                {para}
-              </p>
-            )
-          })}
-        </div>
+        <div
+          className="prose-tricholand prose prose-sm max-w-none mb-12 [&_h2]:font-[family-name:var(--font-archivo-narrow)] [&_h2]:text-xl [&_h2]:font-bold [&_h2]:uppercase [&_h2]:mt-8 [&_h2]:mb-3 [&_h2]:pt-4 [&_h2]:border-t [&_h2]:border-linea [&_h3]:font-[family-name:var(--font-archivo-narrow)] [&_h3]:text-lg [&_h3]:font-bold [&_h3]:mt-6 [&_h3]:mb-2 [&_p]:text-marron-claro [&_p]:leading-relaxed [&_a]:text-naranja [&_a]:underline [&_ul]:space-y-2 [&_li]:text-marron-claro"
+          dangerouslySetInnerHTML={{ __html: htmlContent }}
+        />
 
         {/* CTA */}
         <div className="bg-negro text-crudo p-6 lg:p-8 mb-12 text-center">
