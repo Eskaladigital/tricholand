@@ -66,29 +66,38 @@ export async function getProducts(): Promise<Product[]> {
 
 /** Producto por slug (para catálogo público). */
 export async function getProductBySlug(slug: string): Promise<Product | null> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('products')
-    .select('*')
-    .eq('slug', slug)
-    .eq('status', 'active')
-    .single()
+  try {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('slug', slug)
+      .eq('status', 'active')
+      .single()
 
-  if (error || !data) return null
-  return mapDbProductToProduct(data as Record<string, unknown>)
+    if (error || !data) return null
+    return mapDbProductToProduct(data as Record<string, unknown>)
+  } catch {
+    return null
+  }
 }
 
 /** Productos activos ordenados (para catálogo público). */
 export async function getActiveProducts(): Promise<Product[]> {
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from('products')
-    .select('*')
-    .eq('status', 'active')
-    .order('sort_order')
-    .order('name')
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from('products')
+      .select('*')
+      .eq('status', 'active')
+      .order('sort_order')
+      .order('name')
 
-  return (data ?? []).map(mapDbProductToProduct)
+    return (data ?? []).map(mapDbProductToProduct)
+  } catch {
+    // En build time (generateStaticParams) no hay cookies/request disponibles
+    return []
+  }
 }
 
 /** Producto con traducciones según locale. Fallback a español. */

@@ -41,15 +41,29 @@ export default function MediaPage() {
     setLoading(true)
     setSelected(new Set())
     try {
-      const params = new URLSearchParams({ bucket })
-      if (folder) params.set('path', folder)
-      const res = await fetch(`/api/media?${params}`)
-      const json = await res.json()
-      if (json.error) {
-        alert(json.error)
+      const supabase = createClient()
+      const { data, error } = await supabase.storage.from(bucket).list(folder || '', {
+        limit: 200,
+        sortBy: { column: 'created_at', order: 'desc' },
+      })
+      if (error) {
+        alert(error.message)
         setFiles([])
       } else {
-        setFiles(json.files ?? [])
+        const mapped = (data ?? []).map((f) => {
+          const fullPath = folder ? `${folder}/${f.name}` : f.name
+          const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(fullPath)
+          return {
+            name: f.name,
+            path: fullPath,
+            size: f.metadata?.size ?? 0,
+            type: f.metadata?.mimetype ?? '',
+            created_at: f.created_at ?? '',
+            url: urlData.publicUrl,
+            isFolder: f.id === null,
+          }
+        })
+        setFiles(mapped)
       }
     } catch {
       alert('Error cargando archivos')
@@ -90,15 +104,9 @@ export default function MediaPage() {
     if (selected.size === 0) return
     if (!confirm(`¿Eliminar ${selected.size} archivo(s)?`)) return
 
-    const res = await fetch('/api/media', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ bucket, paths: Array.from(selected) }),
-    })
-    const json = await res.json()
-    if (json.error) {
-      alert(json.error)
-    }
+    const supabase = createClient()
+    const { error } = await supabase.storage.from(bucket).remove(Array.from(selected))
+    if (error) alert(error.message)
     fetchFiles()
   }
 
@@ -134,14 +142,21 @@ export default function MediaPage() {
     if (!name?.trim()) return
     setCreatingFolder(true)
     try {
-      const formData = new FormData()
-      formData.append('action', 'createFolder')
-      formData.append('bucket', bucket)
-      formData.append('folder', folder)
-      formData.append('folderName', name.trim())
-      const res = await fetch('/api/media', { method: 'POST', body: formData })
-      const json = await res.json()
-      if (json.error) alert(json.error)
+      const safeName = name.trim()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9._-]/g, '_')
+      if (!safeName) { alert('Nombre no válido'); setCreatingFolder(false); return }
+      const filePath = folder ? `${folder}/${safeName}/.keep` : `${safeName}/.keep`
+      const png1x1 = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='), c => c.charCodeAt(0))
+      const blob = new Blob([png1x1], { type: 'image/png' })
+      const supabase = createClient()
+      const { error } = await supabase.storage.from(bucket).upload(filePath, blob, {
+        contentType: 'image/png',
+        cacheControl: '0',
+        upsert: false,
+      })
+      if (error) alert(error.message)
       else fetchFiles()
     } catch {
       alert('Error creando carpeta')
@@ -170,6 +185,7 @@ export default function MediaPage() {
         {BUCKETS.map((b) => (
           <button
             key={b.id}
+            type="button"
             onClick={() => { setBucket(b.id); setFolder('') }}
             className={`px-5 py-2.5 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide border transition-colors ${
               bucket === b.id
@@ -185,13 +201,14 @@ export default function MediaPage() {
       {/* Breadcrumb + Actions */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-2 text-sm">
-          <button onClick={() => setFolder('')} className="text-naranja font-semibold hover:underline">
+          <button type="button" onClick={() => setFolder('')} className="text-naranja font-semibold hover:underline">
             {bucket}/
           </button>
           {folder && folder.split('/').map((part, i, arr) => (
             <span key={i} className="flex items-center gap-1">
               <span className="text-marron-claro">/</span>
               <button
+                type="button"
                 onClick={() => setFolder(arr.slice(0, i + 1).join('/'))}
                 className="text-naranja font-semibold hover:underline"
               >
@@ -200,7 +217,7 @@ export default function MediaPage() {
             </span>
           ))}
           {folder && (
-            <button onClick={goUp} className="ml-2 text-xs text-marron-claro hover:text-naranja">
+            <button type="button" onClick={goUp} className="ml-2 text-xs text-marron-claro hover:text-naranja">
               ↑ Subir
             </button>
           )}
@@ -209,6 +226,7 @@ export default function MediaPage() {
         <div className="flex gap-3">
           {selected.size > 0 && (
             <button
+              type="button"
               onClick={handleDelete}
               className="px-4 py-2 border border-red-300 text-red-600 text-xs font-bold uppercase hover:bg-red-50 transition-colors"
             >
@@ -248,6 +266,7 @@ export default function MediaPage() {
               {folders.map((f) => (
                 <button
                   key={f.name}
+                  type="button"
                   onClick={() => enterFolder(f.name)}
                   className="flex items-center gap-2 p-3 bg-blanco border border-linea hover:border-naranja transition-colors text-left"
                 >
@@ -299,6 +318,7 @@ export default function MediaPage() {
                       <p className="text-xs font-bold truncate" title={f.name}>{f.name}</p>
                       <p className="text-[0.65rem] text-marron-claro">{formatBytes(f.size)}</p>
                       <button
+                        type="button"
                         onClick={() => copyUrl(f.url)}
                         className="mt-1 text-[0.65rem] text-naranja font-semibold hover:underline"
                       >

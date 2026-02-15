@@ -49,15 +49,29 @@ export function MediaPickerModal({ open, onClose, onSelect, title = 'Seleccionar
     setLoading(true)
     setSelectedUrl(null)
     try {
-      const params = new URLSearchParams({ bucket })
-      if (folder) params.set('path', folder)
-      const res = await fetch(`/api/media?${params}`)
-      const json = await res.json()
-      if (json.error) {
-        alert(json.error)
+      const supabase = createClient()
+      const { data, error } = await supabase.storage.from(bucket).list(folder || '', {
+        limit: 200,
+        sortBy: { column: 'created_at', order: 'desc' },
+      })
+      if (error) {
+        alert(error.message)
         setFiles([])
       } else {
-        setFiles(json.files ?? [])
+        const mapped = (data ?? []).map((f) => {
+          const fullPath = folder ? `${folder}/${f.name}` : f.name
+          const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(fullPath)
+          return {
+            name: f.name,
+            path: fullPath,
+            size: f.metadata?.size ?? 0,
+            type: f.metadata?.mimetype ?? '',
+            created_at: f.created_at ?? '',
+            url: urlData.publicUrl,
+            isFolder: f.id === null,
+          }
+        })
+        setFiles(mapped)
       }
     } catch {
       alert('Error cargando archivos')
@@ -92,7 +106,7 @@ export function MediaPickerModal({ open, onClose, onSelect, title = 'Seleccionar
         })
         if (error) alert(`Error subiendo ${file.name}: ${error.message}`)
       }
-    } catch (err) {
+    } catch {
       alert('Error de red al subir. Comprueba tu conexión e inténtalo de nuevo.')
     }
     setUploading(false)
@@ -117,14 +131,21 @@ export function MediaPickerModal({ open, onClose, onSelect, title = 'Seleccionar
     if (!name?.trim()) return
     setCreatingFolder(true)
     try {
-      const formData = new FormData()
-      formData.append('action', 'createFolder')
-      formData.append('bucket', bucket)
-      formData.append('folder', folder)
-      formData.append('folderName', name.trim())
-      const res = await fetch('/api/media', { method: 'POST', body: formData })
-      const json = await res.json()
-      if (json.error) alert(json.error)
+      const safeName = name.trim()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9._-]/g, '_')
+      if (!safeName) { alert('Nombre no válido'); setCreatingFolder(false); return }
+      const filePath = folder ? `${folder}/${safeName}/.keep` : `${safeName}/.keep`
+      const png1x1 = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='), c => c.charCodeAt(0))
+      const blob = new Blob([png1x1], { type: 'image/png' })
+      const supabase = createClient()
+      const { error } = await supabase.storage.from(bucket).upload(filePath, blob, {
+        contentType: 'image/png',
+        cacheControl: '0',
+        upsert: false,
+      })
+      if (error) alert(error.message)
       else fetchFiles()
     } catch {
       alert('Error creando carpeta')
