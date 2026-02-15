@@ -3,7 +3,7 @@ import { getPath, getAlternateUrls } from '@/lib/i18n/paths'
 
 const EN_VARIETY_LANDING_SLUGS = ['trichocereus-pachanoi-for-sale-uk', 'trichocereus-pachanoi-for-sale-europe']
 import { getAllPostSlugs } from '@/lib/blog'
-import { getActiveProducts } from '@/content/shop/products-demo'
+import { getActiveProducts } from '@/lib/actions/products'
 
 const BASE_URL = 'https://www.tricholand.com'
 const LOCALES = ['es', 'en', 'nl', 'fr', 'de', 'it', 'pt'] as const
@@ -28,7 +28,7 @@ export async function getSitemapUrls(): Promise<{ url: string; label?: string }[
   const blogSlugsByLocale = Object.fromEntries(
     await Promise.all(LOCALES.map(async (l) => [l, await getAllPostSlugs(l)]))
   )
-  const products = getActiveProducts()
+  const products = await getActiveProducts()
 
   const urls: { url: string; label?: string }[] = []
 
@@ -66,7 +66,7 @@ export async function getSitemapEntries() {
   const blogSlugsByLocale = Object.fromEntries(
     await Promise.all(LOCALES.map(async (l) => [l, await getAllPostSlugs(l)]))
   )
-  const products = getActiveProducts()
+  const products = await getActiveProducts()
 
   const entries: { url: string; lastModified: string; changeFrequency: 'weekly' | 'monthly'; priority: number; alternates?: { languages: Record<string, string> } }[] = []
 

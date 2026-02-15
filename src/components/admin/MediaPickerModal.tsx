@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import Image from 'next/image'
+import { createClient } from '@/lib/supabase/client'
 
 interface MediaFile {
   name: string
@@ -75,25 +76,21 @@ export function MediaPickerModal({ open, onClose, onSelect, title = 'Seleccionar
     const fileList = e.target.files
     if (!fileList?.length) return
     setUploading(true)
+    const supabase = createClient()
     try {
       for (let i = 0; i < fileList.length; i++) {
         const file = fileList[i]
-        // Validar tamaño antes de enviar (máx 20 MB)
-        if (file.size > 20 * 1024 * 1024) {
-          alert(`"${file.name}" es demasiado grande (${(file.size / 1024 / 1024).toFixed(1)} MB). Máximo: 20 MB.`)
-          continue
-        }
-        const formData = new FormData()
-        formData.append('file', file)
-        formData.append('bucket', bucket)
-        if (folder) formData.append('folder', folder)
-        const res = await fetch('/api/media', { method: 'POST', body: formData })
-        if (res.status === 413) {
-          alert(`"${file.name}" es demasiado grande para el servidor. Redúcela de tamaño e inténtalo de nuevo.`)
-          continue
-        }
-        const json = await res.json()
-        if (json.error) alert(`Error subiendo ${file.name}: ${json.error}`)
+        const safeName = file.name
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-zA-Z0-9._-]/g, '_')
+          .toLowerCase()
+        const filePath = folder ? `${folder}/${safeName}` : safeName
+        const { error } = await supabase.storage.from(bucket).upload(filePath, file, {
+          cacheControl: '31536000',
+          upsert: false,
+        })
+        if (error) alert(`Error subiendo ${file.name}: ${error.message}`)
       }
     } catch (err) {
       alert('Error de red al subir. Comprueba tu conexión e inténtalo de nuevo.')

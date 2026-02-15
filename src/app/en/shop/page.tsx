@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getActiveProductsForLocale } from '@/content/shop/products-demo'
+import { getActiveProductsForLocale } from '@/lib/actions/products'
 import { ShopGrid } from '@/components/shop/ShopGrid'
 import { CartButton } from '@/components/shop/CartButton'
 import { getAlternatesMetadata } from '@/lib/i18n/paths'

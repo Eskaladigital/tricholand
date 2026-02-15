@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import type { Product } from '@/types/shop'
+import { PRODUCT_TRANSLATIONS } from '@/content/shop/product-translations'
 
 export interface ProductOption {
   id: string
@@ -57,6 +58,70 @@ export async function getProducts(): Promise<Product[]> {
     .order('name')
 
   return (data ?? []).map(mapDbProductToProduct)
+}
+
+/** Producto por slug (para catálogo público). */
+export async function getProductBySlug(slug: string): Promise<Product | null> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('slug', slug)
+    .eq('status', 'active')
+    .single()
+
+  if (error || !data) return null
+  return mapDbProductToProduct(data as Record<string, unknown>)
+}
+
+/** Productos activos ordenados (para catálogo público). */
+export async function getActiveProducts(): Promise<Product[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('products')
+    .select('*')
+    .eq('status', 'active')
+    .order('sort_order')
+    .order('name')
+
+  return (data ?? []).map(mapDbProductToProduct)
+}
+
+/** Producto con traducciones según locale. Fallback a español. */
+export async function getProductForLocale(slug: string, locale: string): Promise<Product | null> {
+  const base = await getProductBySlug(slug)
+  if (!base) return null
+  if (locale === 'es') return base
+
+  const trans = PRODUCT_TRANSLATIONS[locale]?.[slug]
+  if (!trans) return base
+
+  return {
+    ...base,
+    ...(trans.name && { name: trans.name }),
+    ...(trans.short_description && { short_description: trans.short_description }),
+    ...(trans.description && { description: trans.description }),
+    ...(trans.unit_label && { unit_label: trans.unit_label }),
+  }
+}
+
+/** Productos activos con traducciones según locale. */
+export async function getActiveProductsForLocale(locale: string): Promise<Product[]> {
+  const products = await getActiveProducts()
+  if (locale === 'es') return products
+
+  const transMap = PRODUCT_TRANSLATIONS[locale] ?? {}
+  return products.map((p) => {
+    const trans = transMap[p.slug]
+    if (!trans) return p
+    return {
+      ...p,
+      ...(trans.name && { name: trans.name }),
+      ...(trans.short_description && { short_description: trans.short_description }),
+      ...(trans.description && { description: trans.description }),
+      ...(trans.unit_label && { unit_label: trans.unit_label }),
+    }
+  })
 }
 
 export async function getProductById(id: string): Promise<Product | null> {

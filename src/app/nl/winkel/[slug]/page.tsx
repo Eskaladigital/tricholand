@@ -2,14 +2,15 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getProductForLocale, getActiveProducts } from '@/content/shop/products-demo'
+import { getProductForLocale, getActiveProducts } from '@/lib/actions/products'
 import { formatPrice } from '@/types/shop'
 import { ProductDetailActions } from '@/components/shop/ProductDetailActions'
 import { CartButton } from '@/components/shop/CartButton'
 import { getFullPath, getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export async function generateStaticParams() {
-  return getActiveProducts().map((p) => ({ slug: p.slug }))
+  const products = await getActiveProducts()
+  return products.map((p) => ({ slug: p.slug }))
 }
 
 const LOCALE = 'nl'
@@ -44,16 +45,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          <div className="relative">
-            <Image
-              src={product.images[0]?.url || ''}
-              alt={product.images[0]?.alt || product.name}
-              width={800}
-              height={600}
-              className="w-full aspect-[4/3] object-cover"
-              priority
-              unoptimized={(product.images[0]?.url || '').startsWith('http')}
-            />
+          <div className="relative aspect-[4/3] bg-crudo">
+            {product.images[0]?.url ? (
+              <Image
+                src={product.images[0].url}
+                alt={product.images[0]?.alt || product.name}
+                fill
+                className="object-cover"
+                priority
+                unoptimized={product.images[0].url.startsWith('http')}
+              />
+            ) : (
+              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-marron-claro">
+                <span className="font-bold text-negro">{product.name}</span>
+                <span className="text-sm mt-1">{product.sku}</span>
+              </div>
+            )}
             <span className="absolute top-4 left-4 bg-negro text-blanco px-3 py-1.5 font-[family-name:var(--font-archivo-narrow)] text-xs font-semibold tracking-wide">
               {product.sku}
             </span>

@@ -1,11 +1,12 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  // Permitir subida de imágenes grandes (hasta 20 MB) en el gestor de medios
+  // Sin límite práctico de tamaño para subidas (50 MB = límite Supabase)
   experimental: {
     serverActions: {
-      bodySizeLimit: '20mb',
+      bodySizeLimit: '50mb',
     },
+    middlewareClientMaxBodySize: '50mb',
   },
 
   // Redirects 301 desde el sitio Joomla antiguo
