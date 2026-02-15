@@ -62,6 +62,9 @@ export interface Dictionary {
     lotsAvailable: string
     noProductsFound: string
     tryOtherFilters: string
+    priceNote: string
+    specsLabel: string
+    productDescriptionLabel: string
   }
   services: {
     title: string

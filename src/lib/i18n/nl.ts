@@ -64,6 +64,9 @@ export const nl: Dictionary = {
     lotsAvailable: 'partijen beschikbaar',
     noProductsFound: 'Geen producten gevonden',
     tryOtherFilters: 'Probeer andere filters',
+    priceNote: 'Prijs excl. btw · Fytosanitair paspoort inbegrepen',
+    specsLabel: 'Specificaties',
+    productDescriptionLabel: 'Productbeschrijving',
   },
   services: {
     title: 'Diensten',

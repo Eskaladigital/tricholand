@@ -64,6 +64,9 @@ export const de: Dictionary = {
     lotsAvailable: 'Lose verfügbar',
     noProductsFound: 'Keine Produkte gefunden',
     tryOtherFilters: 'Andere Filter versuchen',
+    priceNote: 'Preis ohne MwSt. · Phytosanitärer Pass inklusive',
+    specsLabel: 'Eigenschaften',
+    productDescriptionLabel: 'Produktbeschreibung',
   },
   services: {
     title: 'Dienstleistungen',

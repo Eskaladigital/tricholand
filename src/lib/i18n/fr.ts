@@ -64,6 +64,9 @@ export const fr: Dictionary = {
     lotsAvailable: 'lots disponibles',
     noProductsFound: 'Aucun produit trouvé',
     tryOtherFilters: 'Essayez d\'autres filtres',
+    priceNote: 'Prix HT · Passeport phytosanitaire inclus',
+    specsLabel: 'Caractéristiques',
+    productDescriptionLabel: 'Description du produit',
   },
   services: {
     title: 'Services',
