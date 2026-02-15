@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     default: 'Tricholand · Trichocereus Nursery Producer',
     template: '%s | Tricholand',
   },
+  description: 'Trichocereus and columnar cacti producer nursery. Exclusive B2B wholesale for professionals. Shipping across Europe from Murcia, Spain.',
   alternates: {
     canonical: 'https://www.tricholand.com/en',
     languages: {
@@ -21,6 +22,12 @@ export const metadata: Metadata = {
       'it': 'https://www.tricholand.com/it',
       'pt': 'https://www.tricholand.com/pt',
     },
+  },
+  openGraph: {
+    url: 'https://www.tricholand.com/en',
+    title: 'Tricholand · Trichocereus Nursery Producer',
+    description: 'Trichocereus and columnar cacti producer nursery. Exclusive B2B wholesale for professionals. Shipping across Europe from Murcia, Spain.',
+    locale: 'en_US',
   },
 }
 

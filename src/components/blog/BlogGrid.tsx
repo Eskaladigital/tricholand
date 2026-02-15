@@ -6,50 +6,9 @@ import Link from 'next/link'
 import type { BlogPostMeta } from '@/types/blog'
 import { formatDate } from '@/lib/utils'
 
-// ─── Imágenes propias de Tricholand ───────────────────────────
-const BLOG_IMAGES = [
-  '/images/blog/Tricholand_blog_1.webp',
-  '/images/blog/Tricholand_blog_2.webp',
-  '/images/blog/Tricholand_blog_3.webp',
-  '/images/blog/Tricholand_blog_4.webp',
-  '/images/blog/Tricholand_blog_5.webp',
-  '/images/blog/Tricholand_blog_6.webp',
-  '/images/blog/Tricholand_blog_7.webp',
-  '/images/blog/Tricholand_blog_8.webp',
-  '/images/varieties/Trichocereus_Pachanoi_1.webp',
-  '/images/varieties/Trichocereus_Pachanoi_2.webp',
-  '/images/varieties/Trichocereus_Bridgessi_1.webp',
-  '/images/varieties/Trichocereus_Bridgessi_2.webp',
-  '/images/varieties/Trichocereus_peruvianus_1.webp',
-  '/images/varieties/Trichocereus_pasacana_1.webp',
-  '/images/varieties/Trichocereus_terscheckii_1.webp',
-  '/images/varieties/Trichocereus_terscheckii_2.webp',
-  '/images/varieties/Otros_cactus.webp',
-  '/images/varieties/Otros_cactus_2.webp',
-  '/images/vivero/vivero_mayorista_cactus.webp',
-  '/images/vivero/productores_cactus_1.webp',
-  '/images/vivero/productores_cactus_2.webp',
-  '/images/products/producto_trichocereus_pachanoi_1.webp',
-  '/images/products/producto_trichocereus_pachanoi_2.webp',
-  '/images/products/producto_trichocereus_bridgessi_1.webp',
-  '/images/products/producto_trichocereus_bridgessi_2.webp',
-  '/images/products/producto_trichocereus_peruvianus_1.webp',
-  '/images/products/producto_trichocereus_pachanoi_bio_1_v2.webp',
-  '/images/products/producto_otros_pachanoi_crestado_1.webp',
-  '/images/vivero/vivero-001.webp',
-  '/images/vivero/vivero-002.webp',
-  '/images/vivero/vivero-003.webp',
-  '/images/vivero/vivero-004.webp',
-  '/images/vivero/vivero-005.webp',
-]
-
-function getImageForPost(slug: string, index: number): string {
-  // Deterministic image based on slug hash
-  let hash = 0
-  for (let i = 0; i < slug.length; i++) {
-    hash = ((hash << 5) - hash + slug.charCodeAt(i)) | 0
-  }
-  return BLOG_IMAGES[Math.abs(hash) % BLOG_IMAGES.length]
+/** Obtiene la URL de imagen a mostrar: post.image si es de Supabase, o null para placeholder */
+function getPostImageSrc(post: { image: string | null }): string | null {
+  return post.image || null
 }
 
 interface BlogGridProps {
@@ -163,15 +122,22 @@ export function BlogGrid({ posts, locale }: BlogGridProps) {
           className="group block mb-10"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0 bg-blanco border border-linea overflow-hidden hover:shadow-lg transition-shadow duration-300">
-            <div className="relative h-[240px] md:h-[340px] overflow-hidden">
-              <Image
-                src={getImageForPost(featured.slug, 0)}
-                alt={featured.imageAlt}
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                quality={70}
-                className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
-              />
+            <div className="relative h-[240px] md:h-[340px] overflow-hidden bg-crudo">
+              {getPostImageSrc(featured) ? (
+                <Image
+                  src={getPostImageSrc(featured)!}
+                  alt={featured.imageAlt}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  quality={70}
+                  className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                  unoptimized={getPostImageSrc(featured)!.startsWith('http')}
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center text-marron-claro/60 text-sm font-[family-name:var(--font-archivo-narrow)] uppercase tracking-wide">
+                  {locale === 'es' ? 'Sin imagen' : 'No image'}
+                </div>
+              )}
             </div>
             <div className="p-6 md:p-8 flex flex-col justify-center">
               <div className="flex items-center gap-3 mb-3">
@@ -216,15 +182,22 @@ export function BlogGrid({ posts, locale }: BlogGridProps) {
             href={`/${locale}/blog/${post.slug}`}
             className="group bg-blanco border border-linea hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
           >
-            <div className="relative overflow-hidden h-[180px]">
-              <Image
-                src={getImageForPost(post.slug, i + 1)}
-                alt={post.imageAlt}
-                fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                quality={60}
-                className="object-cover group-hover:scale-[1.04] transition-transform duration-400"
-              />
+            <div className="relative overflow-hidden h-[180px] bg-crudo">
+              {getPostImageSrc(post) ? (
+                <Image
+                  src={getPostImageSrc(post)!}
+                  alt={post.imageAlt}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  quality={60}
+                  className="object-cover group-hover:scale-[1.04] transition-transform duration-400"
+                  unoptimized={getPostImageSrc(post)!.startsWith('http')}
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center text-marron-claro/50 text-xs font-[family-name:var(--font-archivo-narrow)] uppercase tracking-wide">
+                  {locale === 'es' ? 'Sin imagen' : 'No image'}
+                </div>
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-negro/30 to-transparent" />
               <div className="absolute bottom-3 left-3">
                 <span className="font-[family-name:var(--font-archivo-narrow)] text-[0.65rem] text-blanco/90 font-semibold tracking-wide bg-negro/50 px-2 py-0.5 backdrop-blur-sm">

@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     default: 'Tricholand · Vivaio Trichocereus',
     template: '%s | Tricholand',
   },
+  description: 'Vivaio produttore di Trichocereus e cactus colonnari. Vendita B2B esclusiva per professionisti. Spedizioni in tutta Europa da Murcia, Spagna.',
   alternates: {
     canonical: 'https://www.tricholand.com/it',
     languages: {
@@ -21,6 +22,12 @@ export const metadata: Metadata = {
       'it': 'https://www.tricholand.com/it',
       'pt': 'https://www.tricholand.com/pt',
     },
+  },
+  openGraph: {
+    url: 'https://www.tricholand.com/it',
+    title: 'Tricholand · Vivaio Trichocereus',
+    description: 'Vivaio produttore di Trichocereus e cactus colonnari. Vendita B2B esclusiva per professionisti. Spedizioni in tutta Europa da Murcia, Spagna.',
+    locale: 'it_IT',
   },
 }
 

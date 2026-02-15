@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     default: 'Tricholand · Trichocereus Kwekerij',
     template: '%s | Tricholand',
   },
+  description: 'Trichocereus- en zuilcactuskwekerij. Exclusieve B2B-groothandel voor professionals. Verzending door heel Europa vanuit Murcia, Spanje.',
   alternates: {
     canonical: 'https://www.tricholand.com/nl',
     languages: {
@@ -21,6 +22,12 @@ export const metadata: Metadata = {
       'it': 'https://www.tricholand.com/it',
       'pt': 'https://www.tricholand.com/pt',
     },
+  },
+  openGraph: {
+    url: 'https://www.tricholand.com/nl',
+    title: 'Tricholand · Trichocereus Kwekerij',
+    description: 'Trichocereus- en zuilcactuskwekerij. Exclusieve B2B-groothandel voor professionals. Verzending door heel Europa vanuit Murcia, Spanje.',
+    locale: 'nl_NL',
   },
 }
 

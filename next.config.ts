@@ -201,8 +201,16 @@ const nextConfig: NextConfig = {
     ]
   },
 
-  // Optimización de imágenes (solo locales, no se necesitan remotePatterns)
-  images: {},
+  // Imágenes: locales + Supabase Storage (para admin blog, media, etc.)
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lhxydsjssecudjzkodkc.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
+  },
 }
 
 export default nextConfig

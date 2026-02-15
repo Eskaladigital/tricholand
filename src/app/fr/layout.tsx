@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     default: 'Tricholand · Pépinière Trichocereus',
     template: '%s | Tricholand',
   },
+  description: 'Pépinière productrice de Trichocereus et cactus colonnaires. Vente B2B exclusive pour professionnels. Expédition dans toute l\'Europe depuis Murcia, Espagne.',
   alternates: {
     canonical: 'https://www.tricholand.com/fr',
     languages: {
@@ -21,6 +22,12 @@ export const metadata: Metadata = {
       'it': 'https://www.tricholand.com/it',
       'pt': 'https://www.tricholand.com/pt',
     },
+  },
+  openGraph: {
+    url: 'https://www.tricholand.com/fr',
+    title: 'Tricholand · Pépinière Trichocereus',
+    description: 'Pépinière productrice de Trichocereus et cactus colonnaires. Vente B2B exclusive pour professionnels. Expédition dans toute l\'Europe depuis Murcia, Espagne.',
+    locale: 'fr_FR',
   },
 }
 

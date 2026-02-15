@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     openGraph: {
       title: post.title,
       description: post.description,
-      images: [post.image],
+      images: post.image ? [post.image] : [],
       type: 'article',
       publishedTime: post.date,
     },
@@ -61,14 +61,21 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   return (
     <article className="pb-16">
       {/* Hero image */}
-      <div className="relative h-[35vh] min-h-[280px]">
-        <Image
-          src={post.image}
-          alt={post.imageAlt}
-          fill
-          className="object-cover"
-          priority
-        />
+      <div className="relative h-[35vh] min-h-[280px] bg-crudo">
+        {post.image ? (
+          <Image
+            src={post.image}
+            alt={post.imageAlt}
+            fill
+            className="object-cover"
+            priority
+            unoptimized={post.image.startsWith('http')}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center text-marron-claro/50 text-sm font-[family-name:var(--font-archivo-narrow)] uppercase tracking-wide">
+            Sin imagen
+          </div>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-negro/70 to-transparent" />
       </div>
 

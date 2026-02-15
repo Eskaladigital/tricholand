@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     title: 'Tricholand Admin',
   },
   icons: {
+    icon: '/favicon.png',
     apple: '/administrator/icon-192.svg',
   },
 }

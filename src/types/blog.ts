@@ -3,7 +3,7 @@ export interface BlogPost {
   title: string
   description: string
   date: string
-  image: string
+  image: string | null
   imageAlt: string
   tags: string[]
   readingTime: number // minutos
@@ -15,7 +15,7 @@ export interface BlogPostMeta {
   title: string
   description: string
   date: string
-  image: string
+  image: string | null
   imageAlt: string
   tags: string[]
   readingTime: number

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import Image from 'next/image'
 import { Editor } from '@tinymce/tinymce-react'
 import type { AdminBlogPost } from '@/lib/actions/blog'
 
@@ -152,8 +153,15 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
           </div>
         </div>
         {image && (
-          <div className="mt-3">
-            <img src={image} alt={imageAlt} className="w-48 h-36 object-cover border border-linea" />
+          <div className="mt-3 relative w-48 h-36 rounded overflow-hidden border border-linea bg-crudo">
+            <Image
+              src={image}
+              alt={imageAlt}
+              fill
+              className="object-cover"
+              sizes="192px"
+              unoptimized={image.startsWith('http')}
+            />
           </div>
         )}
       </section>
@@ -169,7 +177,7 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
           apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
           licenseKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY ? undefined : 'gpl'}
           init={{
-            height: 500,
+            height: 600,
             menubar: true,
             plugins: [
               'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
@@ -181,7 +189,48 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
               'alignleft aligncenter alignright alignjustify | ' +
               'bullist numlist outdent indent | link image | ' +
               'removeformat | code fullscreen | help',
-            content_style: 'body { font-family: system-ui, sans-serif; font-size: 14px; }',
+            content_style: `
+              @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Narrow:wght@400;500;600;700&display=swap');
+              body {
+                font-family: 'Archivo', system-ui, sans-serif;
+                font-size: 16px;
+                line-height: 1.625;
+                color: #6b6258;
+                padding: 1.5rem;
+                max-width: 48rem;
+              }
+              p { margin-bottom: 1rem; }
+              p:last-child { margin-bottom: 0; }
+              h2 {
+                font-family: 'Archivo Narrow', sans-serif;
+                font-size: 1.25rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                margin-top: 2rem;
+                margin-bottom: 0.75rem;
+                padding-top: 1rem;
+                border-top: 1px solid #d4cfc3;
+                color: #1a1a1a;
+              }
+              h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+              h3 {
+                font-family: 'Archivo Narrow', sans-serif;
+                font-size: 1.125rem;
+                font-weight: 700;
+                margin-top: 1.5rem;
+                margin-bottom: 0.5rem;
+                color: #1a1a1a;
+              }
+              ul {
+                margin: 1rem 0;
+                padding-left: 1.5rem;
+              }
+              li {
+                margin-bottom: 0.5rem;
+                color: #6b6258;
+              }
+              a { color: #c4652a; text-decoration: underline; }
+            `,
             branding: false,
             promotion: false,
           }}

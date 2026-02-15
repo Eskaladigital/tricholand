@@ -83,44 +83,33 @@ VALUES (
 )
 ON CONFLICT (id) DO NOTHING;
 
--- Políticas blog: lectura pública, escritura solo service role
+-- Políticas blog: lectura pública, escritura solo usuarios autenticados
+-- (la API /administrator/media exige login; solo admins acceden)
 DROP POLICY IF EXISTS "Public read access for blog" ON storage.objects;
 CREATE POLICY "Public read access for blog"
 ON storage.objects FOR SELECT
 USING (bucket_id = 'blog');
 
 DROP POLICY IF EXISTS "Service role can upload blog" ON storage.objects;
-CREATE POLICY "Service role can upload blog"
-ON storage.objects FOR INSERT
-WITH CHECK (bucket_id = 'blog' AND auth.role() = 'service_role');
-
 DROP POLICY IF EXISTS "Service role can update blog" ON storage.objects;
-CREATE POLICY "Service role can update blog"
-ON storage.objects FOR UPDATE
-USING (bucket_id = 'blog' AND auth.role() = 'service_role');
-
 DROP POLICY IF EXISTS "Service role can delete blog" ON storage.objects;
-CREATE POLICY "Service role can delete blog"
-ON storage.objects FOR DELETE
-USING (bucket_id = 'blog' AND auth.role() = 'service_role');
+DROP POLICY IF EXISTS "Authenticated can manage blog" ON storage.objects;
+CREATE POLICY "Authenticated can manage blog"
+ON storage.objects FOR ALL
+USING (bucket_id = 'blog' AND auth.role() = 'authenticated')
+WITH CHECK (bucket_id = 'blog' AND auth.role() = 'authenticated');
 
--- Políticas plants: lectura pública, escritura solo service role
+-- Políticas plants: lectura pública, escritura solo usuarios autenticados
 DROP POLICY IF EXISTS "Public read access for plants" ON storage.objects;
 CREATE POLICY "Public read access for plants"
 ON storage.objects FOR SELECT
 USING (bucket_id = 'plants');
 
 DROP POLICY IF EXISTS "Service role can upload plants" ON storage.objects;
-CREATE POLICY "Service role can upload plants"
-ON storage.objects FOR INSERT
-WITH CHECK (bucket_id = 'plants' AND auth.role() = 'service_role');
-
 DROP POLICY IF EXISTS "Service role can update plants" ON storage.objects;
-CREATE POLICY "Service role can update plants"
-ON storage.objects FOR UPDATE
-USING (bucket_id = 'plants' AND auth.role() = 'service_role');
-
 DROP POLICY IF EXISTS "Service role can delete plants" ON storage.objects;
-CREATE POLICY "Service role can delete plants"
-ON storage.objects FOR DELETE
-USING (bucket_id = 'plants' AND auth.role() = 'service_role');
+DROP POLICY IF EXISTS "Authenticated can manage plants" ON storage.objects;
+CREATE POLICY "Authenticated can manage plants"
+ON storage.objects FOR ALL
+USING (bucket_id = 'plants' AND auth.role() = 'authenticated')
+WITH CHECK (bucket_id = 'plants' AND auth.role() = 'authenticated');

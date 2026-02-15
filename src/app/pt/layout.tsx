@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     default: 'Tricholand · Viveiro Trichocereus',
     template: '%s | Tricholand',
   },
+  description: 'Viveiro produtor de Trichocereus e cactos colunares. Venda B2B exclusiva para profissionais. Envios para toda a Europa a partir de Múrcia, Espanha.',
   alternates: {
     canonical: 'https://www.tricholand.com/pt',
     languages: {
@@ -21,6 +22,12 @@ export const metadata: Metadata = {
       'it': 'https://www.tricholand.com/it',
       'pt': 'https://www.tricholand.com/pt',
     },
+  },
+  openGraph: {
+    url: 'https://www.tricholand.com/pt',
+    title: 'Tricholand · Viveiro Trichocereus',
+    description: 'Viveiro produtor de Trichocereus e cactos colunares. Venda B2B exclusiva para profissionais. Envios para toda a Europa a partir de Múrcia, Espanha.',
+    locale: 'pt_PT',
   },
 }
 

@@ -16,6 +16,12 @@ function getEffectiveLocale(locale: string): (typeof BLOG_LOCALES)[number] {
   return 'en'
 }
 
+/** Solo usa image si es de Supabase Storage; si no, null */
+function isSupabaseImage(url: string | null): boolean {
+  if (!url || typeof url !== 'string') return false
+  return url.includes('supabase.co') && url.includes('/storage/v1/object/public/')
+}
+
 function rowToMeta(row: {
   slug: string
   title: string
@@ -31,7 +37,7 @@ function rowToMeta(row: {
     title: row.title,
     description: row.description || '',
     date: row.date,
-    image: row.image || '/images/blog/Tricholand_blog_1.webp',
+    image: isSupabaseImage(row.image) ? row.image! : null,
     imageAlt: row.image_alt || row.title,
     tags: row.tags || [],
     readingTime: row.reading_time,
