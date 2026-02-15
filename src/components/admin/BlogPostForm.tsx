@@ -125,7 +125,7 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
   const fieldClass = 'w-full px-4 py-2.5 border border-linea text-sm focus:outline-none focus:border-naranja transition-colors bg-blanco'
   const labelClass = 'block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1'
 
-  /** Contenido para TinyMCE. Siempre HTML. Convierte Markdown o híbrido (HTML con **/## dentro). */
+  /** Contenido para TinyMCE. Siempre HTML. Convierte Markdown o híbrido (HTML con ** o ## dentro). */
   const contentForEditor = useMemo(() => {
     const raw = post?.content ?? ''
     if (!raw) return ''
@@ -142,7 +142,7 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
         .replace(/<\/?(?:div|p|span|h[1-6])[^>]*>/gi, '\n')
         .replace(/<[^>]+>/g, '')
         .replace(/&nbsp;/g, ' ')
-        .replace(/&([a-z]+);/gi, (_, n) => ({ aacute: 'á', eacute: 'é', iacute: 'í', oacute: 'ó', uacute: 'ú', ntilde: 'ñ', ldquo: '"', rdquo: '"', quot: '"' }[n] ?? `&${n};`))
+        .replace(/&([a-z]+);/gi, (_, n: string) => (({ aacute: 'á', eacute: 'é', iacute: 'í', oacute: 'ó', uacute: 'ú', ntilde: 'ñ', ldquo: '"', rdquo: '"', quot: '"' } as Record<string, string>)[n] ?? `&${n};`))
         .replace(/&#(\d+);/g, (_, c) => String.fromCharCode(parseInt(c, 10)))
         .replace(/\n{3,}/g, '\n\n')
         .trim()
