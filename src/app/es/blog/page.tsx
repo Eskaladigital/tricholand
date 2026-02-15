@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getPostsMeta } from '@/lib/blog'
 import { BlogGrid } from '@/components/blog/BlogGrid'
 import { getBlogIndexAlternates } from '@/lib/i18n/paths'
+import { getDictionary } from '@/lib/i18n'
 
 export const revalidate = 60
 
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 
 export default async function BlogPage() {
   const posts = await getPostsMeta('es')
+  const dict = getDictionary('es')
 
   return (
     <section className="px-5 lg:px-8 py-16">
@@ -26,7 +28,7 @@ export default async function BlogPage() {
           </p>
         </div>
 
-        <BlogGrid posts={posts} locale="es" />
+        <BlogGrid posts={posts} locale="es" dict={dict.blog} />
       </div>
     </section>
   )

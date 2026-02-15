@@ -1,37 +1,35 @@
-# Checklist i18n — Contenido en español en páginas EN (y otros idiomas)
+# Checklist i18n — Revisión de contenido por idioma
 
-Revisión de contenido hardcodeado en español en la versión inglesa. Rutas EN: `contact`, `services`, `about-us`, `certifications`, `privacy-policy`, `legal-notice`, `varieties`, `shop`, `shop/order`.
+Revisión de contenido hardcodeado en español en páginas de otros idiomas. Cobertura: **ES, EN, NL, FR, DE, IT, PT** (7 idiomas).
 
 ---
 
 ## Estado actual (revisado 2026-02)
 
-### ✅ Completamente en inglés
+### ✅ Completamente traducido
 
-| Sección | Archivo | Estado |
-|---------|---------|--------|
-| **Blog** | `en/blog/page.tsx`, `en/blog/[slug]/page.tsx` | Metadata, subtítulo, formatDate('en'), CTA, "Related posts" — todo EN |
-| **Contact** | `en/contact/page.tsx` | Metadata, títulos, FAQ, "Murcia, Spain", ContactFormWizard dict={en} |
-| **Services** | `en/services/page.tsx` | Metadata, contenido, CertificationsBar dict={en} |
-| **About us** | `en/about-us/page.tsx` | Metadata, párrafos, features, CTA, StatsBar dict={en} |
-| **Certifications** | `en/certifications/page.tsx` | Metadata, contenido, sidebar, FAQ, CTA — todo EN |
-| **Privacy policy** | `en/privacy-policy/page.tsx` | Metadata y contenido completo en inglés |
-| **Legal notice** | `en/legal-notice/page.tsx` | Metadata y contenido completo en inglés |
-| **Shop** (índice) | `en/shop/page.tsx` | Metadata, títulos, pasos del proceso — todo EN |
-| **Shop order** | `en/shop/order/page.tsx` | Metadata, títulos — todo EN |
+| Idioma | Páginas clave | Estado |
+|--------|---------------|--------|
+| **EN** | Blog, Contact, Services, About us, Certifications, Privacy, Legal notice, Shop, Shop order | Todo en inglés |
+| **DE** | Blog, Kontakt, Dienstleistungen, Über uns, Zertifizierungen, Datenschutz, Impressum, Shop | Todo en alemán (corregido 2026-02) |
+| **FR** | Blog, Contact, Services, À propos, Certifications, Privacy, Note légales, Boutique | Todo en francés |
+| **NL** | Blog, Contact, Diensten, Over ons, Certificeringen, Privacybeleid, Juridische info, Winkel | Todo en holandés |
+| **IT** | Blog, Contatto, Servizi, Chi siamo, Certificazioni, Privacy, Note legali, Shop | Todo en italiano |
+| **PT** | Blog, Contacto, Serviços, Sobre nós, Certificações, Política privacidade, Aviso legal, Loja | Todo en portugués |
 
-### ✅ Corregido (2026-02)
+### Correcciones aplicadas (2026-02)
 
 | Archivo | Cambio |
 |---------|--------|
-| `en/shop/[slug]/page.tsx` | priceNote, stock messages, specsLabel, productDescriptionLabel → `t.shop.*` (getDictionary) |
+| `de/uber-uns/page.tsx` | Contenido traducido de español → alemán (párrafos, features, CTA) |
+| `de/zertifizierungen/page.tsx` | Contenido traducido de español → alemán (hero, FAQ, badges, CTA) |
+| `BlogGrid.tsx` | Textos hardcodeados → `dict.blog` (filterAll, searchPlaceholder, articlesFound, noArticlesFound, featured, noImage, loadMore, readingTime) |
+| `it/blog/page.tsx` | Metadata y descripción en español → italiano |
+| `pt/blog/page.tsx` | Metadata y descripción en español → portugués |
 
-### ⚠️ Contenido de variedades (parcial)
+### Diccionarios i18n
 
-| Archivo | Nota |
-|---------|------|
-| `en/varieties/page.tsx` | Usa `varietiesES` directamente. Los `commonName` vienen del data ES (ej. "Antorcha Peruana"). Considerar usar `getAllVarietiesForLocale('en')` o equivalente si existe. |
-| `en/varieties/[slug]/page.tsx` | Usa `getVarietyForLocale(slug, 'en')` — tiene traducciones en `VARIETY_TRANSLATIONS.en` para las variedades principales. Si falta traducción para un slug, muestra español. |
+- **blog**: Añadidos `filterAll`, `searchPlaceholder`, `articlesFound`, `noArticlesFound`, `featured`, `noImage`, `loadMore` en los 7 idiomas.
 
 ---
 
@@ -41,25 +39,19 @@ Revisión de contenido hardcodeado en español en la versión inglesa. Rutas EN:
 |----|----|----|----|----|----|-----|
 | contacto | contact | contact | contact | kontakt | contatto | contacto |
 | servicios | services | diensten | services | dienstleistungen | servizi | servicos |
-| sobre-nosotros | about-us | over-ons | chi-siamo | uber-uns | chi-siamo | sobre-nos |
-| certificaciones | certifications | certificeringen | — | zertifizierungen | certificazioni | certificacoes |
+| sobre-nosotros | about-us | over-ons | a-propos | uber-uns | chi-siamo | sobre-nos |
+| certificaciones | certifications | certificeringen | certifications | zertifizierungen | certificazioni | certificacoes |
 | politica-privacidad | privacy-policy | privacybeleid | privacy | datenschutz | privacy | politica-privacidade |
 | aviso-legal | legal-notice | juridische-informatie | note-legales | impressum | note-legali | aviso-legal |
 | variedades | varieties | varieteiten | varietes | sorten | varieta | variedades |
-| tienda | shop | winkel | shop | shop | shop | loja |
+| tienda | shop | winkel | boutique | shop | shop | loja |
 | tienda/pedido | shop/order | winkel/bestelling | shop/ordre | shop/bestellung | shop/ordine | loja/pedido |
 
 ---
 
-## Checklist para aplicar a nl, fr, de, it, pt
+## Checklist para futuras revisiones
 
-Para cada idioma, revisar las mismas secciones. Los componentes compartidos (`ContactFormWizard`, `OrderForm`, `ShopGrid`, etc.) reciben `locale` y `dict` — verificar que cada página pasa el diccionario correcto.
-
----
-
-## Estrategia recomendada
-
-1. **Diccionarios (i18n)**: Ampliar `en.ts`, `nl.ts`, etc. con cadenas que falten (ej. shop product detail).
-2. **Páginas**: Sustituir texto hardcodeado por `dict.xxx` o `t.shop.xxx`.
+1. **Componentes compartidos**: Verificar que reciben `locale` y `dict` correctos (ContactFormWizard, OrderForm, ShopGrid, BlogGrid, etc.).
+2. **Páginas estáticas**: Si se añaden nuevas páginas con contenido, traducir a los 7 idiomas.
 3. **Variedades**: `getVarietyForLocale` ya soporta traducciones; completar `VARIETY_TRANSLATIONS` para todos los slugs si falta alguno.
 4. **URLs internas**: Usar `getFullPath(locale, 'contact')` o `/${locale}/...` en lugar de rutas fijas.

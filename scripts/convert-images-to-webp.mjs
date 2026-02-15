@@ -1,18 +1,18 @@
 /**
- * Convierte imágenes PNG/JPG en public/images a WebP
- * Mantiene favicon.png y apple-touch-icon.png (requieren PNG para compatibilidad)
+ * Convierte imágenes PNG/JPG a WebP en images/ (raíz del proyecto).
+ * Las convierte in situ, sin moverlas a public.
  * Ejecutar: node scripts/convert-images-to-webp.mjs
  */
 import sharp from 'sharp'
 import { join, dirname, extname } from 'path'
 import { fileURLToPath } from 'url'
-import { readdirSync, statSync, unlinkSync, existsSync } from 'fs'
+import { readdirSync, unlinkSync, existsSync } from 'fs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
-const IMAGES_DIR = join(ROOT, 'public', 'images')
+const IMAGES_DIR = join(ROOT, 'images')
 
-const EXCLUDE = ['favicon.png', 'apple-touch-icon.png']
+const EXCLUDE = []
 
 function getAllImageFiles(dir, files = []) {
   if (!existsSync(dir)) return files
@@ -31,7 +31,7 @@ function getAllImageFiles(dir, files = []) {
 async function main() {
   const files = getAllImageFiles(IMAGES_DIR)
   if (files.length === 0) {
-    console.log('No se encontraron imágenes PNG/JPG en public/images')
+    console.log('No se encontraron imágenes PNG/JPG en images/')
     return
   }
 
@@ -67,9 +67,8 @@ async function main() {
     }
   }
 
-  console.log(`\n✅ ${converted} imágenes convertidas a WebP`)
+  console.log(`\n✅ ${converted} imágenes convertidas a WebP en images/`)
   if (errors > 0) console.log(`⚠️ ${errors} errores`)
-  console.log('\nEjecuta: node scripts/update-image-refs-to-webp.mjs para actualizar referencias en el código')
 }
 
 main().catch(console.error)

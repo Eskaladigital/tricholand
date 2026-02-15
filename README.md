@@ -159,7 +159,7 @@ NEXT_PUBLIC_SITE_URL=https://www.tricholand.com
 | `npm run translate:dry` | Simular translate:content sin escribir |
 | `npm run translate:blog` | Traducir posts del blog a otros idiomas (OpenAI) |
 | `npm run favicon` | Regenerar favicon y apple-touch-icon desde logo |
-| `npm run images:webp` | Convertir imágenes PNG/JPG a WebP (optimización) |
+| `npm run images:webp` | Convertir imágenes PNG/JPG a WebP en `images/` (para subir a Supabase) |
 | `npm run seed:products` | Seed de productos de ejemplo |
 | `npm run seed:blog` | Seed de posts del blog |
 | `npm run import:blog` | Importar blog desde CSV |
@@ -241,11 +241,15 @@ npm run favicon
 
 Genera `public/favicon.png` (32×32), `public/apple-touch-icon.png` (180×180) y `public/images/og-image.webp` (1200×630 para Open Graph / redes sociales).
 
-Las imágenes del sitio están en formato **WebP** para optimizar rendimiento. Para convertir nuevas imágenes PNG/JPG a WebP:
+Las imágenes del sitio están en formato **WebP** para optimizar rendimiento.
+
+La carpeta `images/` (raíz del proyecto) contiene imágenes fuente para subir a Supabase. Está en `.gitignore`. Para convertir PNG/JPG a WebP antes de subirlas:
 
 ```bash
 npm run images:webp
 ```
+
+Convierte in situ en `images/` (no mueve nada a `public/`).
 
 ---
 
@@ -284,8 +288,7 @@ tricholand-web/
 │   ├── ai-blog-perfect.mjs     # Limpieza SEO + traducción con OpenAI
 │   ├── generate-locales.mjs    # Generador de páginas por idioma
 │   ├── generate-favicon.mjs    # Favicon desde logo (fondo blanco)
-│   ├── convert-images-to-webp.mjs   # Conversión PNG/JPG → WebP
-│   ├── update-image-refs-to-webp.mjs # Actualizar referencias a .webp
+│   ├── convert-images-to-webp.mjs   # Conversión PNG/JPG → WebP en images/
 │   ├── seed-products.mjs       # Seed productos
 │   ├── seed-blog-posts.mjs     # Seed blog
 │   ├── import-blog-from-csv.mjs # Importar blog desde CSV
@@ -294,11 +297,12 @@ tricholand-web/
 │   ├── schema.sql              # Schema principal (products, orders, contacts, settings)
 │   ├── translations-schema.sql # Tablas content + translations
 │   └── storage-bucket.sql       # Bucket order-documents (proformas, facturas)
+├── images/                     # Imágenes fuente para Supabase (gitignore)
 └── public/
 │   ├── favicon.png             # Favicon 32×32
 │   ├── apple-touch-icon.png    # Icono iOS 180×180
 │   ├── administrator/          # PWA admin (manifest, icons, sw)
-│   └── images/
+│   └── images/                 # Imágenes estáticas del sitio (variedades, vivero, logo, etc.)
 ```
 
 ---

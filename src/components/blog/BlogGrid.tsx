@@ -14,11 +14,21 @@ function getPostImageSrc(post: { image: string | null }): string | null {
 interface BlogGridProps {
   posts: BlogPostMeta[]
   locale: string
+  dict: {
+    filterAll: string
+    searchPlaceholder: string
+    articlesFound: string
+    noArticlesFound: string
+    featured: string
+    noImage: string
+    loadMore: string
+    readingTime: string
+  }
 }
 
 const POSTS_PER_PAGE = 12
 
-export function BlogGrid({ posts, locale }: BlogGridProps) {
+export function BlogGrid({ posts, locale, dict }: BlogGridProps) {
   const [search, setSearch] = useState('')
   const [activeTag, setActiveTag] = useState<string | null>(null)
   const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE)
@@ -64,7 +74,7 @@ export function BlogGrid({ posts, locale }: BlogGridProps) {
             type="text"
             value={search}
             onChange={(e) => { setSearch(e.target.value); setVisibleCount(POSTS_PER_PAGE) }}
-            placeholder={locale === 'es' ? 'Buscar artículos...' : 'Search articles...'}
+            placeholder={dict.searchPlaceholder}
             className="w-full bg-blanco border border-linea px-4 py-2.5 pr-10 text-sm font-[family-name:var(--font-archivo)] text-negro placeholder:text-marron-claro/60 focus:outline-none focus:border-naranja transition-colors"
           />
           <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-marron-claro" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,7 +92,7 @@ export function BlogGrid({ posts, locale }: BlogGridProps) {
                 : 'bg-transparent text-marron-claro border-linea hover:border-negro hover:text-negro'
             }`}
           >
-            {locale === 'es' ? 'Todos' : 'All'}
+            {dict.filterAll}
           </button>
           {allTags.map((tag) => (
             <button
@@ -103,14 +113,14 @@ export function BlogGrid({ posts, locale }: BlogGridProps) {
       {/* Results count */}
       {(search || activeTag) && (
         <p className="text-xs text-marron-claro mb-6 font-[family-name:var(--font-archivo-narrow)] uppercase tracking-wide">
-          {filtered.length} {locale === 'es' ? 'artículos encontrados' : 'articles found'}
+          {filtered.length} {dict.articlesFound}
         </p>
       )}
 
       {filtered.length === 0 && (
         <div className="text-center py-16">
           <p className="text-marron-claro text-lg">
-            {locale === 'es' ? 'No se encontraron artículos.' : 'No articles found.'}
+            {dict.noArticlesFound}
           </p>
         </div>
       )}
@@ -135,14 +145,14 @@ export function BlogGrid({ posts, locale }: BlogGridProps) {
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center text-marron-claro/60 text-sm font-[family-name:var(--font-archivo-narrow)] uppercase tracking-wide">
-                  {locale === 'es' ? 'Sin imagen' : 'No image'}
+                  {dict.noImage}
                 </div>
               )}
             </div>
             <div className="p-6 md:p-8 flex flex-col justify-center">
               <div className="flex items-center gap-3 mb-3">
                 <span className="bg-naranja text-blanco px-2 py-0.5 font-[family-name:var(--font-archivo-narrow)] text-[0.65rem] font-bold uppercase tracking-wider">
-                  {locale === 'es' ? 'Destacado' : 'Featured'}
+                  {dict.featured}
                 </span>
                 <time className="font-[family-name:var(--font-archivo-narrow)] text-xs text-marron-claro">
                   {formatDate(featured.date, locale)}
@@ -156,7 +166,7 @@ export function BlogGrid({ posts, locale }: BlogGridProps) {
               </p>
               <div className="flex items-center gap-3">
                 <span className="font-[family-name:var(--font-archivo-narrow)] text-xs text-marron-claro">
-                  {featured.readingTime} min {locale === 'es' ? 'de lectura' : 'read'}
+                  {featured.readingTime} {dict.readingTime}
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {featured.tags.slice(0, 3).map((tag) => (
@@ -195,7 +205,7 @@ export function BlogGrid({ posts, locale }: BlogGridProps) {
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center text-marron-claro/50 text-xs font-[family-name:var(--font-archivo-narrow)] uppercase tracking-wide">
-                  {locale === 'es' ? 'Sin imagen' : 'No image'}
+                  {dict.noImage}
                 </div>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-negro/30 to-transparent" />
@@ -240,7 +250,7 @@ export function BlogGrid({ posts, locale }: BlogGridProps) {
             onClick={() => setVisibleCount((c) => c + POSTS_PER_PAGE)}
             className="inline-flex items-center gap-2 bg-negro text-crudo px-6 py-2.5 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-naranja transition-colors"
           >
-            {locale === 'es' ? 'Ver más artículos' : 'Load more articles'}
+            {dict.loadMore}
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>

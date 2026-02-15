@@ -202,6 +202,13 @@ export const pt: Dictionary = {
     publishedOn: 'Publicado em',
     backToList: '← Voltar ao blog',
     relatedPosts: 'Posts relacionados',
+    filterAll: 'Todos',
+    searchPlaceholder: 'Pesquisar artigos...',
+    articlesFound: 'artigos encontrados',
+    noArticlesFound: 'Nenhum artigo encontrado.',
+    featured: 'Destaque',
+    noImage: 'Sem imagem',
+    loadMore: 'Ver mais artigos',
   },
   variety: {
     home: 'Início',

@@ -2,6 +2,32 @@
 
 Todos los cambios notables del proyecto Tricholand Web.
 
+## [1.2.4] - 2026-02
+
+### Corregido (i18n)
+
+- **de/uber-uns**: Contenido traducido de español a alemán (párrafos, features, CTA)
+- **de/zertifizierungen**: Contenido traducido de español a alemán (hero, FAQ, badges, CTA)
+- **BlogGrid**: Textos hardcodeados (Todos/All, Buscar, etc.) → diccionario `blog` en 7 idiomas
+- **it/blog, pt/blog**: Metadata y descripción en español → italiano y portugués
+
+### Añadido
+
+- **Diccionarios blog**: `filterAll`, `searchPlaceholder`, `articlesFound`, `noArticlesFound`, `featured`, `noImage`, `loadMore` en es, en, de, fr, nl, it, pt
+- **CHECKLIST-I18N-EN.md**: Ampliado para cubrir los 7 idiomas (antes solo EN)
+
+---
+
+## [1.2.3] - 2026-02
+
+### Modificado
+
+- **Script `convert-images-to-webp.mjs`**: ahora solo procesa la carpeta `images/` (raíz del proyecto), convierte in situ sin mover nada a `public/`
+- **Script `images:webp`**: ya no ejecuta `update-image-refs-to-webp.mjs` (solo conversión)
+- **Carpeta `images/`**: añadida a `.gitignore` — contiene imágenes fuente para subir a Supabase (161 imágenes convertidas a WebP)
+
+---
+
 ## [1.2.2] - 2026-02
 
 ### Añadido

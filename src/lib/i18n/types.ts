@@ -180,6 +180,13 @@ export interface Dictionary {
     publishedOn: string
     backToList: string
     relatedPosts: string
+    filterAll: string
+    searchPlaceholder: string
+    articlesFound: string
+    noArticlesFound: string
+    featured: string
+    noImage: string
+    loadMore: string
   }
   variety: {
     home: string

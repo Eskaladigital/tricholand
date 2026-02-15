@@ -202,6 +202,13 @@ export const nl: Dictionary = {
     publishedOn: 'Gepubliceerd op',
     backToList: '← Terug naar blog',
     relatedPosts: 'Gerelateerde berichten',
+    filterAll: 'Alle',
+    searchPlaceholder: 'Artikelen zoeken...',
+    articlesFound: 'artikelen gevonden',
+    noArticlesFound: 'Geen artikelen gevonden.',
+    featured: 'Uitgelicht',
+    noImage: 'Geen afbeelding',
+    loadMore: 'Meer artikelen laden',
   },
   variety: {
     home: 'Home',

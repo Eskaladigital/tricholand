@@ -29,21 +29,22 @@ export default function SobreNosotrosPage() {
             </h2>
             <div className="space-y-4 text-marron-claro leading-relaxed">
               <p>
-                Tricholand es un vivero productor especializado en el cultivo y distribución mayorista
-                de cactus del género Trichocereus y otras cactáceas columnares. Desde nuestras
-                instalaciones de 2.500 m² en Murcia, España, cultivamos más de 50 variedades que
-                distribuimos a viveros, garden centers y distribuidores de toda Europa.
+                Tricholand ist eine Produzentengärtnerei, spezialisiert auf den Anbau und die
+                Großhandelsverteilung von Kakteen der Gattung Trichocereus und anderen säulenförmigen
+                Kakteen. Von unseren 2.500 m² Anlagen in Murcia, Spanien kultivieren wir über 50
+                Sorten, die wir an Gärtnereien, Gartencenter und Händler in ganz Europa verteilen.
               </p>
               <p>
-                Los cactus Trichocereus son un género de plantas suculentas pertenecientes a la
-                familia Cactaceae, originarios de América del Sur — particularmente de Argentina,
-                Bolivia, Chile, Ecuador y Perú. Son conocidos por su forma columnar imponente y su
-                espectacular floración nocturna.
+                Trichocereus-Kakteen sind eine Gattung sukkulenter Pflanzen aus der Familie der
+                Cactaceae, ursprünglich aus Südamerika — insbesondere Argentinien, Bolivien, Chile,
+                Ecuador und Peru. Sie sind bekannt für ihre imposante säulenförmige Gestalt und ihre
+                spektakuläre nächtliche Blüte.
               </p>
               <p>
-                Somos una empresa en continuo crecimiento con el objetivo de ofrecer a todos
-                nuestros clientes las plantas que necesiten al año, reservando parte del cultivo
-                para garantizar un stock adaptado a la demanda de cada cliente.
+                Wir sind ein Unternehmen in stetigem Wachstum mit dem Ziel, unseren Kunden die
+                Pflanzen zu bieten, die sie jedes Jahr benötigen, indem wir einen Teil unserer
+                Anbaufläche reservieren, um einen an die Nachfrage jedes Kunden angepassten Bestand
+                zu garantieren.
               </p>
             </div>
           </div>
@@ -51,7 +52,7 @@ export default function SobreNosotrosPage() {
           <div className="grid grid-cols-2 gap-3">
             <Image
               src="/images/vivero/productores_cactus_1.webp"
-              alt="Vivero Tricholand"
+              alt="Tricholand Gärtnerei"
               width={500}
               height={350}
               sizes="(max-width: 1024px) 50vw, 25vw"
@@ -61,7 +62,7 @@ export default function SobreNosotrosPage() {
             />
             <Image
               src="/images/vivero/productores_cactus_2.webp"
-              alt="Cultivo de Trichocereus"
+              alt="Trichocereus-Anbau"
               width={500}
               height={350}
               sizes="(max-width: 1024px) 50vw, 25vw"
@@ -76,28 +77,28 @@ export default function SobreNosotrosPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           {[
             {
-              title: 'Producción propia',
-              text: 'Todo nuestro stock procede de nuestras instalaciones. Controlamos el proceso completo desde la semilla o esqueje hasta la planta lista para venta.',
+              title: 'Eigene Produktion',
+              text: 'Unser gesamter Bestand stammt aus unseren Anlagen. Wir kontrollieren den gesamten Prozess vom Samen oder Steckling bis zur verkaufsfertigen Pflanze.',
             },
             {
-              title: 'Envíos a toda Europa',
-              text: 'Realizamos envíos a toda la Unión Europea e importamos a Reino Unido con toda la documentación actualizada para envíos al por mayor.',
+              title: 'Versand in ganz Europa',
+              text: 'Wir versenden in die gesamte Europäische Union und importieren nach Großbritannien mit vollständiger aktueller Dokumentation für Großhandelsversand.',
             },
             {
-              title: 'Certificación fitosanitaria',
-              text: 'Todos nuestros ejemplares incluyen pasaporte fitosanitario UE. Documentación aduanera completa para exportación a UK.',
+              title: 'Phytosanitäre Zertifizierung',
+              text: 'Alle unsere Exemplare enthalten einen EU-Pflanzenpass. Vollständige Zolldokumentation für den Export nach UK.',
             },
             {
-              title: 'Más de 50 variedades',
-              text: 'Nuestra colección abarca las principales especies de Trichocereus más híbridos selectos, formas crestadas y variedades raras.',
+              title: 'Über 50 Sorten',
+              text: 'Unsere Sammlung umfasst die wichtigsten Trichocereus-Arten sowie ausgewählte Hybride, Kammformen und seltene Sorten.',
             },
             {
-              title: 'Suministro garantizado',
-              text: 'Reserva anticipada de producción para garantizar el suministro de las variedades y cantidades que tu negocio necesita.',
+              title: 'Garantierte Lieferung',
+              text: 'Vorabreservierung von Produktion zur Sicherstellung der Lieferung der Sorten und Mengen, die Ihr Unternehmen benötigt.',
             },
             {
-              title: 'Asesoramiento profesional',
-              text: 'Acompañamos a nuestros clientes con asesoramiento técnico sobre cultivo, cuidado y presentación de las plantas.',
+              title: 'Fachberatung',
+              text: 'Wir unterstützen unsere Kunden mit technischer Beratung zu Anbau, Pflege und Präsentation der Pflanzen.',
             },
           ].map((item, i) => (
             <div key={i} className="bg-blanco border border-linea p-6">
@@ -112,17 +113,17 @@ export default function SobreNosotrosPage() {
         {/* CTA */}
         <div className="bg-negro text-crudo p-8 lg:p-12 text-center max-w-3xl mx-auto">
           <h2 className="font-[family-name:var(--font-archivo-narrow)] text-2xl font-bold uppercase mb-3">
-            ¿Quieres trabajar con nosotros?
+            Möchten Sie mit uns zusammenarbeiten?
           </h2>
           <p className="opacity-70 mb-6">
-            Si eres un profesional del sector y estás interesado en nuestros productos, contacta con
-            nosotros para recibir catálogo y condiciones.
+            Wenn Sie ein Fachmann der Branche sind und an unseren Produkten interessiert sind,
+            kontaktieren Sie uns für Katalog und Konditionen.
           </p>
           <Link
             href={getFullPath('de', 'contact')}
             className="inline-flex bg-naranja text-blanco px-8 py-3 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-verde transition-colors"
           >
-            Solicitar información →
+            Informationen anfordern →
           </Link>
         </div>
       </section>

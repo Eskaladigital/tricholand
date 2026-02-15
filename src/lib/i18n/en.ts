@@ -202,6 +202,13 @@ export const en: Dictionary = {
     publishedOn: 'Published on',
     backToList: '← Back to blog',
     relatedPosts: 'Related posts',
+    filterAll: 'All',
+    searchPlaceholder: 'Search articles...',
+    articlesFound: 'articles found',
+    noArticlesFound: 'No articles found.',
+    featured: 'Featured',
+    noImage: 'No image',
+    loadMore: 'Load more articles',
   },
   variety: {
     home: 'Home',
