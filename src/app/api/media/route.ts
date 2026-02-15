@@ -47,16 +47,36 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({ files })
 }
 
-/** POST /api/media — Subir archivo al bucket */
+/** POST /api/media — Subir archivo o crear carpeta */
 export async function POST(request: NextRequest) {
   const ctx = await getAdminClient()
   if (!ctx) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
 
   const formData = await request.formData()
-  const file = formData.get('file') as File | null
+  const action = formData.get('action') as string | null
   const bucket = (formData.get('bucket') as string) ?? 'blog'
   const folder = (formData.get('folder') as string) ?? ''
 
+  if (action === 'createFolder') {
+    const folderName = (formData.get('folderName') as string)?.trim()
+    if (!folderName) return NextResponse.json({ error: 'Nombre de carpeta vacío' }, { status: 400 })
+    const safeName = folderName
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9._-]/g, '_')
+      .toLowerCase()
+    if (!safeName) return NextResponse.json({ error: 'Nombre de carpeta no válido' }, { status: 400 })
+    const filePath = folder ? `${folder}/${safeName}/.keep` : `${safeName}/.keep`
+    const { supabase } = ctx
+    const { error } = await supabase.storage.from(bucket).upload(filePath, new Blob([]), {
+      cacheControl: '0',
+      upsert: false,
+    })
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ path: filePath, created: true })
+  }
+
+  const file = formData.get('file') as File | null
   if (!file) return NextResponse.json({ error: 'No se envió archivo' }, { status: 400 })
   if (!ALLOWED_BUCKETS.includes(bucket)) {
     return NextResponse.json({ error: 'Bucket no permitido' }, { status: 400 })

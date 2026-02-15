@@ -39,6 +39,7 @@ export function MediaPickerModal({ open, onClose, onSelect, title = 'Seleccionar
   const [files, setFiles] = useState<MediaFile[]>([])
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [creatingFolder, setCreatingFolder] = useState(false)
   const [selectedUrl, setSelectedUrl] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -97,6 +98,26 @@ export function MediaPickerModal({ open, onClose, onSelect, title = 'Seleccionar
     })
   }
 
+  async function handleCreateFolder() {
+    const name = prompt('Nombre de la carpeta:')
+    if (!name?.trim()) return
+    setCreatingFolder(true)
+    try {
+      const formData = new FormData()
+      formData.append('action', 'createFolder')
+      formData.append('bucket', bucket)
+      formData.append('folder', folder)
+      formData.append('folderName', name.trim())
+      const res = await fetch('/api/media', { method: 'POST', body: formData })
+      const json = await res.json()
+      if (json.error) alert(json.error)
+      else fetchFiles()
+    } catch {
+      alert('Error creando carpeta')
+    }
+    setCreatingFolder(false)
+  }
+
   function handleConfirm() {
     if (selectedUrl) {
       onSelect(selectedUrl)
@@ -104,7 +125,7 @@ export function MediaPickerModal({ open, onClose, onSelect, title = 'Seleccionar
     }
   }
 
-  const imageFiles = files.filter((f) => !f.isFolder)
+  const imageFiles = files.filter((f) => !f.isFolder && f.name !== '.keep')
   const folders = files.filter((f) => f.isFolder)
 
   if (!open) return null
@@ -164,10 +185,20 @@ export function MediaPickerModal({ open, onClose, onSelect, title = 'Seleccionar
                 </button>
               )}
             </div>
-            <label className={`px-4 py-2 bg-naranja text-blanco font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase cursor-pointer hover:bg-verde transition-colors ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
-              {uploading ? 'Subiendo...' : '+ Subir'}
-              <input ref={inputRef} type="file" multiple accept="image/*" onChange={handleUpload} className="hidden" />
-            </label>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={handleCreateFolder}
+                disabled={creatingFolder}
+                className="px-4 py-2 border border-linea font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase hover:border-naranja transition-colors disabled:opacity-50"
+              >
+                {creatingFolder ? 'Creando...' : '+ Nueva carpeta'}
+              </button>
+              <label className={`px-4 py-2 bg-naranja text-blanco font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase cursor-pointer hover:bg-verde transition-colors ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                {uploading ? 'Subiendo...' : '+ Subir'}
+                <input ref={inputRef} type="file" multiple accept="image/*" onChange={handleUpload} className="hidden" />
+              </label>
+            </div>
           </div>
         </div>
 
