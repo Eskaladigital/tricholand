@@ -1,6 +1,6 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, unstable_noStore } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 
 export interface AdminBlogPost {
@@ -70,6 +70,7 @@ export async function getBlogPostsBySourceSlug(sourceSlug: string): Promise<Admi
 }
 
 export async function getBlogPostById(id: string): Promise<AdminBlogPost | null> {
+  unstable_noStore() // Evitar caché: siempre datos frescos para el editor
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('blog_posts')

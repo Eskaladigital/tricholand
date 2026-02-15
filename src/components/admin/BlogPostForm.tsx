@@ -125,13 +125,29 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
   const fieldClass = 'w-full px-4 py-2.5 border border-linea text-sm focus:outline-none focus:border-naranja transition-colors bg-blanco'
   const labelClass = 'block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1'
 
-  /** Contenido para TinyMCE. Formato estándar: HTML. Fallback: Markdown → HTML (legacy) */
+  /** Contenido para TinyMCE. Siempre HTML. Convierte Markdown o híbrido (HTML con **/## dentro). */
   const contentForEditor = useMemo(() => {
     const raw = post?.content ?? ''
     if (!raw) return ''
-    if (raw.trim().startsWith('<')) return raw // HTML — TinyMCE trabaja nativamente con HTML
-    const looksLikeMarkdown = raw.includes('##') || raw.includes('**') || raw.includes('\n* ') || raw.startsWith('#')
-    return looksLikeMarkdown ? (marked.parse(raw, { async: false }) as string) : raw
+    const trimmed = raw.trim()
+    // Si contiene sintaxis Markdown (incluso dentro de <p>), convertir
+    const hasMarkdown = trimmed.includes('**') || trimmed.includes('##') || trimmed.includes('\n* ') || trimmed.includes('\n- ') || trimmed.startsWith('#')
+    if (!hasMarkdown && trimmed.startsWith('<')) return raw // HTML puro
+    let toConvert = raw
+    if (trimmed.startsWith('<') && hasMarkdown) {
+      // Híbrido: <p># ... **</p> — extraer Markdown
+      toConvert = raw
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<\/p>\s*<p/gi, '\n\n')
+        .replace(/<\/?(?:div|p|span|h[1-6])[^>]*>/gi, '\n')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&([a-z]+);/gi, (_, n) => ({ aacute: 'á', eacute: 'é', iacute: 'í', oacute: 'ó', uacute: 'ú', ntilde: 'ñ', ldquo: '"', rdquo: '"', quot: '"' }[n] ?? `&${n};`))
+        .replace(/&#(\d+);/g, (_, c) => String.fromCharCode(parseInt(c, 10)))
+        .replace(/\n{3,}/g, '\n\n')
+        .trim()
+    }
+    return hasMarkdown ? (marked.parse(toConvert, { async: false }) as string) : raw
   }, [post?.content])
 
   return (
@@ -305,6 +321,7 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
           Contenido del artículo
         </h2>
         <Editor
+          key={post ? `${post.id}-${post.updated_at ?? ''}` : 'new'}
           onInit={(_evt, editor) => { editorRef.current = editor }}
           initialValue={contentForEditor}
           apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
