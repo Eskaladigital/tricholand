@@ -28,6 +28,7 @@ export const metadata: Metadata = {
     title: 'Tricholand · Pépinière Trichocereus',
     description: 'Pépinière productrice de Trichocereus et cactus colonnaires. Vente B2B exclusive pour professionnels. Expédition dans toute l\'Europe depuis Murcia, Espagne.',
     locale: 'fr_FR',
+    images: ['https://www.tricholand.com/images/og-image.webp'],
   },
 }
 

@@ -28,6 +28,7 @@ export const metadata: Metadata = {
     title: 'Tricholand · Trichocereus Gärtnerei',
     description: 'Trichocereus- und Säulenkakteen-Gärtnerei. Exklusiver B2B-Großhandel für Fachleute. Versand in ganz Europa aus Murcia, Spanien.',
     locale: 'de_DE',
+    images: ['https://www.tricholand.com/images/og-image.webp'],
   },
 }
 
