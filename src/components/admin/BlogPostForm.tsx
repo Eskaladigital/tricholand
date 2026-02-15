@@ -166,7 +166,8 @@ export function BlogPostForm({ post, onSave, onDelete, isSaving }: BlogPostFormP
         <Editor
           onInit={(_evt, editor) => { editorRef.current = editor }}
           initialValue={post?.content ?? ''}
-          licenseKey="gpl"
+          apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
+          licenseKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY ? undefined : 'gpl'}
           init={{
             height: 500,
             menubar: true,

@@ -34,6 +34,17 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'es_ES',
     siteName: 'Tricholand',
+    title: 'Tricholand · Vivero Productor de Trichocereus',
+    description: 'Vivero productor de Trichocereus y cactáceas columnares. Venta mayorista B2B para profesionales. Envíos a toda Europa desde Murcia, España.',
+    url: 'https://www.tricholand.com',
+    images: [
+      {
+        url: '/images/og-image.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Tricholand vivero de Trichocereus',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',

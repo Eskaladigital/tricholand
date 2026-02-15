@@ -1,17 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/api'
 
 const ALLOWED_BUCKETS = ['blog', 'plants']
 
+async function requireAdmin() {
+  const auth = await createClient()
+  const { data: { user } } = await auth.auth.getUser()
+  if (!user) return null
+  return user
+}
+
 /** GET /api/media?bucket=blog — Lista archivos del bucket */
 export async function GET(request: NextRequest) {
+  const user = await requireAdmin()
+  if (!user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+
   const bucket = request.nextUrl.searchParams.get('bucket') ?? 'blog'
   if (!ALLOWED_BUCKETS.includes(bucket)) {
     return NextResponse.json({ error: 'Bucket no permitido' }, { status: 400 })
   }
   const path = request.nextUrl.searchParams.get('path') ?? ''
 
-  const supabase = await createClient()
+  const supabase = createServiceClient()
   const { data, error } = await supabase.storage.from(bucket).list(path, {
     limit: 200,
     sortBy: { column: 'created_at', order: 'desc' },
@@ -38,6 +49,9 @@ export async function GET(request: NextRequest) {
 
 /** POST /api/media — Subir archivo al bucket */
 export async function POST(request: NextRequest) {
+  const user = await requireAdmin()
+  if (!user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+
   const formData = await request.formData()
   const file = formData.get('file') as File | null
   const bucket = (formData.get('bucket') as string) ?? 'blog'
@@ -57,7 +71,7 @@ export async function POST(request: NextRequest) {
 
   const filePath = folder ? `${folder}/${safeName}` : safeName
 
-  const supabase = await createClient()
+  const supabase = createServiceClient()
   const { error } = await supabase.storage.from(bucket).upload(filePath, file, {
     cacheControl: '31536000',
     upsert: false,
@@ -71,6 +85,9 @@ export async function POST(request: NextRequest) {
 
 /** DELETE /api/media — Eliminar archivo del bucket */
 export async function DELETE(request: NextRequest) {
+  const user = await requireAdmin()
+  if (!user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+
   const body = await request.json()
   const bucket = body.bucket ?? 'blog'
   const paths: string[] = body.paths ?? []
@@ -82,7 +99,7 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: 'No se indicaron archivos' }, { status: 400 })
   }
 
-  const supabase = await createClient()
+  const supabase = createServiceClient()
   const { error } = await supabase.storage.from(bucket).remove(paths)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })

@@ -175,7 +175,7 @@ El favicon se genera desde `public/images/icons/logo_tricho.webp` con fondo blan
 npm run favicon
 ```
 
-Genera `public/favicon.png` (32×32) y `public/apple-touch-icon.png` (180×180).
+Genera `public/favicon.png` (32×32), `public/apple-touch-icon.png` (180×180) y `public/images/og-image.webp` (1200×630 para Open Graph / redes sociales).
 
 Las imágenes del sitio están en formato **WebP** para optimizar rendimiento. Para convertir nuevas imágenes PNG/JPG a WebP:
 
