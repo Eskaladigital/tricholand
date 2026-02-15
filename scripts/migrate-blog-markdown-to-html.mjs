@@ -45,11 +45,30 @@ if (!url || !serviceKey) {
 const supabase = createClient(url, serviceKey)
 const dryRun = process.argv.includes('--dry-run')
 
-function looksLikeMarkdown(text) {
+/** Detecta Markdown puro o HTML con Markdown dentro (ej: <p># Título **negrita**</p>) */
+function needsMarkdownConversion(text) {
   if (!text || typeof text !== 'string') return false
   const trimmed = text.trim()
-  if (trimmed.startsWith('<')) return false // Ya es HTML
-  return trimmed.includes('##') || trimmed.includes('**') || trimmed.includes('\n* ') || trimmed.startsWith('#')
+  const hasMarkdownSyntax = trimmed.includes('##') || trimmed.includes('**') || trimmed.includes('\n* ') || trimmed.includes('\n- ') || trimmed.startsWith('#')
+  if (!hasMarkdownSyntax) return false
+  if (!trimmed.startsWith('<')) return true // Markdown puro
+  // HTML con Markdown dentro: <p># ... **...** </p>
+  return trimmed.includes('**') || trimmed.includes('##') || trimmed.includes('# ')
+}
+
+const HTML_ENTITIES = { aacute: 'á', eacute: 'é', iacute: 'í', oacute: 'ó', uacute: 'ú', ntilde: 'ñ', ldquo: '"', rdquo: '"', quot: '"', amp: '&', lt: '<', gt: '>' }
+
+/** Extrae Markdown de contenido híbrido (HTML con Markdown dentro) */
+function extractMarkdownFromHtml(html) {
+  let text = html
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/p>\s*<p/gi, '\n\n')
+    .replace(/<\/?(?:div|p|span|h[1-6])[^>]*>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ')
+  text = text.replace(/&([a-z]+);/gi, (_, name) => HTML_ENTITIES[name] ?? `&${name};`)
+  text = text.replace(/&#(\d+);/g, (_, code) => String.fromCharCode(parseInt(code, 10)))
+  return text.replace(/\n{3,}/g, '\n\n').trim()
 }
 
 async function main() {
@@ -65,7 +84,7 @@ async function main() {
     process.exit(1)
   }
 
-  const toMigrate = (posts ?? []).filter((p) => looksLikeMarkdown(p.content))
+  const toMigrate = (posts ?? []).filter((p) => needsMarkdownConversion(p.content))
   console.log(`Total posts: ${posts?.length ?? 0}`)
   console.log(`A migrar (Markdown → HTML): ${toMigrate.length}\n`)
 
@@ -76,7 +95,11 @@ async function main() {
 
   for (const post of toMigrate) {
     try {
-      const html = marked.parse(post.content, { async: false })
+      let toConvert = post.content
+      if (post.content.trim().startsWith('<') && (post.content.includes('**') || post.content.includes('##'))) {
+        toConvert = extractMarkdownFromHtml(post.content)
+      }
+      const html = marked.parse(toConvert, { async: false })
       const htmlStr = typeof html === 'string' ? html : String(html)
 
       console.log(`  ${post.slug} [${post.locale}] — ${post.content.length} chars → ${htmlStr.length} chars`)
