@@ -1,6 +1,13 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  // Permitir subida de imágenes grandes (hasta 20 MB) en el gestor de medios
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '20mb',
+    },
+  },
+
   // Redirects 301 desde el sitio Joomla antiguo
   async redirects() {
     return [

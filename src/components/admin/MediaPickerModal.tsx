@@ -77,16 +77,26 @@ export function MediaPickerModal({ open, onClose, onSelect, title = 'Seleccionar
     setUploading(true)
     try {
       for (let i = 0; i < fileList.length; i++) {
+        const file = fileList[i]
+        // Validar tamaño antes de enviar (máx 20 MB)
+        if (file.size > 20 * 1024 * 1024) {
+          alert(`"${file.name}" es demasiado grande (${(file.size / 1024 / 1024).toFixed(1)} MB). Máximo: 20 MB.`)
+          continue
+        }
         const formData = new FormData()
-        formData.append('file', fileList[i])
+        formData.append('file', file)
         formData.append('bucket', bucket)
         if (folder) formData.append('folder', folder)
         const res = await fetch('/api/media', { method: 'POST', body: formData })
+        if (res.status === 413) {
+          alert(`"${file.name}" es demasiado grande para el servidor. Redúcela de tamaño e inténtalo de nuevo.`)
+          continue
+        }
         const json = await res.json()
-        if (json.error) alert(`Error subiendo ${fileList[i].name}: ${json.error}`)
+        if (json.error) alert(`Error subiendo ${file.name}: ${json.error}`)
       }
     } catch (err) {
-      alert('Error de red al subir')
+      alert('Error de red al subir. Comprueba tu conexión e inténtalo de nuevo.')
     }
     setUploading(false)
     if (inputRef.current) inputRef.current.value = ''
