@@ -240,7 +240,7 @@ export function OrderForm({ locale }: OrderFormProps) {
             </div>
 
             {/* Resumen rápido con IVA (visible en móvil donde no hay sidebar) */}
-            <div className="lg:hidden bg-crudo border border-linea p-4 mb-4 space-y-1 text-sm">
+            <div className="lg:hidden bg-crudo border border-linea p-4 mb-4 space-y-2 text-sm">
               <div className="flex justify-between">
                 <span>{t.taxBase}</span>
                 <span className="font-semibold">{totalFormatted}</span>
@@ -249,9 +249,9 @@ export function OrderForm({ locale }: OrderFormProps) {
                 <span>{t.estimatedVat} ({IVA_RATE}%)</span>
                 <span>{formatPrice(estimatedTaxCents)}</span>
               </div>
-              <div className="flex justify-between font-bold border-t border-linea pt-1">
-                <span>{t.estimatedTotalWithVat}</span>
-                <span className="text-naranja">{formatPrice(estimatedTotalWithTax)}</span>
+              <div className="flex justify-between items-center font-bold border-t border-linea pt-3 mt-2">
+                <span className="text-base">{t.estimatedTotalWithVat}</span>
+                <span className="text-naranja text-2xl font-[family-name:var(--font-archivo-narrow)]">{formatPrice(estimatedTotalWithTax)}</span>
               </div>
               <p className="text-xs text-marron-claro pt-1">{t.mobileSummaryNote}</p>
               <p className="text-xs text-verde-oscuro italic pt-0.5">{t.vatExemptionNote}</p>
@@ -375,7 +375,7 @@ export function OrderForm({ locale }: OrderFormProps) {
               <div className="pt-2 bg-verde-claro text-verde px-3 py-2 font-bold text-center">
                 TOTAL: {totalUnits} {shopT.totalPlants}
               </div>
-              <div className="pt-3 space-y-1">
+              <div className="pt-3 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>{t.taxBase}</span>
                   <span className="font-semibold">{totalFormatted}</span>
@@ -384,9 +384,9 @@ export function OrderForm({ locale }: OrderFormProps) {
                   <span>{t.estimatedVat} ({IVA_RATE}%)</span>
                   <span>{formatPrice(estimatedTaxCents)}</span>
                 </div>
-                <div className="flex justify-between pt-2 font-bold text-base border-t border-linea/50">
-                  <span>{t.estimatedTotalWithVat}</span>
-                  <span className="text-naranja">{formatPrice(estimatedTotalWithTax)}</span>
+                <div className="flex justify-between items-center pt-3 font-bold border-t border-linea/50 mt-2">
+                  <span className="text-base">{t.estimatedTotalWithVat}</span>
+                  <span className="text-naranja text-2xl font-[family-name:var(--font-archivo-narrow)]">{formatPrice(estimatedTotalWithTax)}</span>
                 </div>
               </div>
               <p className="text-xs text-marron-claro mt-2">
@@ -466,9 +466,9 @@ export function OrderForm({ locale }: OrderFormProps) {
               <span>{t.estimatedVat} ({IVA_RATE}%)</span>
               <span>{formatPrice(estimatedTaxCents)}</span>
             </div>
-            <div className="flex justify-between font-bold border-t border-linea pt-2">
-              <span>{t.estimatedTotalWithVat}</span>
-              <span className="text-naranja text-lg">{formatPrice(estimatedTotalWithTax)}</span>
+            <div className="flex justify-between items-center font-bold border-t border-linea pt-3 mt-2">
+              <span className="text-sm">{t.estimatedTotalWithVat}</span>
+              <span className="text-naranja text-2xl font-[family-name:var(--font-archivo-narrow)]">{formatPrice(estimatedTotalWithTax)}</span>
             </div>
           </div>
           <p className="text-xs text-marron-claro mt-3">{t.pricesExclVat} · {t.shippingConfirmedInQuote}</p>
