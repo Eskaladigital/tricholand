@@ -64,7 +64,7 @@ export function OrderForm({ locale }: OrderFormProps) {
             product_name: item.product.name,
             product_sku: item.product.sku,
             quantity: item.quantity,
-            unit_price_cents: item.product.price_cents,
+            unit_price_cents: Math.round(item.product.price_cents / item.product.units_per_lot),
             notes: item.notes || null,
           })),
           customer_name: customer.name,
