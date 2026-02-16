@@ -274,54 +274,64 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
                   ¿Es un lote adicional?
                 </span>
                 <p className="text-xs text-marron-claro mt-1">
-                  Si marcas esto, el cliente SOLO podrá comprarlo si ya tiene otro producto (el "lote principal") en su pedido.
+                  Marca esto si este producto es un lote más pequeño que se puede añadir después de comprar un lote principal (ej: lote adicional de 150 uds después de un lote principal de 750 uds).
                 </p>
               </div>
             </label>
             
             {isAdditionalLot && (
               <div className="ml-7 pl-4 border-l-2 border-naranja space-y-4">
+                <div className="bg-amarillo/10 border border-amarillo/30 p-3 rounded">
+                  <p className="text-sm text-negro">
+                    ℹ️ <strong>Este producto ES el lote adicional.</strong> Solo necesitas indicar a qué lote principal complementa para calcular su precio automáticamente.
+                  </p>
+                </div>
+
                 <div>
-                  <label className={labelClass}>Lote principal requerido *</label>
+                  <label className={labelClass}>¿A qué lote principal complementa? *</label>
                   <select 
                     value={additionalToProductId} 
                     onChange={(e) => setAdditionalToProductId(e.target.value)} 
                     className={fieldClass} 
                     required
                   >
-                    <option value="">— Seleccionar producto principal —</option>
+                    <option value="">— Seleccionar lote principal —</option>
                     {mainProducts.map((p) => (
                       <option key={p.id} value={p.id}>
-                        {p.name} ({p.sku}) · {p.units_per_lot} uds
+                        {p.name} ({p.sku}) · {p.units_per_lot} uds · {(p.price_cents / 100).toFixed(2)}€
                       </option>
                     ))}
                   </select>
                   <p className="text-xs text-marron-claro mt-1">
-                    El cliente solo podrá añadir este producto si ya tiene el lote principal en su pedido.
+                    El cliente solo podrá comprar este lote si ya tiene el lote principal en su pedido
                   </p>
                 </div>
 
                 {selectedMainProduct && (
-                  <div className="bg-crudo p-4 rounded">
-                    <h4 className="font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase text-marron-claro mb-2">
-                      Cálculo automático de precio
+                  <div className="bg-verde-claro/20 border border-verde p-4 rounded space-y-2">
+                    <h4 className="font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase text-verde-oscuro">
+                      💰 Cálculo automático de precio sugerido
                     </h4>
-                    <div className="space-y-1 text-sm">
-                      <p>
-                        Precio por unidad del lote principal: 
-                        <span className="font-bold ml-1">
-                          {(selectedMainProduct.price_cents / selectedMainProduct.units_per_lot / 100).toFixed(4)} €
-                        </span>
+                    <div className="text-sm space-y-1.5">
+                      <p className="text-marron-claro">
+                        <span className="font-medium">Lote principal:</span> {selectedMainProduct.name}
                       </p>
-                      <p>
-                        Unidades de este lote adicional: 
-                        <span className="font-bold ml-1">{unitsPerLot} uds</span>
+                      <p className="text-marron-claro">
+                        • {selectedMainProduct.units_per_lot} uds por {(selectedMainProduct.price_cents / 100).toFixed(2)}€
                       </p>
-                      {suggestedPriceCents && (
-                        <p className="text-verde font-bold pt-2 border-t border-linea mt-2">
-                          Precio sugerido: {suggestedPriceCents} €
+                      <p className="text-marron-claro">
+                        • Precio por unidad: <span className="font-bold text-negro">{(selectedMainProduct.price_cents / selectedMainProduct.units_per_lot / 100).toFixed(4)} €/ud</span>
+                      </p>
+                      <div className="border-t border-verde/30 pt-2 mt-2">
+                        <p className="text-marron-claro">
+                          <span className="font-medium">Este lote adicional:</span> {unitsPerLot} uds
                         </p>
-                      )}
+                        {suggestedPriceCents && (
+                          <p className="text-verde-oscuro font-bold text-base pt-1">
+                            → Precio sugerido: {suggestedPriceCents} €
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 )}
