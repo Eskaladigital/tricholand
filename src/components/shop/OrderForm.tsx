@@ -146,66 +146,97 @@ export function OrderForm({ locale }: OrderFormProps) {
             </div>
 
             <div className="space-y-4 mb-6">
-              {items.map((item) => (
-                <div key={item.product.id} className="bg-blanco border border-linea p-4 flex gap-4">
-                  <Image
-                    src={item.product.images[0]?.url || ''}
-                    alt={item.product.name}
-                    width={100}
-                    height={80}
-                    className="w-[100px] h-[80px] object-cover shrink-0"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-[family-name:var(--font-archivo-narrow)] font-bold text-sm truncate">
-                      {item.product.name}
-                    </h3>
-                    <p className="text-xs text-marron-claro">{item.product.sku}</p>
+              {items.map((item) => {
+                // Calcular desglose de lotes
+                const fullLots = Math.floor(item.quantity / item.product.min_order_qty)
+                const additionalUnits = item.quantity % item.product.min_order_qty
+                
+                return (
+                  <div key={item.product.id} className="bg-blanco border border-linea p-4 flex gap-4">
+                    <Image
+                      src={item.product.images[0]?.url || ''}
+                      alt={item.product.name}
+                      width={100}
+                      height={80}
+                      className="w-[100px] h-[80px] object-cover shrink-0"
+                      unoptimized
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-[family-name:var(--font-archivo-narrow)] font-bold text-sm truncate">
+                        {item.product.name}
+                      </h3>
+                      <p className="text-xs text-marron-claro">{item.product.sku}</p>
 
-                    <div className="flex items-center gap-3 mt-2">
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                          className="w-7 h-7 border border-linea text-sm hover:bg-crudo"
-                        >
-                          −
-                        </button>
-                        <span className="w-10 text-center font-bold text-sm">{item.quantity}</span>
-                        <button
-                          onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                          className="w-7 h-7 border border-linea text-sm hover:bg-crudo"
-                        >
-                          +
-                        </button>
+                      {/* Desglose de lotes */}
+                      <div className="mt-2 space-y-1">
+                        {fullLots > 0 && (
+                          <p className="text-xs text-verde-oscuro font-medium">
+                            ├─ {fullLots}× Lote completo ({item.product.min_order_qty} uds) = {fullLots * item.product.min_order_qty} plantas
+                          </p>
+                        )}
+                        {additionalUnits > 0 && (
+                          <p className="text-xs text-verde-oscuro font-medium">
+                            └─ {additionalUnits} uds adicionales
+                          </p>
+                        )}
+                        <p className="text-xs text-verde font-bold">
+                          TOTAL: {item.quantity} plantas
+                        </p>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs text-marron-claro">{item.product.unit_label}</span>
-                        <span className="text-xs text-verde font-medium">
-                          = {item.quantity * item.product.units_per_lot} {shopT.totalPlants}
+
+                      <div className="flex items-center gap-3 mt-3">
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => updateQuantity(item.product.id, Math.max(item.product.min_order_qty, item.quantity - item.product.qty_step))}
+                            className="w-7 h-7 border border-linea text-sm hover:bg-crudo"
+                          >
+                            −
+                          </button>
+                          <input
+                            type="number"
+                            value={item.quantity}
+                            onChange={(e) => {
+                              const val = parseInt(e.target.value) || item.product.min_order_qty
+                              if (val >= item.product.min_order_qty) {
+                                updateQuantity(item.product.id, val)
+                              }
+                            }}
+                            min={item.product.min_order_qty}
+                            step={item.product.qty_step}
+                            className="w-16 text-center font-bold text-sm border border-linea px-1 py-1 focus:outline-none focus:border-naranja"
+                          />
+                          <button
+                            onClick={() => updateQuantity(item.product.id, item.quantity + item.product.qty_step)}
+                            className="w-7 h-7 border border-linea text-sm hover:bg-crudo"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <span className="text-xs text-marron-claro">uds</span>
+                        <span className="ml-auto font-[family-name:var(--font-archivo-narrow)] font-bold text-naranja" title={t.pricesExclVat}>
+                          {formatPrice((item.product.price_cents / item.product.units_per_lot) * item.quantity)}
                         </span>
                       </div>
-                      <span className="ml-auto font-[family-name:var(--font-archivo-narrow)] font-bold text-naranja" title={t.pricesExclVat}>
-                        {formatPrice(item.product.price_cents * item.quantity)}
-                      </span>
+
+                      <input
+                        type="text"
+                        placeholder={t.notesPlaceholder}
+                        value={item.notes}
+                        onChange={(e) => updateNotes(item.product.id, e.target.value)}
+                        className="mt-2 w-full px-2 py-1 border border-linea/50 text-xs bg-crudo focus:outline-none focus:border-naranja"
+                      />
                     </div>
 
-                    <input
-                      type="text"
-                      placeholder={t.notesPlaceholder}
-                      value={item.notes}
-                      onChange={(e) => updateNotes(item.product.id, e.target.value)}
-                      className="mt-2 w-full px-2 py-1 border border-linea/50 text-xs bg-crudo focus:outline-none focus:border-naranja"
-                    />
+                    <button
+                      onClick={() => removeItem(item.product.id)}
+                      className="text-marron-claro hover:text-red-600 text-sm self-start"
+                      title={t.remove}
+                    >
+                      ✕
+                    </button>
                   </div>
-
-                  <button
-                    onClick={() => removeItem(item.product.id)}
-                    className="text-marron-claro hover:text-red-600 text-sm self-start"
-                    title={t.remove}
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
+                )
+              })}
             </div>
 
             {/* Resumen rápido con IVA (visible en móvil donde no hay sidebar) */}
@@ -319,17 +350,28 @@ export function OrderForm({ locale }: OrderFormProps) {
 
             <div className="bg-crudo p-5 mb-6 space-y-3 text-sm">
               <h3 className="font-bold text-xs uppercase text-marron-claro">{t.productsLabel}</h3>
-              {items.map((item) => (
-                <div key={item.product.id} className="py-1 border-b border-linea/50">
-                  <div className="flex justify-between">
-                    <span>{item.quantity}× {item.product.name}</span>
-                    <span className="font-bold">{formatPrice(item.product.price_cents * item.quantity)}</span>
+              {items.map((item) => {
+                const fullLots = Math.floor(item.quantity / item.product.min_order_qty)
+                const additionalUnits = item.quantity % item.product.min_order_qty
+                
+                return (
+                  <div key={item.product.id} className="py-2 border-b border-linea/50">
+                    <div className="flex justify-between mb-1">
+                      <span className="font-medium">{item.product.name}</span>
+                      <span className="font-bold">{formatPrice((item.product.price_cents / item.product.units_per_lot) * item.quantity)}</span>
+                    </div>
+                    <div className="text-xs text-verde-oscuro space-y-0.5 ml-2">
+                      {fullLots > 0 && (
+                        <p>├─ {fullLots}× Lote completo ({item.product.min_order_qty} uds) = {fullLots * item.product.min_order_qty} plantas</p>
+                      )}
+                      {additionalUnits > 0 && (
+                        <p>└─ {additionalUnits} uds adicionales</p>
+                      )}
+                      <p className="font-bold text-verde pt-0.5">TOTAL: {item.quantity} plantas</p>
+                    </div>
                   </div>
-                  <div className="text-xs text-verde mt-0.5">
-                    {item.quantity} lotes × {item.product.units_per_lot} {shopT.totalPlants} = {item.quantity * item.product.units_per_lot} {shopT.totalPlants}
-                  </div>
-                </div>
-              ))}
+                )
+              })}
               <div className="pt-2 bg-verde-claro text-verde px-3 py-2 font-bold text-center">
                 TOTAL: {totalUnits} {shopT.totalPlants}
               </div>
@@ -393,17 +435,24 @@ export function OrderForm({ locale }: OrderFormProps) {
             {t.yourOrder}
           </h3>
           <div className="space-y-2 text-sm mb-4">
-            {items.map((item) => (
-              <div key={item.product.id} className="space-y-0.5">
-                <div className="flex justify-between">
-                  <span className="text-marron-claro truncate mr-2">{item.quantity}× {item.product.name}</span>
-                  <span className="font-semibold shrink-0">{formatPrice(item.product.price_cents * item.quantity)}</span>
+            {items.map((item) => {
+              const fullLots = Math.floor(item.quantity / item.product.min_order_qty)
+              const additionalUnits = item.quantity % item.product.min_order_qty
+              
+              return (
+                <div key={item.product.id} className="space-y-1">
+                  <div className="flex justify-between">
+                    <span className="text-marron-claro truncate mr-2 font-medium">{item.product.name}</span>
+                    <span className="font-semibold shrink-0">{formatPrice((item.product.price_cents / item.product.units_per_lot) * item.quantity)}</span>
+                  </div>
+                  <div className="text-xs text-verde-oscuro ml-2 space-y-0.5">
+                    {fullLots > 0 && <p>├─ {fullLots}× {item.product.min_order_qty} uds</p>}
+                    {additionalUnits > 0 && <p>└─ +{additionalUnits} uds</p>}
+                    <p className="font-bold text-verde">= {item.quantity} plantas</p>
+                  </div>
                 </div>
-                <div className="text-xs text-verde">
-                  {item.quantity * item.product.units_per_lot} {shopT.totalPlants}
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
           <div className="bg-verde-claro text-verde px-3 py-2 text-sm font-bold text-center mb-4">
             {totalUnits} {shopT.totalPlants}
