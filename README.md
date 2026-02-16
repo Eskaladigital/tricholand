@@ -26,6 +26,7 @@ npm run dev
 - **7 idiomas**: ES, EN, NL, FR, DE, IT, PT — formulario de pedido, checkout, página de pedido, emails y PDFs 100% traducidos
 - **Selector de idioma** en navbar (menú desplegable)
 - **Tienda B2B** con carrito, lotes mayoristas y solicitud de presupuesto
+- **Sistema de lotes flexible**: pedido mínimo + incrementos adicionales (ej: 750 uds mínimo, después de 150 en 150)
 - **Transparencia IVA B2B**: base imponible + IVA estimado (21%) visibles en todo el flujo de compra
 - **Nota exención IVA intracomunitario** para entregas UE con NIF-IVA válido
 - **Selector de país** en checkout: 28 países permitidos (UE-27 + UK), nombres traducidos y ordenados por locale
@@ -42,6 +43,59 @@ npm run dev
 - **Favicon** con logo sobre fondo blanco
 - **PWA** en panel administrator (instalable)
 - **Redirecciones** desde rutas legacy (Joomla)
+
+---
+
+## Sistema de lotes (B2B)
+
+El sistema permite a los clientes comprar productos en cantidades flexibles adaptadas a la venta mayorista:
+
+### Configuración en el admin
+
+Para cada producto se definen **3 campos**:
+
+| Campo | Descripción | Ejemplo |
+|-------|-------------|---------|
+| **Unidades por lote** | Cuántas plantas incluye un lote completo (para calcular precio/ud) | 750 |
+| **Pedido mínimo** | Cuántas unidades DEBE comprar el cliente como mínimo (primera compra) | 750 |
+| **Incremento mínimo** | Cuántas unidades puede añadir después del pedido mínimo | 150 |
+
+### Funcionamiento en la tienda
+
+**Ejemplo**: Trichocereus Pachanoi 35-45 cm
+
+1. **Primera compra** (producto NO en carrito):
+   - Cliente ve botón: `Añadir al pedido (750 uds)`
+   - Click → añade 750 unidades al carrito
+
+2. **Compras adicionales** (producto YA en carrito):
+   - Cliente ve 2 botones + selector:
+     - `+ Lote (750)` → añade otro lote completo
+     - `+ X uds` → añade la cantidad seleccionada
+   - Selector desplegable: "Añadir 150/300/450/600/750 uds"
+
+### Cantidades válidas
+
+Con configuración: mínimo 750, incremento 150:
+
+- ✅ 750 uds (1 lote inicial)
+- ✅ 900 uds (750 + 150)
+- ✅ 1050 uds (750 + 150 + 150)
+- ✅ 1200 uds (750 + 150 + 150 + 150)
+- ✅ 1500 uds (750 + 750)
+- ✅ 1650 uds (750 + 750 + 150)
+- ❌ 500 uds (menor que mínimo)
+- ❌ 800 uds (no es múltiplo válido)
+
+### Cálculo de precios
+
+- **Precio del lote**: configurado en el admin (ej: 2775€ por 750 uds)
+- **Precio por unidad**: calculado automáticamente (2775€ / 750 = 3.70€/ud)
+- **Precio total carrito**: `(precio_lote / units_per_lot) × cantidad_unidades`
+
+Ejemplo: cliente compra 900 uds
+- Precio por unidad: 2775€ / 750 = 3.70€
+- Total: 3.70€ × 900 = 3330€
 
 ---
 
