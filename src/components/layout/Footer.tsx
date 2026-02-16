@@ -29,8 +29,7 @@ const varieties = [
   { name: 'T. Peruvianus', slug: 'trichocereus-peruvianus' },
   { name: 'T. Bridgesii', slug: 'trichocereus-bridgesii' },
   { name: 'T. Terscheckii', slug: 'trichocereus-pasacana-terscheckii' },
-  { name: 'T. Macrogonus', slug: 'trichocereus-macrogonus' },
-  { name: 'T. Spachianus', slug: 'trichocereus-spachianus' },
+  { name: 'Otros cactus', slug: 'otros-cactus' },
 ]
 
 export function Footer({ locale, dict }: FooterProps) {
