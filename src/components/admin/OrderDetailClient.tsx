@@ -223,13 +223,13 @@ export function OrderDetailClient({ order: initialOrder, items: initialItems, pr
   </p>
   <table>
     <thead>
-      <tr><th>Producto</th><th>SKU</th><th>Cant.</th><th>P. unit.</th><th>Total</th></tr>
+      <tr><th>Producto</th><th>SKU</th><th>Cant. (uds)</th><th>P. unit.</th><th>Total</th></tr>
     </thead>
     <tbody>
       ${items
         .map(
           (i) =>
-            `<tr><td>${i.product_name}</td><td>${i.product_sku}</td><td>${i.quantity}</td><td>${(i.unit_price_cents / 100).toFixed(2)} €</td><td>${(i.total_cents / 100).toFixed(2)} €</td></tr>`
+            `<tr><td>${i.product_name}</td><td>${i.product_sku}</td><td>${i.quantity} uds</td><td>${(i.unit_price_cents / 100).toFixed(2)} €</td><td>${(i.total_cents / 100).toFixed(2)} €</td></tr>`
         )
         .join('')}
     </tbody>
@@ -450,6 +450,9 @@ export function OrderDetailClient({ order: initialOrder, items: initialItems, pr
                     <div>
                       <span className="font-bold text-sm">
                         {item.quantity}× {item.product_name}
+                      </span>
+                      <span className="block text-xs text-verde-oscuro mt-0.5">
+                        {item.quantity} unidades (plantas)
                       </span>
                       <span className="block font-mono text-xs text-marron-claro">{item.product_sku}</span>
                       {item.notes && <span className="block text-xs text-terracota mt-1">📝 {item.notes}</span>}

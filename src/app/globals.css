@@ -23,3 +23,23 @@ body {
   background-color: var(--color-crudo);
   color: var(--color-negro);
 }
+
+/* Prevenir zoom automático en iOS cuando se enfocan inputs */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="url"],
+textarea,
+select {
+  font-size: 16px;
+}
+
+/* Asegurar que el viewport no se descentre en móvil */
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
