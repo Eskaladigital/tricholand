@@ -39,9 +39,9 @@ export default function ServiciosPage() {
               num: '01',
               title: 'Venta mayorista',
               details: [
-                'Pedido mínimo: 100 unidades',
+                'Pedido mínimo: 200 unidades',
                 'Condiciones especiales para pedidos recurrentes y grandes volúmenes',
-                'Pago por transferencia bancaria o a 30 días para clientes habituales',
+                'Pago por transferencia bancaria',
                 'Presupuesto personalizado en menos de 24h laborables',
                 'Posibilidad de reserva anticipada de producción',
               ],
@@ -62,8 +62,8 @@ export default function ServiciosPage() {
               num: '03',
               title: 'Documentación y certificaciones',
               details: [
-                'Pasaporte fitosanitario UE incluido en cada envío',
-                'Documentación aduanera para exportación a Reino Unido',
+                'Pasaporte de planta europeo incluido en cada envío',
+                'Certificado fitosanitario disponible para exportaciones fuera de la UE (coste adicional aprox. 60 €)',
                 'Certificado de origen cuando sea requerido',
                 'Etiquetado conforme a la normativa europea vigente',
                 'Asesoramiento sobre requisitos de importación',

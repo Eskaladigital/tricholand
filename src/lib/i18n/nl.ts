@@ -18,7 +18,7 @@ export const nl: Dictionary = {
   },
   header: {
     band_left: 'Murcia, Spanje · Producentenkwekerij · Exclusieve B2B verkoop',
-    band_right: 'Minimale bestelling 100 stuks · EU fytosanitair paspoort',
+    band_right: 'Minimale bestelling 200 stuks · EU-plantenpaspoort inbegrepen',
   },
   hero: {
     badge: '● Actieve kwekerij',
@@ -28,12 +28,12 @@ export const nl: Dictionary = {
     description: 'Wij kweken en distribueren cactussen van het geslacht Trichocereus aan kwekerijen, tuincentra en distributeurs in heel Europa vanuit onze faciliteiten in Murcia.',
     cta: 'Offerte aanvragen →',
     image_tag: 'Eigen faciliteiten · 2.500 m²',
-    tags: ['Eigen productie', 'EU-certificering', '18 landen', '50+ variëteiten'],
+    tags: ['Eigen productie', 'EU-certificering', '18 landen', '5+ Trichocereus-variëteiten'],
   },
   stats: {
     units: { value: '25K+', label: 'Stuks / jaar' },
     area: { value: '2.500', label: 'm² teelt' },
-    varieties: { value: '50+', label: 'Variëteiten' },
+    varieties: { value: '5+', label: 'Trichocereus-variëteiten' },
     countries: { value: '18', label: 'EU-landen' },
     delivery: { value: '99%', label: 'Levering OK' },
   },
@@ -64,7 +64,7 @@ export const nl: Dictionary = {
     lotsAvailable: 'partijen beschikbaar',
     noProductsFound: 'Geen producten gevonden',
     tryOtherFilters: 'Probeer andere filters',
-    priceNote: 'Prijs excl. btw · Fytosanitair paspoort inbegrepen',
+    priceNote: 'Prijs excl. btw · EU-plantenpaspoort inbegrepen',
     specsLabel: 'Specificaties',
     productDescriptionLabel: 'Productbeschrijving',
   },
@@ -74,7 +74,7 @@ export const nl: Dictionary = {
     items: [
       {
         title: 'Groothandel',
-        description: 'Bestellingen vanaf 100 stuks. Speciale voorwaarden voor volume. Betaling via overschrijving of 30 dagen.',
+        description: 'Bestellingen vanaf 200 stuks. Speciale voorwaarden voor volume. Betaling via bankoverschrijving.',
       },
       {
         title: 'Leveringen Europa',
@@ -82,7 +82,7 @@ export const nl: Dictionary = {
       },
       {
         title: 'Documentatie',
-        description: 'EU fytosanitair paspoort inbegrepen. Douanedocumentatie voor export naar het Verenigd Koninkrijk.',
+        description: 'EU-plantenpaspoort inbegrepen. Fytosanitair certificaat beschikbaar voor export buiten de EU (extra kosten ca. 60 €).',
       },
       {
         title: 'Teelt op bestelling',
@@ -91,10 +91,10 @@ export const nl: Dictionary = {
     ],
   },
   certifications: {
-    title: 'EU fytosanitaire certificering',
-    description: 'Al onze exemplaren voldoen aan de Europese regelgeving. Fytosanitair paspoort inbegrepen bij elke levering.',
+    title: 'EU-certificering & documentatie',
+    description: 'Al onze exemplaren voldoen aan de Europese regelgeving. EU-plantenpaspoort inbegrepen bij elke levering.',
     badges: [
-      { value: 'EU', label: 'Fytopaspoort' },
+      { value: 'EU', label: 'Plantenpaspoort' },
       { value: 'UK', label: 'Export docs' },
       { value: '99%', label: 'Levering OK' },
     ],

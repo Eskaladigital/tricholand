@@ -38,9 +38,9 @@ export default function ServiciosPage() {
               num: '01',
               title: 'Vente en gros',
               details: [
-                'Commande minimum : 100 unités',
+                'Commande minimum : 200 unités',
                 'Conditions spéciales pour commandes récurrentes et grands volumes',
-                'Paiement par virement ou à 30 jours pour clients réguliers',
+                'Paiement par virement',
                 'Devis personnalisé en moins de 24h ouvrées',
                 'Réservation anticipée de production disponible',
               ],
@@ -61,8 +61,8 @@ export default function ServiciosPage() {
               num: '03',
               title: 'Documentation et certifications',
               details: [
-                'Passeport phytosanitaire UE inclus dans chaque envoi',
-                'Documentation douanière pour exportation vers le Royaume-Uni',
+                'Passeport végétal européen inclus dans chaque envoi',
+                'Certificat phytosanitaire disponible pour les exportations hors UE (coût supplémentaire env. 60 €)',
                 'Certificat d\'origine lorsque requis',
                 'Étiquetage conforme à la réglementation européenne en vigueur',
                 'Conseils sur les exigences d\'importation',

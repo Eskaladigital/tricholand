@@ -6,7 +6,7 @@ import { StatsBar } from '@/components/home/StatsBar'
 import { getAlternatesMetadata } from '@/lib/i18n/paths'
 export const metadata: Metadata = {
   title: 'About Us',
-  description: 'Meet Tricholand: producer nursery specialized in Trichocereus and columnar cacti in Murcia, Spain. Over 50 varieties, 2,500 m² of cultivation.',
+  description: 'Meet Tricholand: producer nursery specialized in Trichocereus and columnar cacti in Murcia, Spain. 5+ Trichocereus varieties, 2,500 m² of cultivation.',
   alternates: getAlternatesMetadata('en', 'about'),
 }
 
@@ -31,7 +31,7 @@ export default function SobreNosotrosPage() {
               <p>
                 Tricholand is a producer nursery specialized in the cultivation and wholesale distribution
                 of cacti of the Trichocereus genus and other columnar cacti. From our 2,500 m² facilities
-                in Murcia, Spain, we cultivate over 50 varieties that we distribute to nurseries, garden
+                in Murcia, Spain, we cultivate 5+ Trichocereus varieties that we distribute to nurseries, garden
                 centers and distributors across Europe.
               </p>
               <p>
@@ -87,7 +87,7 @@ export default function SobreNosotrosPage() {
               text: 'All our specimens include EU phytosanitary passport. Complete customs documentation for export to the UK.',
             },
             {
-              title: 'Over 50 varieties',
+              title: '5+ Trichocereus varieties',
               text: 'Our collection covers the main Trichocereus species plus select hybrids, crested forms and rare varieties.',
             },
             {

@@ -6,7 +6,7 @@ import { it } from '@/lib/i18n/it'
 import { StatsBar } from '@/components/home/StatsBar'
 export const metadata: Metadata = {
   title: 'Chi siamo',
-  description: 'Scopri Tricholand: vivaio produttore specializzato in Trichocereus e cactacee colonnari a Murcia, Spagna. Oltre 50 varietà, 2.500 m² di coltivazione.',
+  description: 'Scopri Tricholand: vivaio produttore specializzato in Trichocereus e cactacee colonnari a Murcia, Spagna. 5+ varietà di Trichocereus, 2.500 m² di coltivazione.',
   alternates: getAlternatesMetadata('it', 'about'),
 }
 
@@ -31,7 +31,7 @@ export default function SobreNosotrosPage() {
               <p>
                 Tricholand è un vivaio produttore specializzato nella coltivazione e distribuzione all&apos;ingrosso
                 di cactus del genere Trichocereus e altre cactacee colonnari. Dalle nostre strutture di 2.500 m²
-                a Murcia, Spagna, coltiviamo oltre 50 varietà che distribuiamo a vivai, garden center e
+                a Murcia, Spagna, coltiviamo 5+ varietà di Trichocereus che distribuiamo a vivai, garden center e
                 distributori in tutta Europa.
               </p>
               <p>
@@ -87,7 +87,7 @@ export default function SobreNosotrosPage() {
               text: 'Tutti i nostri esemplari includono il passaporto fitosanitario UE. Documentazione doganale completa per l\'export verso il Regno Unito.',
             },
             {
-              title: 'Oltre 50 varietà',
+              title: '5+ varietà di Trichocereus',
               text: 'La nostra collezione comprende le principali specie di Trichocereus più ibridi selezionati, forme crestate e varietà rare.',
             },
             {

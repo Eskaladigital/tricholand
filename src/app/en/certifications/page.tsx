@@ -4,7 +4,7 @@ import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
   title: 'Phytosanitary certifications',
-  description: 'Tricholand certifications: EU phytosanitary passport, UK export documentation, European regulatory compliance for cacti.',
+  description: 'Tricholand certifications: EU plant passport, UK export documentation, European regulatory compliance for cacti.',
   alternates: getAlternatesMetadata('en', 'certifications'),
 }
 
@@ -28,21 +28,21 @@ export default function CertificacionesPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-12 mb-16">
           <div className="space-y-6 text-marron-claro leading-relaxed">
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-2xl font-bold uppercase text-negro">
-              EU phytosanitary <span className="text-naranja">passport</span>
+              EU plant <span className="text-naranja">passport</span>
             </h2>
             <p>
-              The phytosanitary passport is an official document certifying that plants comply with
+              The EU plant passport is an official document certifying that plants comply with
               the phytosanitary requirements of the European Union. It is mandatory for the marketing
               of live plants within EU territory and guarantees that specimens are free from regulated
               pests and diseases.
             </p>
             <p>
-              At Tricholand, all our specimens include an individual phytosanitary passport. Our
+              At Tricholand, all our specimens include an individual EU plant passport. Our
               facilities are registered and subject to periodic inspections by the official plant health
               services of the Region of Murcia.
             </p>
             <p>
-              The phytosanitary passport includes: authorised operator code, traceability code,
+              The EU plant passport includes: authorised operator code, traceability code,
               scientific name of the species, country of origin and, when applicable, protected zone
               of destination.
             </p>
@@ -75,13 +75,13 @@ export default function CertificacionesPage() {
             {[
               {
                 icon: '🇪🇺',
-                title: 'EU phytosanitary passport',
-                desc: 'Included in all intra-community shipments. Compliance with Regulation (EU) 2016/2031.',
+                title: 'EU plant passport',
+                desc: 'Included at no additional cost in all intra-community shipments. Compliance with Regulation (EU) 2016/2031.',
               },
               {
                 icon: '🇬🇧',
                 title: 'UK export docs',
-                desc: 'Phytosanitary certificate + customs documentation for import to the United Kingdom.',
+                desc: 'Phytosanitary export certificate + customs documentation for import to the United Kingdom.',
               },
               {
                 icon: '🔍',
@@ -113,12 +113,12 @@ export default function CertificacionesPage() {
           <div className="space-y-6">
             {[
               {
-                q: 'Can I buy plants without a phytosanitary passport?',
-                a: 'No. European regulations require that all live plants marketed within the EU include a phytosanitary passport. It is a health guarantee for the buyer and a legal requirement for the seller.',
+                q: 'Can I buy plants without an EU plant passport?',
+                a: 'No. European regulations require that all live plants marketed within the EU include an EU plant passport. It is a health guarantee for the buyer and a legal requirement for the seller.',
               },
               {
-                q: 'Does the phytosanitary passport have an additional cost?',
-                a: 'No. The phytosanitary passport is included in the price of all our plants. There are no surcharges or hidden costs.',
+                q: 'Does the EU plant passport have an additional cost?',
+                a: 'No. The EU plant passport is included at no additional cost in the price of all our plants. The phytosanitary certificate (required only for exports outside the EU) has an additional cost of approximately 60€.',
               },
               {
                 q: 'Do you ship outside the European Union (besides UK)?',

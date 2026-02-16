@@ -18,7 +18,7 @@ export const fr: Dictionary = {
   },
   header: {
     band_left: 'Murcie, Espagne · Pépinière productrice · Vente B2B exclusive',
-    band_right: 'Commande minimum 100 unités · Passeport phytosanitaire UE',
+    band_right: 'Commande minimum 200 unités · Passeport végétal européen inclus',
   },
   hero: {
     badge: '● Pépinière active',
@@ -28,12 +28,12 @@ export const fr: Dictionary = {
     description: 'Nous cultivons et distribuons des cactus du genre Trichocereus aux pépinières, jardineries et distributeurs de toute l\'Europe depuis nos installations à Murcie.',
     cta: 'Demander un devis →',
     image_tag: 'Installations propres · 2.500 m²',
-    tags: ['Production propre', 'Certification UE', '18 pays', '50+ variétés'],
+    tags: ['Production propre', 'Certification UE', '18 pays', '5+ variétés de Trichocereus'],
   },
   stats: {
     units: { value: '25K+', label: 'Unités / an' },
     area: { value: '2.500', label: 'm² de culture' },
-    varieties: { value: '50+', label: 'Variétés' },
+    varieties: { value: '5+', label: 'Variétés Trichocereus' },
     countries: { value: '18', label: 'Pays UE' },
     delivery: { value: '99%', label: 'Livraison OK' },
   },
@@ -64,7 +64,7 @@ export const fr: Dictionary = {
     lotsAvailable: 'lots disponibles',
     noProductsFound: 'Aucun produit trouvé',
     tryOtherFilters: 'Essayez d\'autres filtres',
-    priceNote: 'Prix HT · Passeport phytosanitaire inclus',
+    priceNote: 'Prix HT · Passeport végétal européen inclus',
     specsLabel: 'Caractéristiques',
     productDescriptionLabel: 'Description du produit',
   },
@@ -74,7 +74,7 @@ export const fr: Dictionary = {
     items: [
       {
         title: 'Vente en gros',
-        description: 'Commandes à partir de 100 unités. Conditions spéciales par volume. Paiement par virement ou 30 jours.',
+        description: 'Commandes à partir de 200 unités. Conditions spéciales par volume. Paiement par virement bancaire.',
       },
       {
         title: 'Expéditions Europe',
@@ -82,7 +82,7 @@ export const fr: Dictionary = {
       },
       {
         title: 'Documentation',
-        description: 'Passeport phytosanitaire UE inclus. Documentation douanière pour exportation vers le Royaume-Uni.',
+        description: 'Passeport végétal européen inclus. Certificat phytosanitaire disponible pour exportations hors UE (coût additionnel env. 60 €).',
       },
       {
         title: 'Culture sur commande',
@@ -91,10 +91,10 @@ export const fr: Dictionary = {
     ],
   },
   certifications: {
-    title: 'Certification phytosanitaire UE',
-    description: 'Tous nos spécimens respectent la réglementation européenne. Passeport phytosanitaire inclus dans chaque envoi.',
+    title: 'Certification & documentation UE',
+    description: 'Tous nos spécimens respectent la réglementation européenne. Passeport végétal européen inclus dans chaque envoi.',
     badges: [
-      { value: 'UE', label: 'Passeport phyto' },
+      { value: 'UE', label: 'Passeport végétal' },
       { value: 'UK', label: 'Docs export' },
       { value: '99%', label: 'Livraison OK' },
     ],

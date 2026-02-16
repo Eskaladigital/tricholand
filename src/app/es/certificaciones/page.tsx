@@ -5,7 +5,7 @@ import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
   title: 'Certificaciones fitosanitarias',
-  description: 'Certificaciones de Tricholand: pasaporte fitosanitario UE, documentación de exportación UK, cumplimiento normativo europeo para cactáceas.',
+  description: 'Certificaciones de Tricholand: pasaporte de planta europeo UE, documentación de exportación UK, cumplimiento normativo europeo para cactáceas.',
   alternates: getAlternatesMetadata('es', 'certifications'),
 }
 
@@ -29,21 +29,21 @@ export default function CertificacionesPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-12 mb-16">
           <div className="space-y-6 text-marron-claro leading-relaxed">
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-2xl font-bold uppercase text-negro">
-              Pasaporte fitosanitario <span className="text-naranja">UE</span>
+              Pasaporte de planta europeo <span className="text-naranja">UE</span>
             </h2>
             <p>
-              El pasaporte fitosanitario es un documento oficial que certifica que las plantas cumplen
+              El pasaporte de planta europeo es un documento oficial que certifica que las plantas cumplen
               con los requisitos fitosanitarios de la Unión Europea. Es obligatorio para la
               comercialización de plantas vivas dentro del territorio de la UE y garantiza que los
               ejemplares están libres de plagas y enfermedades reguladas.
             </p>
             <p>
-              En Tricholand, todos nuestros ejemplares incluyen pasaporte fitosanitario individual.
+              En Tricholand, todos nuestros ejemplares incluyen pasaporte de planta europeo individual.
               Nuestras instalaciones están registradas y sometidas a inspecciones periódicas por parte
               de los servicios oficiales de sanidad vegetal de la Región de Murcia.
             </p>
             <p>
-              El pasaporte fitosanitario incluye: código de operador autorizado, código de trazabilidad,
+              El pasaporte de planta europeo incluye: código de operador autorizado, código de trazabilidad,
               nombre científico de la especie, país de origen y, cuando procede, zona protegida de destino.
             </p>
 
@@ -76,13 +76,13 @@ export default function CertificacionesPage() {
             {[
               {
                 icon: '🇪🇺',
-                title: 'Pasaporte fitosanitario UE',
-                desc: 'Incluido en todos los envíos intracomunitarios. Cumplimiento del Reglamento (UE) 2016/2031.',
+                title: 'Pasaporte de planta europeo UE',
+                desc: 'Incluido sin coste adicional en todos los envíos intracomunitarios. Cumplimiento del Reglamento (UE) 2016/2031.',
               },
               {
                 icon: '🇬🇧',
                 title: 'Export docs UK',
-                desc: 'Certificado fitosanitario + documentación aduanera para importación al Reino Unido.',
+                desc: 'Certificado fitosanitario de exportación + documentación aduanera para importación al Reino Unido.',
               },
               {
                 icon: '🔍',
@@ -114,12 +114,12 @@ export default function CertificacionesPage() {
           <div className="space-y-6">
             {[
               {
-                q: '¿Puedo comprar plantas sin pasaporte fitosanitario?',
-                a: 'No. La normativa europea exige que todas las plantas vivas comercializadas dentro de la UE incluyan pasaporte fitosanitario. Es una garantía sanitaria para el comprador y un requisito legal para el vendedor.',
+                q: '¿Puedo comprar plantas sin pasaporte de planta europeo?',
+                a: 'No. La normativa europea exige que todas las plantas vivas comercializadas dentro de la UE incluyan pasaporte de planta europeo. Es una garantía sanitaria para el comprador y un requisito legal para el vendedor.',
               },
               {
-                q: '¿El pasaporte fitosanitario tiene coste adicional?',
-                a: 'No. El pasaporte fitosanitario está incluido en el precio de todas nuestras plantas. No hay recargos ni costes ocultos.',
+                q: '¿El pasaporte de planta europeo tiene coste adicional?',
+                a: 'No. El pasaporte de planta europeo está incluido sin coste adicional en el precio de todas nuestras plantas. El certificado fitosanitario (requerido solo para exportaciones fuera de la UE) tiene un coste adicional de aproximadamente 60€.',
               },
               {
                 q: '¿Hacéis envíos fuera de la Unión Europea (además de UK)?',

@@ -6,7 +6,7 @@ import { fr } from '@/lib/i18n/fr'
 import { StatsBar } from '@/components/home/StatsBar'
 export const metadata: Metadata = {
   title: 'À propos de nous',
-  description: 'Découvrez Tricholand : pépinière productrice spécialisée en Trichocereus et cactacées colonnaires à Murcie, Espagne. Plus de 50 variétés, 2 500 m² de culture.',
+  description: 'Découvrez Tricholand : pépinière productrice spécialisée en Trichocereus et cactacées colonnaires à Murcie, Espagne. 5+ variétés de Trichocereus, 2 500 m² de culture.',
   alternates: getAlternatesMetadata('fr', 'about'),
 }
 
@@ -31,7 +31,7 @@ export default function SobreNosotrosPage() {
               <p>
                 Tricholand est une pépinière productrice spécialisée dans la culture et la distribution en gros
                 de cactus du genre Trichocereus et autres cactacées colonnaires. Depuis nos installations de
-                2 500 m² à Murcie, Espagne, nous cultivons plus de 50 variétés que nous distribuons aux pépinières,
+                2 500 m² à Murcie, Espagne, nous cultivons 5+ variétés de Trichocereus que nous distribuons aux pépinières,
                 jardineries et distributeurs de toute l&apos;Europe.
               </p>
               <p>
@@ -77,7 +77,7 @@ export default function SobreNosotrosPage() {
             { title: 'Production propre', text: 'Tout notre stock provient de nos installations. Nous maîtrisons tout le processus de la graine ou bouture à la plante prête à la vente.' },
             { title: 'Expéditions Europe', text: 'Nous expédions dans toute l\'Union européenne et importons au Royaume-Uni avec toute la documentation à jour pour les envois en gros.' },
             { title: 'Certification phytosanitaire', text: 'Tous nos spécimens incluent le passeport phytosanitaire UE. Documentation douanière complète pour l\'exportation vers le Royaume-Uni.' },
-            { title: 'Plus de 50 variétés', text: 'Notre collection couvre les principales espèces de Trichocereus plus des hybrides sélectionnés, formes crêtées et variétés rares.' },
+            { title: '5+ variétés de Trichocereus', text: 'Notre collection couvre les principales espèces de Trichocereus plus des hybrides sélectionnés, formes crêtées et variétés rares.' },
             { title: 'Approvisionnement garanti', text: 'Réservation anticipée de production pour garantir l\'approvisionnement des variétés et quantités dont votre entreprise a besoin.' },
             { title: 'Conseil professionnel', text: 'Nous accompagnons nos clients avec des conseils techniques sur la culture, l\'entretien et la présentation des plantes.' },
           ].map((item, i) => (

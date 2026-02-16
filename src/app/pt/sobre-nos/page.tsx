@@ -87,7 +87,7 @@ export default function SobreNosotrosPage() {
               text: 'Todos os nossos exemplares incluem o passaporte fitossanitário UE. Documentação aduaneira completa para exportação para o Reino Unido.',
             },
             {
-              title: 'Mais de 50 variedades',
+              title: '5+ variedades de Trichocereus',
               text: 'A nossa coleção inclui as principais espécies de Trichocereus mais híbridos selecionados, formas cristadas e variedades raras.',
             },
             {

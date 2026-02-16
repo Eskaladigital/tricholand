@@ -18,7 +18,7 @@ export const de: Dictionary = {
   },
   header: {
     band_left: 'Murcia, Spanien · Produzent · Exklusiver B2B-Verkauf',
-    band_right: 'Mindestbestellung 100 Stk · EU-Pflanzenpass',
+    band_right: 'Mindestbestellung 200 Stk · EU-Pflanzenpass inklusive',
   },
   hero: {
     badge: '● Aktive Gärtnerei',
@@ -28,12 +28,12 @@ export const de: Dictionary = {
     description: 'Wir kultivieren und vertreiben Kakteen der Gattung Trichocereus an Gärtnereien, Gartencenter und Händler in ganz Europa von unseren Einrichtungen in Murcia.',
     cta: 'Angebot anfordern →',
     image_tag: 'Eigene Einrichtungen · 2.500 m²',
-    tags: ['Eigene Produktion', 'EU-Zertifizierung', '18 Länder', '50+ Sorten'],
+    tags: ['Eigene Produktion', 'EU-Zertifizierung', '18 Länder', '5+ Trichocereus-Sorten'],
   },
   stats: {
     units: { value: '25K+', label: 'Stk / Jahr' },
     area: { value: '2.500', label: 'm² Anbau' },
-    varieties: { value: '50+', label: 'Sorten' },
+    varieties: { value: '5+', label: 'Trichocereus-Sorten' },
     countries: { value: '18', label: 'EU-Länder' },
     delivery: { value: '99%', label: 'Lieferung OK' },
   },
@@ -64,7 +64,7 @@ export const de: Dictionary = {
     lotsAvailable: 'Lose verfügbar',
     noProductsFound: 'Keine Produkte gefunden',
     tryOtherFilters: 'Andere Filter versuchen',
-    priceNote: 'Preis ohne MwSt. · Phytosanitärer Pass inklusive',
+    priceNote: 'Preis ohne MwSt. · EU-Pflanzenpass inklusive',
     specsLabel: 'Eigenschaften',
     productDescriptionLabel: 'Produktbeschreibung',
   },
@@ -74,7 +74,7 @@ export const de: Dictionary = {
     items: [
       {
         title: 'Großhandel',
-        description: 'Bestellungen ab 100 Einheiten. Sonderkonditionen bei Volumen. Zahlung per Überweisung oder 30 Tage.',
+        description: 'Bestellungen ab 200 Einheiten. Sonderkonditionen bei Volumen. Zahlung per Banküberweisung.',
       },
       {
         title: 'Versand Europa',
@@ -82,7 +82,7 @@ export const de: Dictionary = {
       },
       {
         title: 'Dokumentation',
-        description: 'EU-Pflanzenpass inklusive. Zolldokumentation für Export nach Großbritannien.',
+        description: 'EU-Pflanzenpass inklusive. Pflanzengesundheitszeugnis für Exporte außerhalb der EU verfügbar (Zusatzkosten ca. 60 €).',
       },
       {
         title: 'Anbau auf Bestellung',
@@ -91,8 +91,8 @@ export const de: Dictionary = {
     ],
   },
   certifications: {
-    title: 'EU-Pflanzengesundheitszertifizierung',
-    description: 'Alle unsere Exemplare entsprechen den europäischen Vorschriften. Pflanzenpass in jeder Sendung enthalten.',
+    title: 'EU-Zertifizierung & Dokumentation',
+    description: 'Alle unsere Exemplare entsprechen den europäischen Vorschriften. EU-Pflanzenpass in jeder Sendung enthalten.',
     badges: [
       { value: 'EU', label: 'Pflanzenpass' },
       { value: 'UK', label: 'Exportdokumente' },

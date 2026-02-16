@@ -37,9 +37,9 @@ export default function ServiciosPage() {
               num: '01',
               title: 'Venda por atacado',
               details: [
-                'Pedido mínimo: 100 unidades',
+                'Pedido mínimo: 200 unidades',
                 'Condições especiais para pedidos recorrentes e grandes volumes',
-                'Pagamento por transferência bancária ou 30 dias para clientes habituais',
+                'Pagamento por transferência bancária',
                 'Orçamento personalizado em menos de 24 horas úteis',
                 'Possibilidade de reserva antecipada de produção',
               ],
@@ -60,7 +60,7 @@ export default function ServiciosPage() {
               num: '03',
               title: 'Documentação e certificações',
               details: [
-                'Passaporte fitossanitário UE incluído em cada envio',
+                'Passaporte de planta europeu incluído em cada envio',
                 'Documentação aduaneira para exportação para o Reino Unido',
                 'Certificado de origem se necessário',
                 'Etiquetagem conforme a regulamentação europeia vigente',

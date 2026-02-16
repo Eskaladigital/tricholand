@@ -29,7 +29,7 @@ export default async function TiendaPage() {
                 B2B Shop
               </h1>
               <p className="text-marron-claro mt-2">
-                Wholesale lots · Prices excl. VAT · Phytosanitary passport included
+                Wholesale lots · Prices excl. VAT · EU plant passport included
               </p>
             </div>
             <div className="bg-verde-claro text-verde px-4 py-2 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide">

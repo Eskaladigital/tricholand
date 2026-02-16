@@ -37,9 +37,9 @@ export default function ServiciosPage() {
               num: '01',
               title: 'Wholesale sales',
               details: [
-                'Minimum order: 100 units',
+                'Minimum order: 200 units',
                 'Special conditions for recurring orders and large volumes',
-                'Payment by bank transfer or 30 days for regular customers',
+                'Payment by bank transfer',
                 'Custom quote in less than 24 business hours',
                 'Advance production reservation available',
               ],
@@ -60,8 +60,8 @@ export default function ServiciosPage() {
               num: '03',
               title: 'Documentation and certifications',
               details: [
-                'EU phytosanitary passport included with each shipment',
-                'Customs documentation for export to the United Kingdom',
+                'EU plant passport included with each shipment',
+                'Phytosanitary certificate available for exports outside the EU (additional cost approx. €60)',
                 'Certificate of origin when required',
                 'Labelling compliant with current European regulations',
                 'Advice on import requirements',

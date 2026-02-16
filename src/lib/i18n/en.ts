@@ -18,7 +18,7 @@ export const en: Dictionary = {
   },
   header: {
     band_left: 'Murcia, Spain · Producer nursery · Exclusive B2B sales',
-    band_right: 'Minimum order 100 units · EU phytosanitary passport',
+    band_right: 'Minimum order 200 units · EU plant passport included',
   },
   hero: {
     badge: '● Active nursery',
@@ -28,12 +28,12 @@ export const en: Dictionary = {
     description: 'We cultivate and distribute cacti of the Trichocereus genus to nurseries, garden centers, and distributors across Europe from our facilities in Murcia.',
     cta: 'Request a quote →',
     image_tag: 'Own facilities · 2,500 m²',
-    tags: ['Own production', 'EU certification', '18 countries', '50+ varieties'],
+    tags: ['Own production', 'EU certification', '18 countries', '5+ Trichocereus varieties'],
   },
   stats: {
     units: { value: '25K+', label: 'Units / year' },
     area: { value: '2,500', label: 'm² cultivation' },
-    varieties: { value: '50+', label: 'Varieties' },
+    varieties: { value: '5+', label: 'Trichocereus varieties' },
     countries: { value: '18', label: 'EU countries' },
     delivery: { value: '99%', label: 'Delivery OK' },
   },
@@ -64,7 +64,7 @@ export const en: Dictionary = {
     lotsAvailable: 'lots available',
     noProductsFound: 'No products found',
     tryOtherFilters: 'Try other filters',
-    priceNote: 'Price excl. VAT · Phytosanitary passport included',
+    priceNote: 'Price excl. VAT · EU plant passport included',
     specsLabel: 'Specifications',
     productDescriptionLabel: 'Product description',
   },
@@ -74,7 +74,7 @@ export const en: Dictionary = {
     items: [
       {
         title: 'Wholesale sales',
-        description: 'Orders from 100 units. Special conditions for volume. Payment by transfer or 30 days.',
+        description: 'Orders from 200 units. Special conditions for volume. Payment by bank transfer.',
       },
       {
         title: 'Europe shipping',
@@ -82,7 +82,7 @@ export const en: Dictionary = {
       },
       {
         title: 'Documentation',
-        description: 'EU phytosanitary passport included. Customs documentation for export to the United Kingdom.',
+        description: 'EU plant passport included. Phytosanitary certificate available for exports outside the EU (additional cost approx. €60).',
       },
       {
         title: 'Custom cultivation',
@@ -91,10 +91,10 @@ export const en: Dictionary = {
     ],
   },
   certifications: {
-    title: 'EU Phytosanitary Certification',
-    description: 'All our specimens comply with European regulations. Phytosanitary passport included in each shipment.',
+    title: 'EU Certification & Documentation',
+    description: 'All our specimens comply with European regulations. EU plant passport included in each shipment.',
     badges: [
-      { value: 'EU', label: 'Phytosanitary passport' },
+      { value: 'EU', label: 'Plant passport' },
       { value: 'UK', label: 'Export docs' },
       { value: '99%', label: 'Delivery OK' },
     ],

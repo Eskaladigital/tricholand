@@ -29,7 +29,7 @@ export default async function TiendaPage() {
                 Negozio B2B
               </h1>
               <p className="text-marron-claro mt-2">
-                Lotti all&apos;ingrosso · Prezzi IVA esclusa · Passaporto fitosanitario incluso
+                Lotti all&apos;ingrosso · Prezzi IVA esclusa · Passaporto delle piante UE incluso
               </p>
             </div>
             <div className="bg-verde-claro text-verde px-4 py-2 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide">

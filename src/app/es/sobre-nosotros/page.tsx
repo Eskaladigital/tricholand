@@ -6,7 +6,7 @@ import { StatsBar } from '@/components/home/StatsBar'
 import { getAlternatesMetadata } from '@/lib/i18n/paths'
 export const metadata: Metadata = {
   title: 'Sobre nosotros',
-  description: 'Conoce Tricholand: vivero productor especializado en Trichocereus y cactáceas columnares en Murcia, España. Más de 50 variedades, 2.500 m² de cultivo.',
+  description: 'Conoce Tricholand: vivero productor especializado en Trichocereus y cactáceas columnares en Murcia, España. 5+ variedades de Trichocereus, 2.500 m² de cultivo.',
   alternates: getAlternatesMetadata('es', 'about'),
 }
 
@@ -31,7 +31,7 @@ export default function SobreNosotrosPage() {
               <p>
                 Tricholand es un vivero productor especializado en el cultivo y distribución mayorista
                 de cactus del género Trichocereus y otras cactáceas columnares. Desde nuestras
-                instalaciones de 2.500 m² en Murcia, España, cultivamos más de 50 variedades que
+                instalaciones de 2.500 m² en Murcia, España, cultivamos 5+ variedades de Trichocereus que
                 distribuimos a viveros, garden centers y distribuidores de toda Europa.
               </p>
               <p>
@@ -88,7 +88,7 @@ export default function SobreNosotrosPage() {
               text: 'Todos nuestros ejemplares incluyen pasaporte fitosanitario UE. Documentación aduanera completa para exportación a UK.',
             },
             {
-              title: 'Más de 50 variedades',
+              title: 'Más de 5 variedades de Trichocereus',
               text: 'Nuestra colección abarca las principales especies de Trichocereus más híbridos selectos, formas crestadas y variedades raras.',
             },
             {

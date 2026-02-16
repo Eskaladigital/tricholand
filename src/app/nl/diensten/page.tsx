@@ -37,9 +37,9 @@ export default function ServiciosPage() {
               num: '01',
               title: 'Groothandel',
               details: [
-                'Minimale bestelling: 100 stuks',
+                'Minimale bestelling: 200 stuks',
                 'Speciale voorwaarden voor terugkerende bestellingen en grote volumes',
-                'Betaling per overschrijving of 30 dagen voor vaste klanten',
+                'Betaling per overschrijving',
                 'Offerte op maat in minder dan 24 werkuren',
                 'Vroegtijdige productiereservering beschikbaar',
               ],
@@ -60,8 +60,8 @@ export default function ServiciosPage() {
               num: '03',
               title: 'Documentatie en certificeringen',
               details: [
-                'EU fytosanitair paspoort inbegrepen bij elke zending',
-                'Douanedocumentatie voor export naar het Verenigd Koninkrijk',
+                'EU plantenpaspoort inbegrepen bij elke zending',
+                'Fytosanitair certificaat beschikbaar voor exporten buiten de EU (extra kosten ca. €60)',
                 'Certificaat van oorsprong indien vereist',
                 'Etikettering conform de huidige Europese regelgeving',
                 'Advies over importvereisten',

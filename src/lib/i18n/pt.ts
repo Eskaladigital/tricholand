@@ -18,7 +18,7 @@ export const pt: Dictionary = {
   },
   header: {
     band_left: 'Murcia, Espanha · Viveiro produtor · Venda B2B exclusiva',
-    band_right: 'Pedido mínimo 100 uds · Passaporte fitossanitário UE',
+    band_right: 'Pedido mínimo 200 uds · Passaporte de planta europeu incluído',
   },
   hero: {
     badge: '● Viveiro ativo',
@@ -28,12 +28,12 @@ export const pt: Dictionary = {
     description: 'Cultivamos e distribuímos cactos do gênero Trichocereus para viveiros, garden centers e distribuidores de toda a Europa a partir de nossas instalações em Murcia.',
     cta: 'Solicitar orçamento →',
     image_tag: 'Instalações próprias · 2.500 m²',
-    tags: ['Produção própria', 'Certificação UE', '18 países', '50+ variedades'],
+    tags: ['Produção própria', 'Certificação UE', '18 países', '5+ variedades de Trichocereus'],
   },
   stats: {
     units: { value: '25K+', label: 'Uds / ano' },
     area: { value: '2.500', label: 'm² cultivo' },
-    varieties: { value: '50+', label: 'Variedades' },
+    varieties: { value: '5+', label: 'Variedades Trichocereus' },
     countries: { value: '18', label: 'Países UE' },
     delivery: { value: '99%', label: 'Entrega OK' },
   },
@@ -64,7 +64,7 @@ export const pt: Dictionary = {
     lotsAvailable: 'lotes disponíveis',
     noProductsFound: 'Nenhum produto encontrado',
     tryOtherFilters: 'Tente outros filtros',
-    priceNote: 'Preço sem IVA · Passaporte fitossanitário incluído',
+    priceNote: 'Preço sem IVA · Passaporte de planta europeu incluído',
     specsLabel: 'Características',
     productDescriptionLabel: 'Descrição do produto',
   },
@@ -74,7 +74,7 @@ export const pt: Dictionary = {
     items: [
       {
         title: 'Venda por atacado',
-        description: 'Pedidos a partir de 100 unidades. Condições especiais por volume. Pagamento por transferência ou 30 dias.',
+        description: 'Pedidos a partir de 200 unidades. Condições especiais por volume. Pagamento por transferência bancária.',
       },
       {
         title: 'Envios Europa',
@@ -82,7 +82,7 @@ export const pt: Dictionary = {
       },
       {
         title: 'Documentação',
-        description: 'Passaporte fitossanitário UE incluído. Documentação aduaneira para exportação ao Reino Unido.',
+        description: 'Passaporte de planta europeu incluído. Certificado fitossanitário disponível para exportações fora da UE (custo adicional aprox. 60 €).',
       },
       {
         title: 'Cultivo por encomenda',
@@ -91,10 +91,10 @@ export const pt: Dictionary = {
     ],
   },
   certifications: {
-    title: 'Certificação fitossanitária UE',
-    description: 'Todos os nossos exemplares cumprem a normativa europeia. Passaporte fitossanitário incluído em cada envio.',
+    title: 'Certificação e documentação UE',
+    description: 'Todos os nossos exemplares cumprem a normativa europeia. Passaporte de planta europeu incluído em cada envio.',
     badges: [
-      { value: 'UE', label: 'Passaporte fito' },
+      { value: 'UE', label: 'Passaporte planta' },
       { value: 'UK', label: 'Export docs' },
       { value: '99%', label: 'Entrega OK' },
     ],

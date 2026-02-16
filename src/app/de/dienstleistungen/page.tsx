@@ -31,7 +31,7 @@ export default function ServiciosPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           {[
-            { num: '01', title: 'Großhandel', details: ['Mindestbestellung: 100 Einheiten', 'Sonderkonditionen für wiederkehrende Bestellungen und große Mengen', 'Zahlung per Überweisung oder 30 Tage für Stammkunden', 'Individuelles Angebot in weniger als 24 Arbeitsstunden', 'Frühzeitige Produktionsreservierung verfügbar'] },
+            { num: '01', title: 'Großhandel', details: ['Mindestbestellung: 200 Einheiten', 'Sonderkonditionen für wiederkehrende Bestellungen und große Mengen', 'Zahlung per Überweisung', 'Individuelles Angebot in weniger als 24 Arbeitsstunden', 'Frühzeitige Produktionsreservierung verfügbar'] },
             { num: '02', title: 'Europaweiter Versand', details: ['Spanien Festland: 48–72 Stunden', 'Europäische Union: 72–96 Stunden', 'Vereinigtes Königreich: 5–7 Werktage', 'Spezialverpackung für Kakteen (Einzelschutz)', 'Echtzeit-Sendungsverfolgung', 'Versicherung bei allen Sendungen inklusive'] },
             { num: '03', title: 'Dokumentation und Zertifizierungen', details: ['EU-Pflanzenpass bei jeder Sendung inklusive', 'Zolldokumentation für Export nach Großbritannien', 'Ursprungszeugnis bei Bedarf', 'Etikettierung gemäß geltender EU-Vorschriften', 'Beratung zu Importanforderungen'] },
             { num: '04', title: 'Anbau auf Bestellung', details: ['Frühzeitige Produktionsreservierung für das folgende Jahr', 'Spezifische Sorten auf Anfrage', 'Jährliche Liefergarantie für Kunden mit Vereinbarung', 'Maßgeschneiderte Größen nach Bedarf', 'Exklusive Sortenanzucht verfügbar'] },

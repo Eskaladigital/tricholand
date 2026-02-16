@@ -6,7 +6,7 @@ import { getFullPath, getAlternatesMetadata } from '@/lib/i18n/paths'
 import { StatsBar } from '@/components/home/StatsBar'
 export const metadata: Metadata = {
   title: 'Über uns',
-  description: 'Lernen Sie Tricholand kennen: Produzentengärtnerei spezialisiert auf Trichocereus und säulenförmige Kakteen in Murcia, Spanien. Über 50 Sorten, 2.500 m² Anbaufläche.',
+  description: 'Lernen Sie Tricholand kennen: Produzentengärtnerei spezialisiert auf Trichocereus und säulenförmige Kakteen in Murcia, Spanien. 5+ Trichocereus-Sorten, 2.500 m² Anbaufläche.',
   alternates: getAlternatesMetadata('de', 'about'),
 }
 
@@ -31,8 +31,7 @@ export default function SobreNosotrosPage() {
               <p>
                 Tricholand ist eine Produzentengärtnerei, spezialisiert auf den Anbau und die
                 Großhandelsverteilung von Kakteen der Gattung Trichocereus und anderen säulenförmigen
-                Kakteen. Von unseren 2.500 m² Anlagen in Murcia, Spanien kultivieren wir über 50
-                Sorten, die wir an Gärtnereien, Gartencenter und Händler in ganz Europa verteilen.
+                Kakteen. Von unseren 2.500 m² Anlagen in Murcia, Spanien kultivieren wir 5+ Trichocereus-Sorten, die wir an Gärtnereien, Gartencenter und Händler in ganz Europa verteilen.
               </p>
               <p>
                 Trichocereus-Kakteen sind eine Gattung sukkulenter Pflanzen aus der Familie der
@@ -89,7 +88,7 @@ export default function SobreNosotrosPage() {
               text: 'Alle unsere Exemplare enthalten einen EU-Pflanzenpass. Vollständige Zolldokumentation für den Export nach UK.',
             },
             {
-              title: 'Über 50 Sorten',
+              title: '5+ Trichocereus-Sorten',
               text: 'Unsere Sammlung umfasst die wichtigsten Trichocereus-Arten sowie ausgewählte Hybride, Kammformen und seltene Sorten.',
             },
             {

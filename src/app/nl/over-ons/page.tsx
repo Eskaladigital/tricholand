@@ -6,7 +6,7 @@ import { nl } from '@/lib/i18n/nl'
 import { StatsBar } from '@/components/home/StatsBar'
 export const metadata: Metadata = {
   title: 'Over ons',
-  description: 'Maak kennis met Tricholand: producentenkwekerij gespecialiseerd in Trichocereus en kolomvormige cactussen in Murcia, Spanje. Meer dan 50 variëteiten, 2.500 m² teelt.',
+  description: 'Maak kennis met Tricholand: producentenkwekerij gespecialiseerd in Trichocereus en kolomvormige cactussen in Murcia, Spanje. 5+ Trichocereus-variëteiten, 2.500 m² teelt.',
   alternates: getAlternatesMetadata('nl', 'about'),
 }
 
@@ -31,7 +31,7 @@ export default function SobreNosotrosPage() {
               <p>
                 Tricholand is een producentenkwekerij gespecialiseerd in de teelt en groothandelsdistributie
                 van cactussen van het geslacht Trichocereus en andere kolomvormige cactussen. Vanuit onze
-                faciliteiten van 2.500 m² in Murcia, Spanje, kweken we meer dan 50 variëteiten die we
+                faciliteiten van 2.500 m² in Murcia, Spanje, kweken we 5+ Trichocereus-variëteiten die we
                 distribueren aan kwekerijen, tuincentra en distributeurs in heel Europa.
               </p>
               <p>
@@ -87,7 +87,7 @@ export default function SobreNosotrosPage() {
               text: 'Al onze exemplaren bevatten het EU fytosanitair paspoort. Volledige douanedocumentatie voor export naar het VK.',
             },
             {
-              title: 'Meer dan 50 variëteiten',
+              title: '5+ Trichocereus-variëteiten',
               text: 'Onze collectie omvat de belangrijkste Trichocereus-soorten plus geselecteerde hybriden, kuifvormen en zeldzame variëteiten.',
             },
             {

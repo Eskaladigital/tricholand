@@ -4,7 +4,7 @@ import { getFullPath, getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
   title: 'Certificazioni fitosanitarie',
-  description: 'Certificazioni Tricholand: passaporto fitosanitario UE, documentazione export UK, conformità normativa europea per cactus.',
+  description: 'Certificazioni Tricholand: passaporto di pianta europeo UE, documentazione export UK, conformità normativa europea per cactus.',
   alternates: getAlternatesMetadata('it', 'certifications'),
 }
 
@@ -28,21 +28,21 @@ export default function CertificacionesPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-12 mb-16">
           <div className="space-y-6 text-marron-claro leading-relaxed">
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-2xl font-bold uppercase text-negro">
-              Passaporto fitosanitario <span className="text-naranja">UE</span>
+              Passaporto di pianta europeo <span className="text-naranja">UE</span>
             </h2>
             <p>
-              Il passaporto fitosanitario è un documento ufficiale che certifica che le piante soddisfano i
+              Il passaporto di pianta europeo è un documento ufficiale che certifica che le piante soddisfano i
               requisiti fitosanitari dell&apos;Unione Europea. È obbligatorio per la commercializzazione di
               piante vive all&apos;interno del territorio UE e garantisce che gli esemplari siano privi di
               organismi nocivi e malattie regolamentati.
             </p>
             <p>
-              Presso Tricholand tutti i nostri esemplari includono un passaporto fitosanitario individuale. Le
+              Presso Tricholand tutti i nostri esemplari includono un passaporto di pianta europeo individuale. Le
               nostre strutture sono registrate e soggette a ispezioni periodiche da parte dei servizi ufficiali
               di sanità vegetale della Regione di Murcia.
             </p>
             <p>
-              Il passaporto fitosanitario contiene: codice operatore autorizzato, codice di tracciabilità,
+              Il passaporto di pianta europeo contiene: codice operatore autorizzato, codice di tracciabilità,
               nome scientifico della specie, paese di origine e, se applicabile, zona protetta di destinazione.
             </p>
 
@@ -74,8 +74,8 @@ export default function CertificacionesPage() {
             {[
               {
                 icon: '🇪🇺',
-                title: 'Passaporto fitosanitario UE',
-                desc: 'Incluso in tutte le spedizioni intracomunitarie. Conforme al Regolamento (UE) 2016/2031.',
+                title: 'Passaporto di pianta europeo UE',
+                desc: 'Incluso senza costi aggiuntivi in tutte le spedizioni intracomunitarie. Conforme al Regolamento (UE) 2016/2031.',
               },
               {
                 icon: '🇬🇧',
@@ -112,12 +112,12 @@ export default function CertificacionesPage() {
           <div className="space-y-6">
             {[
               {
-                q: 'Posso acquistare piante senza passaporto fitosanitario?',
-                a: 'No. La normativa europea richiede che tutte le piante vive commercializzate nell\'UE abbiano un passaporto fitosanitario. È una garanzia sanitaria per l\'acquirente e un requisito legale per il venditore.',
+                q: 'Posso acquistare piante senza passaporto di pianta europeo?',
+                a: 'No. La normativa europea richiede che tutte le piante vive commercializzate nell\'UE abbiano un passaporto di pianta europeo. È una garanzia sanitaria per l\'acquirente e un requisito legale per il venditore.',
               },
               {
-                q: 'Il passaporto fitosanitario ha costi aggiuntivi?',
-                a: 'No. Il passaporto fitosanitario è incluso nel prezzo di tutte le nostre piante. Non ci sono supplementi o costi nascosti.',
+                q: 'Il passaporto di pianta europeo ha costi aggiuntivi?',
+                a: 'No. Il passaporto di pianta europeo è incluso senza costi aggiuntivi nel prezzo di tutte le nostre piante. Il certificato fitosanitario (richiesto solo per esportazioni fuori dall\'UE) ha un costo aggiuntivo di circa 60€.',
               },
               {
                 q: 'Consegnate fuori dall\'Unione Europea (oltre al Regno Unito)?',

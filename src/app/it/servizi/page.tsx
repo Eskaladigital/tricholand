@@ -37,9 +37,9 @@ export default function ServiciosPage() {
               num: '01',
               title: 'Vendita all\'ingrosso',
               details: [
-                'Ordine minimo: 100 pezzi',
+                'Ordine minimo: 200 pezzi',
                 'Condizioni speciali per ordini ricorrenti e grandi volumi',
-                'Pagamento tramite bonifico o 30 giorni per clienti abituali',
+                'Pagamento tramite bonifico',
                 'Preventivo personalizzato in meno di 24 ore lavorative',
                 'Possibilità di prenotazione anticipata della produzione',
               ],
@@ -60,8 +60,8 @@ export default function ServiciosPage() {
               num: '03',
               title: 'Documentazione e certificazioni',
               details: [
-                'Passaporto fitosanitario UE incluso in ogni spedizione',
-                'Documentazione doganale per l\'export verso il Regno Unito',
+                'Passaporto vegetale europeo incluso in ogni spedizione',
+                'Certificato fitosanitario disponibile per esportazioni fuori UE (costo aggiuntivo ca. 60 €)',
                 'Certificato di origine se richiesto',
                 'Etichettatura conforme alla normativa europea vigente',
                 'Consulenza sui requisiti di importazione',
