@@ -45,21 +45,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([])
 
   const canAddProduct = useCallback((product: Product): CanAddResult => {
-    if (product.lot_type !== 'additional' || !product.additional_to_product_id) {
-      return { canAdd: true }
-    }
-    const hasMainLot = items.some((item) => item.product.id === product.additional_to_product_id)
-    if (!hasMainLot) {
-      return { canAdd: false, reason: 'addMainLotFirst' }
-    }
     return { canAdd: true }
-  }, [items])
+  }, [])
 
   const addItem = useCallback((product: Product, quantity: number = 1) => {
-    if (product.lot_type === 'additional' && product.additional_to_product_id) {
-      const hasMainLot = items.some((item) => item.product.id === product.additional_to_product_id)
-      if (!hasMainLot) return
-    }
     setItems((prev) => {
       const existing = prev.find((item) => item.product.id === product.id)
       if (existing) {
@@ -71,7 +60,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { product, quantity, notes: '' }]
     })
-  }, [items])
+  }, [])
 
   const removeItem = useCallback((productId: string) => {
     setItems((prev) => prev.filter((item) => item.product.id !== productId))

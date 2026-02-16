@@ -28,7 +28,7 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
   const [description, setDescription] = useState(product?.description || '')
   const [shortDescription, setShortDescription] = useState(product?.short_description || '')
   const [priceCents, setPriceCents] = useState(product?.price_cents ? product.price_cents / 100 : 0)
-  const [unitsPerLot, setUnitsPerLot] = useState(product?.units_per_lot || 100)
+  const [unitsPerLot, setUnitsPerLot] = useState(product?.units_per_lot || 750)
   const [minOrderQty, setMinOrderQty] = useState(product?.min_order_qty || 1)
   const [qtyStep, setQtyStep] = useState(product?.qty_step || 1)
   const [sizeRange, setSizeRange] = useState(product?.size_range || '')
@@ -40,35 +40,7 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
   const [imageUrl, setImageUrl] = useState(product?.images[0]?.url || '')
   const [imageAlt, setImageAlt] = useState(product?.images[0]?.alt || '')
   const [varietySlug, setVarietySlug] = useState(product?.variety_slug || '')
-  const [isAdditionalLot, setIsAdditionalLot] = useState(product?.lot_type === 'additional')
-  const [additionalToProductId, setAdditionalToProductId] = useState<string>(product?.additional_to_product_id || '')
-  const [mainProducts, setMainProducts] = useState<{ id: string; name: string; sku: string; price_cents: number; units_per_lot: number }[]>([])
   const [mediaPickerOpen, setMediaPickerOpen] = useState(false)
-
-  useEffect(() => {
-    getProductsForSelect().then((list) => {
-      setMainProducts(
-        list.filter(
-          (p) => p.lot_type !== 'additional' && p.id !== product?.id
-        ).map((p) => ({
-          id: p.id,
-          name: p.name,
-          sku: p.sku,
-          price_cents: p.price_cents,
-          units_per_lot: p.units_per_lot || 100,
-        }))
-      )
-    })
-  }, [product?.id])
-
-  // Calcular precio sugerido cuando es lote adicional
-  const selectedMainProduct = mainProducts.find((p) => p.id === additionalToProductId)
-  const pricePerUnitFromMain = selectedMainProduct 
-    ? selectedMainProduct.price_cents / selectedMainProduct.units_per_lot 
-    : null
-  const suggestedPriceCents = pricePerUnitFromMain && unitsPerLot > 0
-    ? (pricePerUnitFromMain * unitsPerLot / 100).toFixed(2)
-    : null
 
   const [specs, setSpecs] = useState<ProductSpec[]>(product?.specs || [
     { label: '', value: '' },
@@ -120,8 +92,6 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
       images: imageUrl ? [{ id: 'img_new', url: imageUrl, alt: imageAlt || name, order: 0 }] : [],
       specs: specs.filter((s) => s.label && s.value),
       tags: [],
-      lot_type: isAdditionalLot ? 'additional' : 'main',
-      additional_to_product_id: isAdditionalLot && additionalToProductId ? additionalToProductId : null,
     })
   }
 
@@ -219,14 +189,42 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
           <h3 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase text-marron-claro mb-3">
             Pedido
           </h3>
+          <div className="bg-azul-claro/10 border border-azul p-3 rounded mb-4">
+            <p className="text-sm text-negro">
+              💡 <strong>¿Cómo funciona el sistema de lotes?</strong><br/>
+              • Pedido mínimo: cuántos lotes tiene que comprar el cliente como mínimo (ej: 1)<br/>
+              • Incremento: de cuánto en cuánto puede añadir más (ej: 1 para lotes completos, o fracciones como 0.2 para 150 uds si el lote es de 750)
+            </p>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelClass}>Pedido mínimo</label>
-              <input type="number" min="1" value={minOrderQty} onChange={(e) => setMinOrderQty(parseInt(e.target.value) || 1)} className={fieldClass} />
+              <label className={labelClass}>Pedido mínimo (en lotes) *</label>
+              <input 
+                type="number" 
+                min="1" 
+                value={minOrderQty} 
+                onChange={(e) => setMinOrderQty(parseInt(e.target.value) || 1)} 
+                className={fieldClass} 
+                placeholder="1"
+              />
+              <p className="text-xs text-marron-claro mt-1">
+                Ejemplo: 1 = el cliente debe comprar mínimo 1 lote completo
+              </p>
             </div>
             <div>
-              <label className={labelClass}>Incremento</label>
-              <input type="number" min="1" value={qtyStep} onChange={(e) => setQtyStep(parseInt(e.target.value) || 1)} className={fieldClass} />
+              <label className={labelClass}>Incremento (en lotes) *</label>
+              <input 
+                type="number" 
+                min="0.01"
+                step="0.01" 
+                value={qtyStep} 
+                onChange={(e) => setQtyStep(parseFloat(e.target.value) || 1)} 
+                className={fieldClass} 
+                placeholder="1"
+              />
+              <p className="text-xs text-marron-claro mt-1">
+                Ejemplo: 0.2 = el cliente puede añadir de 0.2 en 0.2 lotes (150 uds si el lote es de 750)
+              </p>
             </div>
           </div>
         </div>
@@ -250,93 +248,6 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
                 <option value="archived">Archivado</option>
               </select>
             </div>
-          </div>
-        </div>
-
-        {/* Lotes adicionales */}
-        <div>
-          <h3 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase text-marron-claro mb-3">
-            Configuración de lotes adicionales
-          </h3>
-          <div className="space-y-4">
-            <label className="flex items-start gap-3 cursor-pointer group">
-              <input 
-                type="checkbox" 
-                checked={isAdditionalLot} 
-                onChange={(e) => { 
-                  setIsAdditionalLot(e.target.checked)
-                  if (!e.target.checked) setAdditionalToProductId('')
-                }} 
-                className="w-4 h-4 mt-1 accent-naranja" 
-              />
-              <div className="flex-1">
-                <span className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase group-hover:text-naranja transition-colors">
-                  ¿Es un lote adicional?
-                </span>
-                <p className="text-xs text-marron-claro mt-1">
-                  Marca esto si este producto es un lote más pequeño que se puede añadir después de comprar un lote principal (ej: lote adicional de 150 uds después de un lote principal de 750 uds).
-                </p>
-              </div>
-            </label>
-            
-            {isAdditionalLot && (
-              <div className="ml-7 pl-4 border-l-2 border-naranja space-y-4">
-                <div className="bg-amarillo/10 border border-amarillo/30 p-3 rounded">
-                  <p className="text-sm text-negro">
-                    ℹ️ <strong>Este producto ES el lote adicional.</strong> Solo necesitas indicar a qué lote principal complementa para calcular su precio automáticamente.
-                  </p>
-                </div>
-
-                <div>
-                  <label className={labelClass}>¿A qué lote principal complementa? *</label>
-                  <select 
-                    value={additionalToProductId} 
-                    onChange={(e) => setAdditionalToProductId(e.target.value)} 
-                    className={fieldClass} 
-                    required
-                  >
-                    <option value="">— Seleccionar lote principal —</option>
-                    {mainProducts.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name} ({p.sku}) · {p.units_per_lot} uds · {(p.price_cents / 100).toFixed(2)}€
-                      </option>
-                    ))}
-                  </select>
-                  <p className="text-xs text-marron-claro mt-1">
-                    El cliente solo podrá comprar este lote si ya tiene el lote principal en su pedido
-                  </p>
-                </div>
-
-                {selectedMainProduct && (
-                  <div className="bg-verde-claro/20 border border-verde p-4 rounded space-y-2">
-                    <h4 className="font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase text-verde-oscuro">
-                      💰 Cálculo automático de precio sugerido
-                    </h4>
-                    <div className="text-sm space-y-1.5">
-                      <p className="text-marron-claro">
-                        <span className="font-medium">Lote principal:</span> {selectedMainProduct.name}
-                      </p>
-                      <p className="text-marron-claro">
-                        • {selectedMainProduct.units_per_lot} uds por {(selectedMainProduct.price_cents / 100).toFixed(2)}€
-                      </p>
-                      <p className="text-marron-claro">
-                        • Precio por unidad: <span className="font-bold text-negro">{(selectedMainProduct.price_cents / selectedMainProduct.units_per_lot / 100).toFixed(4)} €/ud</span>
-                      </p>
-                      <div className="border-t border-verde/30 pt-2 mt-2">
-                        <p className="text-marron-claro">
-                          <span className="font-medium">Este lote adicional:</span> {unitsPerLot} uds
-                        </p>
-                        {suggestedPriceCents && (
-                          <p className="text-verde-oscuro font-bold text-base pt-1">
-                            → Precio sugerido: {suggestedPriceCents} €
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         </div>
       </section>

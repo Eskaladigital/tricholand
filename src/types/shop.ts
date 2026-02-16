@@ -27,10 +27,10 @@ export interface Product {
   // Precio y cantidades
   price_cents: number             // Precio en céntimos (ej: 35000 = 350,00€)
   currency: 'EUR'
-  min_order_qty: number           // Mínimo por pedido (ej: 100)
-  qty_step: number                // Incrementos (ej: de 50 en 50)
-  unit_label: string              // "unidades", "bandejas", "pallets" (se genera automáticamente)
-  units_per_lot: number           // Unidades incluidas en el lote (ej: 750, 150, 100)
+  min_order_qty: number           // Mínimo por pedido (ej: 1 lote = 750 uds)
+  qty_step: number                // Incrementos adicionales (ej: 150 uds)
+  unit_label: string              // "lotes de 750 uds" (se genera automáticamente)
+  units_per_lot: number           // Unidades incluidas por lote (ej: 750)
 
   // Características
   size_range: string              // "15-20 cm"
@@ -52,10 +52,6 @@ export interface Product {
   tags: string[]
   featured: boolean               // Destacado en home
   sort_order: number              // Orden en catálogo
-
-  // Lote principal vs adicional
-  lot_type: 'main' | 'additional' // main = estándar (ej. 750 uds). additional = suplemento (ej. 50 uds)
-  additional_to_product_id: string | null  // Para additional: ID del producto principal
 }
 
 export interface ProductSpec {

@@ -23,7 +23,6 @@ export interface ProductOption {
   name: string
   sku: string
   price_cents: number
-  lot_type?: string
   units_per_lot?: number
 }
 
@@ -68,8 +67,6 @@ function mapDbProductToProduct(row: Record<string, unknown>): Product {
     tags: Array.isArray(tags) ? tags : [],
     featured: (row.featured as boolean) ?? false,
     sort_order: (row.sort_order as number) ?? 0,
-    lot_type: ((row.lot_type as string) === 'additional' ? 'additional' : 'main') as 'main' | 'additional',
-    additional_to_product_id: (row.additional_to_product_id as string) ?? null,
   }
 }
 
@@ -172,7 +169,7 @@ export async function getProductsForSelect(): Promise<ProductOption[]> {
   const supabase = await createClient()
   const { data } = await supabase
     .from('products')
-    .select('id, name, sku, price_cents, lot_type, units_per_lot')
+    .select('id, name, sku, price_cents, units_per_lot')
     .eq('status', 'active')
     .order('name')
 
@@ -181,7 +178,6 @@ export async function getProductsForSelect(): Promise<ProductOption[]> {
     name: p.name,
     sku: p.sku,
     price_cents: p.price_cents ?? 0,
-    lot_type: (p.lot_type as string) || 'main',
     units_per_lot: (p.units_per_lot as number) ?? 100,
   }))
 }
@@ -196,6 +192,7 @@ export async function createProduct(data: Record<string, unknown>): Promise<{ er
     description: data.description ?? '',
     short_description: data.short_description ?? '',
     price_cents: data.price_cents ?? 0,
+    units_per_lot: data.units_per_lot ?? 100,
     min_order_qty: data.min_order_qty ?? 1,
     qty_step: data.qty_step ?? 1,
     unit_label: data.unit_label ?? 'lotes',
@@ -210,8 +207,6 @@ export async function createProduct(data: Record<string, unknown>): Promise<{ er
     tags: data.tags ?? [],
     featured: data.featured ?? false,
     sort_order: data.sort_order ?? 0,
-    lot_type: data.lot_type ?? 'main',
-    additional_to_product_id: data.additional_to_product_id ?? null,
   }).select('id').single()
   if (error) return { error: error.message }
   return { id: inserted?.id }
@@ -227,6 +222,7 @@ export async function updateProduct(id: string, data: Record<string, unknown>): 
     description: data.description ?? '',
     short_description: data.short_description ?? '',
     price_cents: data.price_cents ?? 0,
+    units_per_lot: data.units_per_lot ?? 100,
     min_order_qty: data.min_order_qty ?? 1,
     qty_step: data.qty_step ?? 1,
     unit_label: data.unit_label ?? 'lotes',
@@ -241,8 +237,6 @@ export async function updateProduct(id: string, data: Record<string, unknown>): 
     tags: data.tags ?? [],
     featured: data.featured ?? false,
     sort_order: data.sort_order ?? 0,
-    lot_type: data.lot_type ?? 'main',
-    additional_to_product_id: data.additional_to_product_id ?? null,
   }).eq('id', id)
   if (error) return { error: error.message }
   return {}

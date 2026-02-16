@@ -12,22 +12,19 @@ interface ProductCardShopProps {
   product: Product
   locale: string
   t: Dictionary['shop']
-  hasAdditionalLots?: boolean
-  additionalLotProduct?: Product | null
 }
 
-export function ProductCardShop({ product, locale, t, hasAdditionalLots = false, additionalLotProduct = null }: ProductCardShopProps) {
-  const { addItem, canAddProduct, isInCart, getItemQuantity } = useCart()
+export function ProductCardShop({ product, locale, t }: ProductCardShopProps) {
+  const { addItem, isInCart, getItemQuantity } = useCart()
   const inCart = isInCart(product.id)
-  const { canAdd } = canAddProduct(product)
   const quantity = getItemQuantity(product.id)
   
   const pricePerUnitCents = product.units_per_lot > 1 
     ? Math.round(product.price_cents / product.units_per_lot) 
     : null
 
-  // Si es producto principal Y ya está en el carrito Y tiene lotes adicionales
-  const showTwoButtons = product.lot_type === 'main' && inCart && hasAdditionalLots && additionalLotProduct
+  // Calcular cuántas unidades adicionales se pueden añadir según qty_step
+  const additionalUnits = Math.round(product.units_per_lot * product.qty_step)
 
   return (
     <div className="group bg-blanco border border-linea hover:shadow-lg transition-all duration-300 flex flex-col">
@@ -59,7 +56,7 @@ export function ProductCardShop({ product, locale, t, hasAdditionalLots = false,
         )}
         {quantity > 0 && (
           <span className="absolute bottom-3 right-3 bg-verde text-blanco px-3 py-1.5 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold">
-            {quantity}× ({quantity * product.units_per_lot} {t.totalPlants})
+            {Math.round(quantity * product.units_per_lot)} {t.totalPlants}
           </span>
         )}
       </Link>
@@ -86,45 +83,26 @@ export function ProductCardShop({ product, locale, t, hasAdditionalLots = false,
               {formatPrice(pricePerUnitCents)} {t.perUnit}
             </p>
           )}
-          {hasAdditionalLots && product.lot_type === 'main' && !inCart && (
-            <p className="text-xs text-verde font-medium">{t.additionalLotsAvailable}</p>
+          {product.qty_step < 1 && (
+            <p className="text-xs text-verde font-medium">
+              Puedes añadir de {additionalUnits} en {additionalUnits} uds
+            </p>
           )}
         </div>
       </div>
 
       {/* Add to cart */}
       <div className="px-5 pb-4">
-        {showTwoButtons ? (
-          <div className="space-y-2">
-            <button
-              onClick={() => addItem(product, 1)}
-              className="w-full py-2.5 px-4 bg-verde text-blanco font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-verde-oscuro transition-colors"
-            >
-              {t.addAnotherFullLot} ({product.units_per_lot})
-            </button>
-            <button
-              onClick={() => addItem(additionalLotProduct, 1)}
-              className="w-full py-2 px-4 border-2 border-verde text-verde font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide hover:bg-verde hover:text-blanco transition-colors"
-            >
-              {t.addAdditionalLot} ({additionalLotProduct.units_per_lot})
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => canAdd && addItem(product, product.min_order_qty)}
-            disabled={!canAdd}
-            className={`w-full py-3 px-4 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide transition-colors ${
-              !canAdd
-                ? 'bg-linea text-marron-claro cursor-not-allowed'
-                : inCart
-                  ? 'bg-verde text-blanco hover:bg-verde-oscuro'
-                  : 'bg-naranja text-blanco hover:bg-marron'
-            }`}
-            title={!canAdd ? t.addMainLotFirst : undefined}
-          >
-            {!canAdd ? t.addMainLotFirst : inCart ? t.inYourOrderAddAnother : t.addToOrder}
-          </button>
-        )}
+        <button
+          onClick={() => addItem(product, product.min_order_qty)}
+          className={`w-full py-3 px-4 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide transition-colors ${
+            inCart
+              ? 'bg-verde text-blanco hover:bg-verde-oscuro'
+              : 'bg-naranja text-blanco hover:bg-marron'
+          }`}
+        >
+          {inCart ? t.inYourOrderAddAnother : t.addToOrder}
+        </button>
       </div>
     </div>
   )

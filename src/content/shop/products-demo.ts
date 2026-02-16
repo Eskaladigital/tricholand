@@ -43,8 +43,6 @@ export const productsDemo: Product[] = [
     tags: ['pachanoi', 'san-pedro', 'lote'],
     featured: true,
     sort_order: 1,
-    lot_type: 'main',
-    additional_to_product_id: null,
   },
   {
     id: 'prod_002',
@@ -82,8 +80,6 @@ export const productsDemo: Product[] = [
     tags: ['pachanoi', 'san-pedro', 'lote'],
     featured: true,
     sort_order: 2,
-    lot_type: 'main',
-    additional_to_product_id: null,
   },
   {
     id: 'prod_003',
@@ -121,8 +117,6 @@ export const productsDemo: Product[] = [
     tags: ['peruvianus', 'antorcha-peruana', 'lote'],
     featured: true,
     sort_order: 3,
-    lot_type: 'main',
-    additional_to_product_id: null,
   },
   {
     id: 'prod_004',
@@ -160,8 +154,6 @@ export const productsDemo: Product[] = [
     tags: ['bridgesii', 'achuma', 'lote', 'limitado'],
     featured: false,
     sort_order: 4,
-    lot_type: 'main',
-    additional_to_product_id: null,
   },
   {
     id: 'prod_005',
@@ -199,8 +191,6 @@ export const productsDemo: Product[] = [
     tags: ['terscheckii', 'cardon', 'lote'],
     featured: false,
     sort_order: 5,
-    lot_type: 'main',
-    additional_to_product_id: null,
   },
   {
     id: 'prod_006',
@@ -238,8 +228,6 @@ export const productsDemo: Product[] = [
     tags: ['spachianus', 'portainjerto', 'lote'],
     featured: false,
     sort_order: 6,
-    lot_type: 'main',
-    additional_to_product_id: null,
   },
   {
     id: 'prod_007',
@@ -277,8 +265,6 @@ export const productsDemo: Product[] = [
     tags: ['pack', 'mixto', 'muestra', 'primer-pedido'],
     featured: true,
     sort_order: 0,
-    lot_type: 'main',
-    additional_to_product_id: null,
   },
 ]
 
