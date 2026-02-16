@@ -64,6 +64,9 @@ export function ProductsTable({ products: initial }: { products: Product[] }) {
               <th className="text-right px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">
                 Precio
               </th>
+              <th className="text-right px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">
+                €/unidad
+              </th>
               <th className="text-center px-4 py-3 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro">
                 Stock
               </th>
@@ -78,7 +81,7 @@ export function ProductsTable({ products: initial }: { products: Product[] }) {
           <tbody>
             {products.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-marron-claro">
+                <td colSpan={7} className="px-4 py-8 text-center text-marron-claro">
                   No hay productos. Crea el primero para empezar a vender.
                 </td>
               </tr>
@@ -114,6 +117,9 @@ export function ProductsTable({ products: initial }: { products: Product[] }) {
                     <td className="px-4 py-3 font-mono text-xs">{product.sku}</td>
                     <td className="px-4 py-3 text-right font-bold text-naranja">
                       {formatPrice(product.price_cents)}
+                    </td>
+                    <td className="px-4 py-3 text-right text-sm text-azul">
+                      {formatPrice(Math.round(product.price_cents / product.units_per_lot))}
                     </td>
                     <td className="px-4 py-3 text-center">
                       {product.stock_qty !== null ? (
