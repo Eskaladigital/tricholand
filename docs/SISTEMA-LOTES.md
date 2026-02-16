@@ -23,6 +23,25 @@ En el panel de administración, cada producto tiene estos 3 campos:
 | **Pedido mínimo** (`min_order_qty`) | Cuántas unidades DEBE comprar como mínimo (primera compra obligatoria) | 750 |
 | **Incremento mínimo** (`qty_step`) | Cuántas unidades puede añadir después del pedido mínimo | 150 |
 
+### Visualización en admin
+
+**Tabla de productos** (`/administrator/products`):
+
+```
+Producto | SKU | Precio | €/unidad | Stock | Activo | Acciones
+Lote T. Pachanoi 45-55 cm    TRI-PAC-025-50    2.775,00 €    3,70 €    ∞    [ON]    Editar
+lotes de 750 uds                                                ↑
+                                                          Color azul
+```
+
+**Detalle de pedido** (`/administrator/orders/{id}`):
+
+```
+750× Lote T. Pachanoi 45-55 cm
+750 unidades (plantas)              ← Clarificación en verde
+TRI-PAC-025-50
+```
+
 ### Ejemplo de configuración
 
 **Producto**: Trichocereus Pachanoi 35-45 cm  
@@ -87,6 +106,31 @@ En la esquina de la imagen del producto aparece:
 ┌─────────────┐
 │ 1050 plantas│
 └─────────────┘
+```
+
+### 4. Página de pedido
+
+**Input editable** para modificar cantidad directamente:
+
+```
+[-]  [ 750 ]  [+]  uds    2.775,00 €
+      ↑
+  Escribible
+```
+
+**Desglose visual** de lotes:
+
+```
+├─ 1× Lote completo (750 uds) = 750 plantas
+└─ 150 uds adicionales
+TOTAL: 900 plantas
+```
+
+**Precio por unidad** siempre visible:
+
+```
+Lote T. Pachanoi 45-55 cm
+Precio por unidad: 3,70 €     ← En azul claro
 ```
 
 ---
@@ -194,6 +238,48 @@ const cartTotal = items.reduce(
 )
 ```
 
+### Creación de pedidos (CRÍTICO)
+
+Al enviar el pedido al backend, **el `unit_price_cents` DEBE ser el precio por unidad**, no el precio del lote:
+
+```typescript
+// ✅ CORRECTO
+unit_price_cents: Math.round(product.price_cents / product.units_per_lot)
+// Ejemplo: Math.round(277500 / 750) = 370 cents (3,70€/ud)
+
+// ❌ INCORRECTO (causa precios astronómicos)
+unit_price_cents: product.price_cents
+// Esto causa que 750 uds × 2775€ = 2.081.250€
+```
+
+**Backend** luego calcula:
+```typescript
+total_cents = quantity * unit_price_cents
+// 750 × 370 = 277500 cents = 2775€ ✓
+```
+
+---
+
+## Visualización de precios
+
+### Frontend (cliente)
+
+| Ubicación | Muestra |
+|-----------|---------|
+| **Product card** | Precio/ud: 3,70 € (azul) |
+| **Cart badge** | Total plantas + total € |
+| **OrderForm - Lista** | Precio/ud + Desglose lotes + Total € |
+| **OrderForm - Confirmación** | Precio/ud + Desglose + Total con IVA (grande) |
+| **OrderForm - Sidebar** | Precio/ud + Desglose + Total con IVA (grande) |
+
+### Backend (admin)
+
+| Ubicación | Muestra |
+|-----------|---------|
+| **Tabla productos** | Precio lote + €/unidad (azul) |
+| **Detalle pedido** | Cantidad × Producto + "X unidades (plantas)" (verde) |
+| **PDF/Proforma** | Columna "Cant. (uds)" con valor "750 uds" |
+
 ---
 
 ## Casos de uso comunes
@@ -225,6 +311,7 @@ const cartTotal = items.reduce(
 3. **Simplicidad**: el cliente entiende que trabaja con unidades, no con fracciones de lote
 4. **Escalabilidad**: fácil añadir más sin cálculos complejos
 5. **UX clara**: botones distintos para lote completo vs incremento adicional
+6. **Transparencia**: precio por unidad siempre visible
 
 ---
 
@@ -256,3 +343,7 @@ Con incremento de 150, no es posible. Las opciones más cercanas serían:
 - 2250 uds (750 + 750 + 750)
 
 Si se necesita exactamente 2000, se debe ajustar la configuración del producto o hacer un pedido personalizado.
+
+### ¿Por qué algunos pedidos antiguos tienen precios incorrectos?
+
+Los pedidos creados **antes del commit `204e005`** (16/02/2026) tienen un bug donde `unit_price_cents` era el precio del lote completo en lugar del precio por unidad, causando cálculos incorrectos. Los nuevos pedidos se calculan correctamente.
