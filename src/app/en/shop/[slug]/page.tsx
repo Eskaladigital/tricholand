@@ -125,7 +125,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </div>
 
             {/* Add to order */}
-            <ProductDetailActions product={product} />
+            <ProductDetailActions product={product} locale="en" />
 
             {/* Specs */}
             <div className="mt-8">

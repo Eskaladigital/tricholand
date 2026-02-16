@@ -23,6 +23,7 @@ export interface ProductOption {
   name: string
   sku: string
   price_cents: number
+  lot_type?: string
 }
 
 function mapDbProductToProduct(row: Record<string, unknown>): Product {
@@ -63,6 +64,8 @@ function mapDbProductToProduct(row: Record<string, unknown>): Product {
     tags: Array.isArray(tags) ? tags : [],
     featured: (row.featured as boolean) ?? false,
     sort_order: (row.sort_order as number) ?? 0,
+    lot_type: ((row.lot_type as string) === 'additional' ? 'additional' : 'main') as 'main' | 'additional',
+    additional_to_product_id: (row.additional_to_product_id as string) ?? null,
   }
 }
 
@@ -165,7 +168,7 @@ export async function getProductsForSelect(): Promise<ProductOption[]> {
   const supabase = await createClient()
   const { data } = await supabase
     .from('products')
-    .select('id, name, sku, price_cents')
+    .select('id, name, sku, price_cents, lot_type')
     .eq('status', 'active')
     .order('name')
 
@@ -174,6 +177,7 @@ export async function getProductsForSelect(): Promise<ProductOption[]> {
     name: p.name,
     sku: p.sku,
     price_cents: p.price_cents ?? 0,
+    lot_type: (p.lot_type as string) || 'main',
   }))
 }
 
@@ -201,6 +205,8 @@ export async function createProduct(data: Record<string, unknown>): Promise<{ er
     tags: data.tags ?? [],
     featured: data.featured ?? false,
     sort_order: data.sort_order ?? 0,
+    lot_type: data.lot_type ?? 'main',
+    additional_to_product_id: data.additional_to_product_id ?? null,
   }).select('id').single()
   if (error) return { error: error.message }
   return { id: inserted?.id }
@@ -230,6 +236,8 @@ export async function updateProduct(id: string, data: Record<string, unknown>): 
     tags: data.tags ?? [],
     featured: data.featured ?? false,
     sort_order: data.sort_order ?? 0,
+    lot_type: data.lot_type ?? 'main',
+    additional_to_product_id: data.additional_to_product_id ?? null,
   }).eq('id', id)
   if (error) return { error: error.message }
   return {}

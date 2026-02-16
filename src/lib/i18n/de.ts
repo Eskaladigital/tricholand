@@ -67,6 +67,7 @@ export const de: Dictionary = {
     priceNote: 'Preis ohne MwSt. · EU-Pflanzenpass inklusive',
     specsLabel: 'Eigenschaften',
     productDescriptionLabel: 'Produktbeschreibung',
+    addMainLotFirst: 'Fügen Sie zuerst die Hauptpartie dieses Produkts hinzu',
   },
   services: {
     title: 'Dienstleistungen',

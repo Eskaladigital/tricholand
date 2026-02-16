@@ -67,6 +67,7 @@ export const fr: Dictionary = {
     priceNote: 'Prix HT · Passeport végétal européen inclus',
     specsLabel: 'Caractéristiques',
     productDescriptionLabel: 'Description du produit',
+    addMainLotFirst: 'Ajoutez d\'abord le lot principal de ce produit',
   },
   services: {
     title: 'Services',

@@ -15,19 +15,24 @@ interface AddToCartButtonProps {
 }
 
 export function AddToCartButton({ product, className = '', t }: AddToCartButtonProps) {
-  const { addItem, isInCart } = useCart()
+  const { addItem, canAddProduct, isInCart } = useCart()
   const inCart = isInCart(product.id)
+  const { canAdd } = canAddProduct(product)
 
   return (
     <button
-      onClick={() => addItem(product)}
+      onClick={() => canAdd && addItem(product, product.min_order_qty)}
+      disabled={!canAdd}
       className={`font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide transition-colors ${
-        inCart
-          ? 'bg-verde text-blanco hover:bg-verde-oscuro'
-          : 'bg-naranja text-blanco hover:bg-marron'
+        !canAdd
+          ? 'bg-linea text-marron-claro cursor-not-allowed'
+          : inCart
+            ? 'bg-verde text-blanco hover:bg-verde-oscuro'
+            : 'bg-naranja text-blanco hover:bg-marron'
       } ${className}`}
+      title={!canAdd ? t.addMainLotFirst : undefined}
     >
-      {inCart ? t.inYourOrderAddAnother : t.addToOrder}
+      {!canAdd ? t.addMainLotFirst : inCart ? t.inYourOrderAddAnother : t.addToOrder}
     </button>
   )
 }

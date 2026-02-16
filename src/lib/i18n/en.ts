@@ -67,6 +67,7 @@ export const en: Dictionary = {
     priceNote: 'Price excl. VAT · EU plant passport included',
     specsLabel: 'Specifications',
     productDescriptionLabel: 'Product description',
+    addMainLotFirst: 'Add the main lot of this product first',
   },
   services: {
     title: 'Services',

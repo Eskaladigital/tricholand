@@ -67,6 +67,7 @@ export const pt: Dictionary = {
     priceNote: 'Preço sem IVA · Passaporte de planta europeu incluído',
     specsLabel: 'Características',
     productDescriptionLabel: 'Descrição do produto',
+    addMainLotFirst: 'Adicione primeiro o lote principal deste produto',
   },
   services: {
     title: 'Serviços',

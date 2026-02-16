@@ -65,6 +65,7 @@ export interface Dictionary {
     priceNote: string
     specsLabel: string
     productDescriptionLabel: string
+    addMainLotFirst: string
   }
   services: {
     title: string

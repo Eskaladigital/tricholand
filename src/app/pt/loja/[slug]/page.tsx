@@ -118,7 +118,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               )}
             </div>
 
-            <ProductDetailActions product={product} />
+            <ProductDetailActions product={product} locale="pt" />
 
             <div className="mt-8">
               <h2 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide text-marron-claro mb-3">

@@ -51,6 +51,10 @@ export interface Product {
   tags: string[]
   featured: boolean               // Destacado en home
   sort_order: number              // Orden en catálogo
+
+  // Lote principal vs adicional
+  lot_type: 'main' | 'additional' // main = estándar (ej. 750 uds). additional = suplemento (ej. 50 uds)
+  additional_to_product_id: string | null  // Para additional: ID del producto principal
 }
 
 export interface ProductSpec {
@@ -106,6 +110,8 @@ export interface ProductFormData {
   sort_order: number
   meta_title: string | null
   meta_description: string | null
+  lot_type: 'main' | 'additional'
+  additional_to_product_id: string | null
 }
 
 // Card del catálogo público
@@ -119,6 +125,8 @@ export interface ProductCard {
   currency: 'EUR'
   min_order_qty: number
   unit_label: string
+  lot_type: 'main' | 'additional'
+  additional_to_product_id: string | null
   size_range: string
   status: ProductStatus
   stock_qty: number | null

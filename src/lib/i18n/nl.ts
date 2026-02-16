@@ -67,6 +67,7 @@ export const nl: Dictionary = {
     priceNote: 'Prijs excl. btw · EU-plantenpaspoort inbegrepen',
     specsLabel: 'Specificaties',
     productDescriptionLabel: 'Productbeschrijving',
+    addMainLotFirst: 'Voeg eerst de hoofdpartij van dit product toe',
   },
   services: {
     title: 'Diensten',

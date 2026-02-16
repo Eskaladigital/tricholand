@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import type { Product, ProductSpec, ProductStatus } from '@/types/shop'
 import { MediaPickerModal } from './MediaPickerModal'
+import { getProductsForSelect } from '@/lib/actions/products'
 
 interface ProductFormProps {
   product?: Product
@@ -39,7 +40,20 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
   const [imageUrl, setImageUrl] = useState(product?.images[0]?.url || '')
   const [imageAlt, setImageAlt] = useState(product?.images[0]?.alt || '')
   const [varietySlug, setVarietySlug] = useState(product?.variety_slug || '')
+  const [lotType, setLotType] = useState<'main' | 'additional'>(product?.lot_type || 'main')
+  const [additionalToProductId, setAdditionalToProductId] = useState<string>(product?.additional_to_product_id || '')
+  const [mainProducts, setMainProducts] = useState<{ id: string; name: string; sku: string }[]>([])
   const [mediaPickerOpen, setMediaPickerOpen] = useState(false)
+
+  useEffect(() => {
+    getProductsForSelect().then((list) => {
+      setMainProducts(
+        list.filter(
+          (p) => p.lot_type !== 'additional' && p.id !== product?.id
+        )
+      )
+    })
+  }, [product?.id])
 
   const [specs, setSpecs] = useState<ProductSpec[]>(product?.specs || [
     { label: '', value: '' },
@@ -86,6 +100,8 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
       images: imageUrl ? [{ id: 'img_new', url: imageUrl, alt: imageAlt || name, order: 0 }] : [],
       specs: specs.filter((s) => s.label && s.value),
       tags: [],
+      lot_type: lotType,
+      additional_to_product_id: lotType === 'additional' && additionalToProductId ? additionalToProductId : null,
     })
   }
 
@@ -167,6 +183,25 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
               <option value="archived">Archivado</option>
             </select>
           </div>
+          <div>
+            <label className={labelClass}>Tipo de lote</label>
+            <select value={lotType} onChange={(e) => { setLotType(e.target.value as 'main' | 'additional'); if (e.target.value === 'main') setAdditionalToProductId('') }} className={fieldClass}>
+              <option value="main">Principal (ej. 750 uds = 5 carros)</option>
+              <option value="additional">Adicional (solo si ya tienes el lote principal)</option>
+            </select>
+          </div>
+          {lotType === 'additional' && (
+            <div>
+              <label className={labelClass}>Lote principal (producto al que complementa)</label>
+              <select value={additionalToProductId} onChange={(e) => setAdditionalToProductId(e.target.value)} className={fieldClass} required>
+                <option value="">— Seleccionar producto principal —</option>
+                {mainProducts.map((p) => (
+                  <option key={p.id} value={p.id}>{p.name} ({p.sku})</option>
+                ))}
+              </select>
+              <p className="text-xs text-marron-claro mt-1">El cliente solo podrá añadir este producto si ya tiene el lote principal en su pedido.</p>
+            </div>
+          )}
         </div>
       </section>
 

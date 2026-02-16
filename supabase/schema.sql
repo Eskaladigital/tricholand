@@ -37,7 +37,11 @@ CREATE TABLE products (
   category TEXT,
   tags TEXT[] DEFAULT '{}',
   featured BOOLEAN DEFAULT false,
-  sort_order INTEGER DEFAULT 0
+  sort_order INTEGER DEFAULT 0,
+
+  -- Lote principal vs adicional
+  lot_type TEXT DEFAULT 'main' CHECK (lot_type IN ('main', 'additional')),
+  additional_to_product_id UUID REFERENCES products(id) ON DELETE SET NULL
 );
 
 CREATE INDEX idx_products_slug ON products(slug);

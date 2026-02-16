@@ -2,18 +2,23 @@
 
 import { useState } from 'react'
 import { useCart } from '@/lib/shop/cart-context'
+import { getDictionary } from '@/lib/i18n'
 import type { Product } from '@/types/shop'
 
 interface ProductDetailActionsProps {
   product: Product
+  locale?: string
 }
 
-export function ProductDetailActions({ product }: ProductDetailActionsProps) {
-  const { addItem, isInCart } = useCart()
+export function ProductDetailActions({ product, locale = 'es' }: ProductDetailActionsProps) {
+  const { addItem, canAddProduct, isInCart } = useCart()
   const [qty, setQty] = useState(product.min_order_qty)
   const [added, setAdded] = useState(false)
+  const t = getDictionary(locale).shop
+  const { canAdd, reason } = canAddProduct(product)
 
   const handleAdd = () => {
+    if (!canAdd) return
     addItem(product, qty)
     setAdded(true)
     setTimeout(() => setAdded(false), 2000)
@@ -56,16 +61,25 @@ export function ProductDetailActions({ product }: ProductDetailActionsProps) {
       {/* Add button */}
       <button
         onClick={handleAdd}
+        disabled={!canAdd}
         className={`w-full py-4 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide transition-colors ${
           added
             ? 'bg-verde text-blanco'
-            : 'bg-naranja text-blanco hover:bg-marron'
+            : canAdd
+              ? 'bg-naranja text-blanco hover:bg-marron'
+              : 'bg-linea text-marron-claro cursor-not-allowed'
         }`}
       >
-        {added ? '✓ Añadido a tu pedido' : 'Añadir al pedido →'}
+        {added ? '✓ Añadido a tu pedido' : canAdd ? 'Añadir al pedido →' : t.addMainLotFirst}
       </button>
 
-      {isInCart(product.id) && !added && (
+      {!canAdd && reason === 'addMainLotFirst' && (
+        <p className="text-xs text-marron-claro text-center">
+          {t.addMainLotFirst}
+        </p>
+      )}
+
+      {isInCart(product.id) && !added && canAdd && (
         <p className="text-xs text-verde font-semibold text-center">
           ✓ Ya tienes este producto en tu pedido
         </p>
