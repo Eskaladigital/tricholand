@@ -78,9 +78,24 @@ export function ShopGrid({ products, locale, t }: ShopGridProps) {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((product) => (
-            <ProductCardShop key={product.id} product={product} locale={locale} t={t} />
-          ))}
+          {filtered.map((product) => {
+            const hasAdditionalLots =
+              product.lot_type === 'main' &&
+              products.some((p) => p.additional_to_product_id === product.id)
+            const additionalLotProduct = hasAdditionalLots
+              ? products.find((p) => p.additional_to_product_id === product.id)
+              : null
+            return (
+              <ProductCardShop
+                key={product.id}
+                product={product}
+                locale={locale}
+                t={t}
+                hasAdditionalLots={hasAdditionalLots}
+                additionalLotProduct={additionalLotProduct || null}
+              />
+            )
+          })}
         </div>
       )}
     </div>

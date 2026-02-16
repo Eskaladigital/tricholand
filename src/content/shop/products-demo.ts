@@ -22,6 +22,7 @@ export const productsDemo: Product[] = [
     min_order_qty: 1,
     qty_step: 1,
     unit_label: 'lotes de 100 uds',
+    units_per_lot: 100,
     size_range: '15-20 cm',
     specs: [
       { label: 'Especie', value: 'Echinopsis pachanoi' },
@@ -60,6 +61,7 @@ export const productsDemo: Product[] = [
     min_order_qty: 1,
     qty_step: 1,
     unit_label: 'lotes de 50 uds',
+    units_per_lot: 50,
     size_range: '25-35 cm',
     specs: [
       { label: 'Especie', value: 'Echinopsis pachanoi' },
@@ -98,6 +100,7 @@ export const productsDemo: Product[] = [
     min_order_qty: 1,
     qty_step: 1,
     unit_label: 'lotes de 100 uds',
+    units_per_lot: 100,
     size_range: '10-15 cm',
     specs: [
       { label: 'Especie', value: 'Echinopsis peruviana' },
@@ -136,6 +139,7 @@ export const productsDemo: Product[] = [
     min_order_qty: 1,
     qty_step: 1,
     unit_label: 'lotes de 50 uds',
+    units_per_lot: 50,
     size_range: '10-15 cm',
     specs: [
       { label: 'Especie', value: 'Echinopsis lageniformis' },
@@ -174,6 +178,7 @@ export const productsDemo: Product[] = [
     min_order_qty: 1,
     qty_step: 1,
     unit_label: 'lotes de 25 uds',
+    units_per_lot: 25,
     size_range: '20-30 cm',
     specs: [
       { label: 'Especie', value: 'Echinopsis terscheckii' },
@@ -212,6 +217,7 @@ export const productsDemo: Product[] = [
     min_order_qty: 1,
     qty_step: 1,
     unit_label: 'lotes de 100 uds',
+    units_per_lot: 100,
     size_range: '15-20 cm',
     specs: [
       { label: 'Especie', value: 'Echinopsis spachiana' },
@@ -250,6 +256,7 @@ export const productsDemo: Product[] = [
     min_order_qty: 1,
     qty_step: 1,
     unit_label: 'packs de 50 uds',
+    units_per_lot: 50,
     size_range: '10-15 cm',
     specs: [
       { label: 'Contenido', value: '5 variedades × 10 uds' },

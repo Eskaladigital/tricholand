@@ -24,12 +24,15 @@ export interface ProductOption {
   sku: string
   price_cents: number
   lot_type?: string
+  units_per_lot?: number
 }
 
 function mapDbProductToProduct(row: Record<string, unknown>): Product {
   const images = (row.images as unknown[]) ?? []
   const specs = (row.specs as { label: string; value: string }[]) ?? []
   const tags = (row.tags as string[]) ?? []
+  const units_per_lot = (row.units_per_lot as number) ?? 100
+  
   return {
     id: row.id as string,
     created_at: row.created_at as string,
@@ -44,7 +47,8 @@ function mapDbProductToProduct(row: Record<string, unknown>): Product {
     currency: 'EUR',
     min_order_qty: (row.min_order_qty as number) ?? 1,
     qty_step: (row.qty_step as number) ?? 1,
-    unit_label: (row.unit_label as string) ?? 'lotes',
+    unit_label: (row.unit_label as string) ?? `lotes de ${units_per_lot} uds`,
+    units_per_lot,
     size_range: (row.size_range as string) ?? '',
     specs: Array.isArray(specs) ? specs : [],
     images: Array.isArray(images) ? images.map((img: unknown, i: number) => {
@@ -168,7 +172,7 @@ export async function getProductsForSelect(): Promise<ProductOption[]> {
   const supabase = await createClient()
   const { data } = await supabase
     .from('products')
-    .select('id, name, sku, price_cents, lot_type')
+    .select('id, name, sku, price_cents, lot_type, units_per_lot')
     .eq('status', 'active')
     .order('name')
 
@@ -178,6 +182,7 @@ export async function getProductsForSelect(): Promise<ProductOption[]> {
     sku: p.sku,
     price_cents: p.price_cents ?? 0,
     lot_type: (p.lot_type as string) || 'main',
+    units_per_lot: (p.units_per_lot as number) ?? 100,
   }))
 }
 

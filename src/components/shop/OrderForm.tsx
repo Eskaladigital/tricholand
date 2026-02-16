@@ -25,8 +25,10 @@ interface CustomerData {
 }
 
 export function OrderForm({ locale }: OrderFormProps) {
-  const { items, itemCount, totalCents, totalFormatted, removeItem, updateQuantity, updateNotes, clearCart } = useCart()
-  const t = getDictionary(locale).orderForm
+  const { items, itemCount, totalCents, totalFormatted, totalUnits, removeItem, updateQuantity, updateNotes, clearCart } = useCart()
+  const dict = getDictionary(locale)
+  const t = dict.orderForm
+  const shopT = dict.shop
 
   // Estimación IVA 21% para transparencia B2B
   const IVA_RATE = 21
@@ -139,6 +141,9 @@ export function OrderForm({ locale }: OrderFormProps) {
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mb-4">
               {t.yourOrder} ({itemCount} {itemCount === 1 ? t.product : t.products})
             </h2>
+            <div className="bg-verde-claro text-verde px-4 py-2 mb-4 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold">
+              Total: {totalUnits} {shopT.totalPlants}
+            </div>
 
             <div className="space-y-4 mb-6">
               {items.map((item) => (
@@ -172,7 +177,12 @@ export function OrderForm({ locale }: OrderFormProps) {
                           +
                         </button>
                       </div>
-                      <span className="text-xs text-marron-claro">{item.product.unit_label}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs text-marron-claro">{item.product.unit_label}</span>
+                        <span className="text-xs text-verde font-medium">
+                          = {item.quantity * item.product.units_per_lot} {shopT.totalPlants}
+                        </span>
+                      </div>
                       <span className="ml-auto font-[family-name:var(--font-archivo-narrow)] font-bold text-naranja" title={t.pricesExclVat}>
                         {formatPrice(item.product.price_cents * item.quantity)}
                       </span>
@@ -310,11 +320,19 @@ export function OrderForm({ locale }: OrderFormProps) {
             <div className="bg-crudo p-5 mb-6 space-y-3 text-sm">
               <h3 className="font-bold text-xs uppercase text-marron-claro">{t.productsLabel}</h3>
               {items.map((item) => (
-                <div key={item.product.id} className="flex justify-between py-1 border-b border-linea/50">
-                  <span>{item.quantity}× {item.product.name}</span>
-                  <span className="font-bold">{formatPrice(item.product.price_cents * item.quantity)}</span>
+                <div key={item.product.id} className="py-1 border-b border-linea/50">
+                  <div className="flex justify-between">
+                    <span>{item.quantity}× {item.product.name}</span>
+                    <span className="font-bold">{formatPrice(item.product.price_cents * item.quantity)}</span>
+                  </div>
+                  <div className="text-xs text-verde mt-0.5">
+                    {item.quantity} lotes × {item.product.units_per_lot} {shopT.totalPlants} = {item.quantity * item.product.units_per_lot} {shopT.totalPlants}
+                  </div>
                 </div>
               ))}
+              <div className="pt-2 bg-verde-claro text-verde px-3 py-2 font-bold text-center">
+                TOTAL: {totalUnits} {shopT.totalPlants}
+              </div>
               <div className="pt-3 space-y-1">
                 <div className="flex justify-between text-sm">
                   <span>{t.taxBase}</span>
@@ -376,11 +394,19 @@ export function OrderForm({ locale }: OrderFormProps) {
           </h3>
           <div className="space-y-2 text-sm mb-4">
             {items.map((item) => (
-              <div key={item.product.id} className="flex justify-between">
-                <span className="text-marron-claro truncate mr-2">{item.quantity}× {item.product.name}</span>
-                <span className="font-semibold shrink-0">{formatPrice(item.product.price_cents * item.quantity)}</span>
+              <div key={item.product.id} className="space-y-0.5">
+                <div className="flex justify-between">
+                  <span className="text-marron-claro truncate mr-2">{item.quantity}× {item.product.name}</span>
+                  <span className="font-semibold shrink-0">{formatPrice(item.product.price_cents * item.quantity)}</span>
+                </div>
+                <div className="text-xs text-verde">
+                  {item.quantity * item.product.units_per_lot} {shopT.totalPlants}
+                </div>
               </div>
             ))}
+          </div>
+          <div className="bg-verde-claro text-verde px-3 py-2 text-sm font-bold text-center mb-4">
+            {totalUnits} {shopT.totalPlants}
           </div>
           <div className="pt-3 border-t border-linea space-y-2">
             <div className="flex justify-between text-sm">

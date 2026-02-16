@@ -66,6 +66,11 @@ export interface Dictionary {
     specsLabel: string
     productDescriptionLabel: string
     addMainLotFirst: string
+    additionalLotsAvailable: string
+    perUnit: string
+    addAnotherFullLot: string
+    addAdditionalLot: string
+    totalPlants: string
   }
   services: {
     title: string

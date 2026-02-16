@@ -68,6 +68,11 @@ export const nl: Dictionary = {
     specsLabel: 'Specificaties',
     productDescriptionLabel: 'Productbeschrijving',
     addMainLotFirst: 'Voeg eerst de hoofdpartij van dit product toe',
+    additionalLotsAvailable: 'Extra partijen van 150 stuks op productpagina',
+    perUnit: '/ st',
+    addAnotherFullLot: 'Nog een volle partij toevoegen',
+    addAdditionalLot: 'Extra partij toevoegen',
+    totalPlants: 'planten',
   },
   services: {
     title: 'Diensten',
@@ -79,7 +84,7 @@ export const nl: Dictionary = {
       },
       {
         title: 'Leveringen Europa',
-        description: 'Spanje 48–72u, EU 72–96u, VK 5–7 dagen. Logistiek en gespecialiseerde verpakking voor cactussen.',
+        description: 'Spanje 48–72u (of minder). EU: 3 dagen. VK: 5–7 werkdagen. Gespecialiseerde logistiek en verpakking voor cactussen, temperatuur gecontroleerd volgens seizoen (gekoeld of verwarmd) voor kwaliteit tijdens transport.',
       },
       {
         title: 'Documentatie',

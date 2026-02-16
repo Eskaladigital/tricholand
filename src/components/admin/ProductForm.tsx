@@ -28,9 +28,9 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
   const [description, setDescription] = useState(product?.description || '')
   const [shortDescription, setShortDescription] = useState(product?.short_description || '')
   const [priceCents, setPriceCents] = useState(product?.price_cents ? product.price_cents / 100 : 0)
+  const [unitsPerLot, setUnitsPerLot] = useState(product?.units_per_lot || 100)
   const [minOrderQty, setMinOrderQty] = useState(product?.min_order_qty || 1)
   const [qtyStep, setQtyStep] = useState(product?.qty_step || 1)
-  const [unitLabel, setUnitLabel] = useState(product?.unit_label || 'lotes de 100 uds')
   const [sizeRange, setSizeRange] = useState(product?.size_range || '')
   const [status, setStatus] = useState<ProductStatus>(product?.status || 'draft')
   const [stockQty, setStockQty] = useState<number | ''>(product?.stock_qty ?? '')
@@ -40,9 +40,9 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
   const [imageUrl, setImageUrl] = useState(product?.images[0]?.url || '')
   const [imageAlt, setImageAlt] = useState(product?.images[0]?.alt || '')
   const [varietySlug, setVarietySlug] = useState(product?.variety_slug || '')
-  const [lotType, setLotType] = useState<'main' | 'additional'>(product?.lot_type || 'main')
+  const [isAdditionalLot, setIsAdditionalLot] = useState(product?.lot_type === 'additional')
   const [additionalToProductId, setAdditionalToProductId] = useState<string>(product?.additional_to_product_id || '')
-  const [mainProducts, setMainProducts] = useState<{ id: string; name: string; sku: string }[]>([])
+  const [mainProducts, setMainProducts] = useState<{ id: string; name: string; sku: string; price_cents: number; units_per_lot: number }[]>([])
   const [mediaPickerOpen, setMediaPickerOpen] = useState(false)
 
   useEffect(() => {
@@ -50,10 +50,25 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
       setMainProducts(
         list.filter(
           (p) => p.lot_type !== 'additional' && p.id !== product?.id
-        )
+        ).map((p) => ({
+          id: p.id,
+          name: p.name,
+          sku: p.sku,
+          price_cents: p.price_cents,
+          units_per_lot: p.units_per_lot || 100,
+        }))
       )
     })
   }, [product?.id])
+
+  // Calcular precio sugerido cuando es lote adicional
+  const selectedMainProduct = mainProducts.find((p) => p.id === additionalToProductId)
+  const pricePerUnitFromMain = selectedMainProduct 
+    ? selectedMainProduct.price_cents / selectedMainProduct.units_per_lot 
+    : null
+  const suggestedPriceCents = pricePerUnitFromMain && unitsPerLot > 0
+    ? (pricePerUnitFromMain * unitsPerLot / 100).toFixed(2)
+    : null
 
   const [specs, setSpecs] = useState<ProductSpec[]>(product?.specs || [
     { label: '', value: '' },
@@ -80,6 +95,10 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    
+    // Generar unit_label automáticamente
+    const unitLabel = `lotes de ${unitsPerLot} uds`
+    
     onSave({
       name,
       slug,
@@ -87,6 +106,7 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
       description,
       short_description: shortDescription,
       price_cents: Math.round(priceCents * 100),
+      units_per_lot: unitsPerLot,
       min_order_qty: minOrderQty,
       qty_step: qtyStep,
       unit_label: unitLabel,
@@ -100,8 +120,8 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
       images: imageUrl ? [{ id: 'img_new', url: imageUrl, alt: imageAlt || name, order: 0 }] : [],
       specs: specs.filter((s) => s.label && s.value),
       tags: [],
-      lot_type: lotType,
-      additional_to_product_id: lotType === 'additional' && additionalToProductId ? additionalToProductId : null,
+      lot_type: isAdditionalLot ? 'additional' : 'main',
+      additional_to_product_id: isAdditionalLot && additionalToProductId ? additionalToProductId : null,
     })
   }
 
@@ -153,55 +173,161 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
         <h2 className="font-[family-name:var(--font-archivo-narrow)] text-base font-bold uppercase mb-4 pb-2 border-b border-linea">
           Precio y stock
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div>
-            <label className={labelClass}>Precio (€ sin IVA) *</label>
-            <input type="number" step="0.01" min="0" value={priceCents} onChange={(e) => setPriceCents(parseFloat(e.target.value) || 0)} required className={fieldClass} />
-          </div>
-          <div>
-            <label className={labelClass}>Pedido mínimo</label>
-            <input type="number" min="1" value={minOrderQty} onChange={(e) => setMinOrderQty(parseInt(e.target.value) || 1)} className={fieldClass} />
-          </div>
-          <div>
-            <label className={labelClass}>Incremento</label>
-            <input type="number" min="1" value={qtyStep} onChange={(e) => setQtyStep(parseInt(e.target.value) || 1)} className={fieldClass} />
-          </div>
-          <div>
-            <label className={labelClass}>Etiqueta de unidad</label>
-            <input type="text" value={unitLabel} onChange={(e) => setUnitLabel(e.target.value)} className={fieldClass} placeholder="lotes de 100 uds" />
-          </div>
-          <div>
-            <label className={labelClass}>Stock (lotes disponibles)</label>
-            <input type="number" min="0" value={stockQty} onChange={(e) => setStockQty(e.target.value === '' ? '' : parseInt(e.target.value))} className={fieldClass} placeholder="Vacío = sin límite" />
-          </div>
-          <div>
-            <label className={labelClass}>Estado</label>
-            <select value={status} onChange={(e) => setStatus(e.target.value as ProductStatus)} className={fieldClass}>
-              <option value="draft">Borrador</option>
-              <option value="active">Activo</option>
-              <option value="out_of_stock">Agotado</option>
-              <option value="archived">Archivado</option>
-            </select>
-          </div>
-          <div>
-            <label className={labelClass}>Tipo de lote</label>
-            <select value={lotType} onChange={(e) => { setLotType(e.target.value as 'main' | 'additional'); if (e.target.value === 'main') setAdditionalToProductId('') }} className={fieldClass}>
-              <option value="main">Principal (ej. 750 uds = 5 carros)</option>
-              <option value="additional">Adicional (solo si ya tienes el lote principal)</option>
-            </select>
-          </div>
-          {lotType === 'additional' && (
+
+        {/* Unidades y precio */}
+        <div className="mb-6">
+          <h3 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase text-marron-claro mb-3">
+            Unidades y precio
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelClass}>Lote principal (producto al que complementa)</label>
-              <select value={additionalToProductId} onChange={(e) => setAdditionalToProductId(e.target.value)} className={fieldClass} required>
-                <option value="">— Seleccionar producto principal —</option>
-                {mainProducts.map((p) => (
-                  <option key={p.id} value={p.id}>{p.name} ({p.sku})</option>
-                ))}
-              </select>
-              <p className="text-xs text-marron-claro mt-1">El cliente solo podrá añadir este producto si ya tiene el lote principal en su pedido.</p>
+              <label className={labelClass}>Unidades por lote *</label>
+              <input 
+                type="number" 
+                min="1" 
+                value={unitsPerLot} 
+                onChange={(e) => setUnitsPerLot(parseInt(e.target.value) || 1)} 
+                required 
+                className={fieldClass} 
+                placeholder="750" 
+              />
+              <p className="text-xs text-marron-claro mt-1">Cuántas plantas incluye este producto</p>
             </div>
-          )}
+            <div>
+              <label className={labelClass}>Precio por lote (€ sin IVA) *</label>
+              <input 
+                type="number" 
+                step="0.01" 
+                min="0" 
+                value={priceCents} 
+                onChange={(e) => setPriceCents(parseFloat(e.target.value) || 0)} 
+                required 
+                className={fieldClass} 
+                placeholder="2775.00" 
+              />
+              {unitsPerLot > 0 && priceCents > 0 && (
+                <p className="text-xs text-verde font-medium mt-1">
+                  Precio por unidad: {(priceCents / unitsPerLot).toFixed(2)} €
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Pedido */}
+        <div className="mb-6 pb-6 border-b border-linea">
+          <h3 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase text-marron-claro mb-3">
+            Pedido
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className={labelClass}>Pedido mínimo</label>
+              <input type="number" min="1" value={minOrderQty} onChange={(e) => setMinOrderQty(parseInt(e.target.value) || 1)} className={fieldClass} />
+            </div>
+            <div>
+              <label className={labelClass}>Incremento</label>
+              <input type="number" min="1" value={qtyStep} onChange={(e) => setQtyStep(parseInt(e.target.value) || 1)} className={fieldClass} />
+            </div>
+          </div>
+        </div>
+
+        {/* Stock y disponibilidad */}
+        <div className="mb-6 pb-6 border-b border-linea">
+          <h3 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase text-marron-claro mb-3">
+            Stock y disponibilidad
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className={labelClass}>Stock (lotes disponibles)</label>
+              <input type="number" min="0" value={stockQty} onChange={(e) => setStockQty(e.target.value === '' ? '' : parseInt(e.target.value))} className={fieldClass} placeholder="Vacío = sin límite" />
+            </div>
+            <div>
+              <label className={labelClass}>Estado</label>
+              <select value={status} onChange={(e) => setStatus(e.target.value as ProductStatus)} className={fieldClass}>
+                <option value="draft">Borrador</option>
+                <option value="active">Activo</option>
+                <option value="out_of_stock">Agotado</option>
+                <option value="archived">Archivado</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Lotes adicionales */}
+        <div>
+          <h3 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase text-marron-claro mb-3">
+            Configuración de lotes adicionales
+          </h3>
+          <div className="space-y-4">
+            <label className="flex items-start gap-3 cursor-pointer group">
+              <input 
+                type="checkbox" 
+                checked={isAdditionalLot} 
+                onChange={(e) => { 
+                  setIsAdditionalLot(e.target.checked)
+                  if (!e.target.checked) setAdditionalToProductId('')
+                }} 
+                className="w-4 h-4 mt-1 accent-naranja" 
+              />
+              <div className="flex-1">
+                <span className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase group-hover:text-naranja transition-colors">
+                  ¿Es un lote adicional?
+                </span>
+                <p className="text-xs text-marron-claro mt-1">
+                  Si marcas esto, el cliente SOLO podrá comprarlo si ya tiene otro producto (el "lote principal") en su pedido.
+                </p>
+              </div>
+            </label>
+            
+            {isAdditionalLot && (
+              <div className="ml-7 pl-4 border-l-2 border-naranja space-y-4">
+                <div>
+                  <label className={labelClass}>Lote principal requerido *</label>
+                  <select 
+                    value={additionalToProductId} 
+                    onChange={(e) => setAdditionalToProductId(e.target.value)} 
+                    className={fieldClass} 
+                    required
+                  >
+                    <option value="">— Seleccionar producto principal —</option>
+                    {mainProducts.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name} ({p.sku}) · {p.units_per_lot} uds
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-marron-claro mt-1">
+                    El cliente solo podrá añadir este producto si ya tiene el lote principal en su pedido.
+                  </p>
+                </div>
+
+                {selectedMainProduct && (
+                  <div className="bg-crudo p-4 rounded">
+                    <h4 className="font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase text-marron-claro mb-2">
+                      Cálculo automático de precio
+                    </h4>
+                    <div className="space-y-1 text-sm">
+                      <p>
+                        Precio por unidad del lote principal: 
+                        <span className="font-bold ml-1">
+                          {(selectedMainProduct.price_cents / selectedMainProduct.units_per_lot / 100).toFixed(4)} €
+                        </span>
+                      </p>
+                      <p>
+                        Unidades de este lote adicional: 
+                        <span className="font-bold ml-1">{unitsPerLot} uds</span>
+                      </p>
+                      {suggestedPriceCents && (
+                        <p className="text-verde font-bold pt-2 border-t border-linea mt-2">
+                          Precio sugerido: {suggestedPriceCents} €
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </section>
 

@@ -29,7 +29,8 @@ export interface Product {
   currency: 'EUR'
   min_order_qty: number           // Mínimo por pedido (ej: 100)
   qty_step: number                // Incrementos (ej: de 50 en 50)
-  unit_label: string              // "unidades", "bandejas", "pallets"
+  unit_label: string              // "unidades", "bandejas", "pallets" (se genera automáticamente)
+  units_per_lot: number           // Unidades incluidas en el lote (ej: 750, 150, 100)
 
   // Características
   size_range: string              // "15-20 cm"
@@ -100,6 +101,7 @@ export interface ProductFormData {
   min_order_qty: number
   qty_step: number
   unit_label: string
+  units_per_lot: number
   size_range: string
   specs: ProductSpec[]
   status: ProductStatus
@@ -133,6 +135,7 @@ export interface ProductCard {
   images: ProductImage[]
   category: string | null
   featured: boolean
+  units_per_lot: number
 }
 
 

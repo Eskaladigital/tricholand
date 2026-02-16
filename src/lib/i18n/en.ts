@@ -68,6 +68,11 @@ export const en: Dictionary = {
     specsLabel: 'Specifications',
     productDescriptionLabel: 'Product description',
     addMainLotFirst: 'Add the main lot of this product first',
+    additionalLotsAvailable: 'Additional lots of 150 units available on product page',
+    perUnit: '/ unit',
+    addAnotherFullLot: 'Add another full lot',
+    addAdditionalLot: 'Add additional lot',
+    totalPlants: 'plants',
   },
   services: {
     title: 'Services',
@@ -79,7 +84,7 @@ export const en: Dictionary = {
       },
       {
         title: 'Europe shipping',
-        description: 'Spain 48–72h, EU 72–96h, UK 5–7 days. Specialized logistics and packaging for cacti.',
+        description: 'Spain 48–72h (or less). EU: 3 days. UK: 5–7 business days. Specialized logistics and packaging for cacti, temperature-controlled according to season (refrigerated or heated) guaranteeing quality during transport.',
       },
       {
         title: 'Documentation',
