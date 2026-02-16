@@ -26,7 +26,7 @@ export function ProductCardShop({ product, locale, t }: ProductCardShopProps) {
     : null
 
   // Calcular cuántas unidades tiene actualmente en el carrito
-  const currentUnits = currentQty * product.units_per_lot
+  const currentUnits = currentQty
 
   return (
     <div className="group bg-blanco border border-linea hover:shadow-lg transition-all duration-300 flex flex-col">
