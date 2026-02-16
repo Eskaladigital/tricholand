@@ -166,6 +166,9 @@ export function OrderForm({ locale }: OrderFormProps) {
                         {item.product.name}
                       </h3>
                       <p className="text-xs text-marron-claro">{item.product.sku}</p>
+                      <p className="text-xs text-azul mt-1">
+                        Precio por unidad: {formatPrice(item.product.price_cents / item.product.units_per_lot)}
+                      </p>
 
                       {/* Desglose de lotes */}
                       <div className="mt-2 space-y-1">
@@ -360,6 +363,9 @@ export function OrderForm({ locale }: OrderFormProps) {
                       <span className="font-medium">{item.product.name}</span>
                       <span className="font-bold">{formatPrice((item.product.price_cents / item.product.units_per_lot) * item.quantity)}</span>
                     </div>
+                    <p className="text-xs text-azul-claro ml-2">
+                      {formatPrice(item.product.price_cents / item.product.units_per_lot)}/ud
+                    </p>
                     <div className="text-xs text-verde-oscuro space-y-0.5 ml-2">
                       {fullLots > 0 && (
                         <p>├─ {fullLots}× Lote completo ({item.product.min_order_qty} uds) = {fullLots * item.product.min_order_qty} plantas</p>
@@ -445,6 +451,9 @@ export function OrderForm({ locale }: OrderFormProps) {
                     <span className="text-marron-claro truncate mr-2 font-medium">{item.product.name}</span>
                     <span className="font-semibold shrink-0">{formatPrice((item.product.price_cents / item.product.units_per_lot) * item.quantity)}</span>
                   </div>
+                  <p className="text-xs text-azul-claro ml-2">
+                    {formatPrice(item.product.price_cents / item.product.units_per_lot)}/ud
+                  </p>
                   <div className="text-xs text-verde-oscuro ml-2 space-y-0.5">
                     {fullLots > 0 && <p>├─ {fullLots}× {item.product.min_order_qty} uds</p>}
                     {additionalUnits > 0 && <p>└─ +{additionalUnits} uds</p>}
