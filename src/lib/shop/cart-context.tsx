@@ -6,7 +6,7 @@ import { formatPrice } from '@/types/shop'
 
 export interface CartItem {
   product: Product
-  quantity: number
+  quantity: number  // Cantidad en UNIDADES (no lotes)
   notes: string
 }
 
@@ -48,17 +48,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return { canAdd: true }
   }, [])
 
-  const addItem = useCallback((product: Product, quantity: number = 1) => {
+  const addItem = useCallback((product: Product, quantityToAdd: number = 1) => {
     setItems((prev) => {
       const existing = prev.find((item) => item.product.id === product.id)
       if (existing) {
         return prev.map((item) =>
           item.product.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
+            ? { ...item, quantity: item.quantity + quantityToAdd }
             : item
         )
       }
-      return [...prev, { product, quantity, notes: '' }]
+      // Primera vez: debe ser el pedido mínimo
+      const initialQty = Math.max(quantityToAdd, product.min_order_qty)
+      return [...prev, { product, quantity: initialQty, notes: '' }]
     })
   }, [])
 
@@ -100,11 +102,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
   const totalCents = items.reduce(
-    (sum, item) => sum + item.product.price_cents * item.quantity,
+    (sum, item) => sum + (item.product.price_cents / item.product.units_per_lot) * item.quantity,
     0
   )
   const totalUnits = items.reduce(
-    (sum, item) => sum + (item.product.units_per_lot * item.quantity),
+    (sum, item) => sum + item.quantity,
     0
   )
 

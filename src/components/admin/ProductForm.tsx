@@ -187,43 +187,43 @@ export function ProductForm({ product, onSave, isSaving }: ProductFormProps) {
         {/* Pedido */}
         <div className="mb-6 pb-6 border-b border-linea">
           <h3 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase text-marron-claro mb-3">
-            Pedido
+            Configuración de pedidos
           </h3>
           <div className="bg-azul-claro/10 border border-azul p-3 rounded mb-4">
             <p className="text-sm text-negro">
-              💡 <strong>¿Cómo funciona el sistema de lotes?</strong><br/>
-              • Pedido mínimo: cuántos lotes tiene que comprar el cliente como mínimo (ej: 1)<br/>
-              • Incremento: de cuánto en cuánto puede añadir más (ej: 1 para lotes completos, o fracciones como 0.2 para 150 uds si el lote es de 750)
+              💡 <strong>Sistema de lotes:</strong><br/>
+              • El cliente DEBE comprar primero el "Pedido mínimo" (ej: 750 uds)<br/>
+              • Después puede añadir más unidades de "Incremento mínimo" en "Incremento mínimo" (ej: de 150 en 150 uds)<br/>
+              • Ejemplo: puede comprar 750, 900 (750+150), 1050 (750+150+150), 1500 (750+750), etc.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelClass}>Pedido mínimo (en lotes) *</label>
+              <label className={labelClass}>Pedido mínimo (unidades) *</label>
               <input 
                 type="number" 
                 min="1" 
                 value={minOrderQty} 
                 onChange={(e) => setMinOrderQty(parseInt(e.target.value) || 1)} 
                 className={fieldClass} 
-                placeholder="1"
+                placeholder="750"
               />
               <p className="text-xs text-marron-claro mt-1">
-                Ejemplo: 1 = el cliente debe comprar mínimo 1 lote completo
+                Cuántas unidades MÍNIMO debe comprar el cliente (ej: 750)
               </p>
             </div>
             <div>
-              <label className={labelClass}>Incremento (en lotes) *</label>
+              <label className={labelClass}>Incremento mínimo (unidades) *</label>
               <input 
                 type="number" 
-                min="0.01"
-                step="0.01" 
+                min="1"
                 value={qtyStep} 
-                onChange={(e) => setQtyStep(parseFloat(e.target.value) || 1)} 
+                onChange={(e) => setQtyStep(parseInt(e.target.value) || 1)} 
                 className={fieldClass} 
-                placeholder="1"
+                placeholder="150"
               />
               <p className="text-xs text-marron-claro mt-1">
-                Ejemplo: 0.2 = el cliente puede añadir de 0.2 en 0.2 lotes (150 uds si el lote es de 750)
+                Cuántas unidades puede añadir después (ej: 150). Puede añadir también múltiplos del pedido mínimo.
               </p>
             </div>
           </div>

@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { useState } from 'react'
 import { useCart } from '@/lib/shop/cart-context'
 import { formatPrice } from '@/types/shop'
 import type { Product } from '@/types/shop'
@@ -17,14 +18,15 @@ interface ProductCardShopProps {
 export function ProductCardShop({ product, locale, t }: ProductCardShopProps) {
   const { addItem, isInCart, getItemQuantity } = useCart()
   const inCart = isInCart(product.id)
-  const quantity = getItemQuantity(product.id)
+  const currentQty = getItemQuantity(product.id)
+  const [additionalQty, setAdditionalQty] = useState(product.qty_step)
   
   const pricePerUnitCents = product.units_per_lot > 1 
     ? Math.round(product.price_cents / product.units_per_lot) 
     : null
 
-  // Calcular cuántas unidades adicionales se pueden añadir según qty_step
-  const additionalUnits = Math.round(product.units_per_lot * product.qty_step)
+  // Calcular cuántas unidades tiene actualmente en el carrito
+  const currentUnits = currentQty * product.units_per_lot
 
   return (
     <div className="group bg-blanco border border-linea hover:shadow-lg transition-all duration-300 flex flex-col">
@@ -54,9 +56,9 @@ export function ProductCardShop({ product, locale, t }: ProductCardShopProps) {
             {t.featured}
           </span>
         )}
-        {quantity > 0 && (
+        {currentUnits > 0 && (
           <span className="absolute bottom-3 right-3 bg-verde text-blanco px-3 py-1.5 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold">
-            {Math.round(quantity * product.units_per_lot)} {t.totalPlants}
+            {currentUnits} {t.totalPlants}
           </span>
         )}
       </Link>
@@ -83,26 +85,47 @@ export function ProductCardShop({ product, locale, t }: ProductCardShopProps) {
               {formatPrice(pricePerUnitCents)} {t.perUnit}
             </p>
           )}
-          {product.qty_step < 1 && (
-            <p className="text-xs text-verde font-medium">
-              Puedes añadir de {additionalUnits} en {additionalUnits} uds
-            </p>
-          )}
         </div>
       </div>
 
       {/* Add to cart */}
-      <div className="px-5 pb-4">
-        <button
-          onClick={() => addItem(product, product.min_order_qty)}
-          className={`w-full py-3 px-4 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide transition-colors ${
-            inCart
-              ? 'bg-verde text-blanco hover:bg-verde-oscuro'
-              : 'bg-naranja text-blanco hover:bg-marron'
-          }`}
-        >
-          {inCart ? t.inYourOrderAddAnother : t.addToOrder}
-        </button>
+      <div className="px-5 pb-4 space-y-2">
+        {!inCart ? (
+          <button
+            onClick={() => addItem(product, product.min_order_qty)}
+            className="w-full py-3 px-4 bg-naranja text-blanco font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-marron transition-colors"
+          >
+            {t.addToOrder} ({product.min_order_qty} uds)
+          </button>
+        ) : (
+          <>
+            <div className="flex gap-2">
+              <button
+                onClick={() => addItem(product, product.min_order_qty)}
+                className="flex-1 py-2 px-3 bg-verde text-blanco font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide hover:bg-verde-oscuro transition-colors"
+              >
+                + Lote ({product.min_order_qty})
+              </button>
+              <button
+                onClick={() => addItem(product, additionalQty)}
+                className="flex-1 py-2 px-3 border-2 border-verde text-verde font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide hover:bg-verde hover:text-blanco transition-colors"
+              >
+                + {additionalQty} uds
+              </button>
+            </div>
+            <select
+              value={additionalQty}
+              onChange={(e) => setAdditionalQty(parseInt(e.target.value))}
+              className="w-full px-3 py-2 border border-linea text-sm bg-blanco"
+            >
+              {[1, 2, 3, 4, 5].map((multiplier) => (
+                <option key={multiplier} value={product.qty_step * multiplier}>
+                  Añadir {product.qty_step * multiplier} uds
+                </option>
+              ))}
+            </select>
+          </>
+        )}
       </div>
     </div>
   )
