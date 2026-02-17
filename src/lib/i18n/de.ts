@@ -73,6 +73,7 @@ export const de: Dictionary = {
     addAnotherFullLot: 'Weitere volle Partie hinzufügen',
     addAdditionalLot: 'Zusätzliche Partie hinzufügen',
     totalPlants: 'Pflanzen',
+    preparationTime: '7 Tage Auftragsvorbereitung + Versandzeit',
   },
   services: {
     title: 'Dienstleistungen',
@@ -84,7 +85,7 @@ export const de: Dictionary = {
       },
       {
         title: 'Versand Europa',
-        description: 'Spanien 48–72h (oder weniger). EU: 3 Tage. UK: 5–7 Werktage. Spezialisierte Logistik und Verpackung für Kakteen, temperaturabhängig je nach Jahreszeit (gekühlt oder beheizt) für Qualität während des Transports.',
+        description: 'Spanien 48–72h (oder weniger). EU: 3 Tage. UK: 5–7 Werktage. Spezialisierte Logistik und Verpackung für Kakteen, temperaturabhängig je nach Jahreszeit (gekühlt oder beheizt) für Qualität während des Transports. Auftragsvorbereitung: 7 Werktage, zuzüglich Versandzeit.',
       },
       {
         title: 'Dokumentation',

@@ -39,11 +39,12 @@ export default async function TiendaPage() {
         </div>
 
         {/* Info bar */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {[
             { icon: '📦', text: 'Añade lotes a tu pedido y envíanos la solicitud' },
             { icon: '📋', text: 'Revisamos tu pedido y te enviamos presupuesto final' },
             { icon: '💳', text: 'Te enviamos link de pago seguro (Stripe / Redsys)' },
+            { icon: '⏱️', text: t.shop.preparationTime },
           ].map((step, i) => (
             <div key={i} className="bg-blanco border border-linea p-4 flex items-start gap-3">
               <span className="text-xl">{step.icon}</span>

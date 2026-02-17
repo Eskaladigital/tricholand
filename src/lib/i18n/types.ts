@@ -71,6 +71,7 @@ export interface Dictionary {
     addAnotherFullLot: string
     addAdditionalLot: string
     totalPlants: string
+    preparationTime: string
   }
   services: {
     title: string

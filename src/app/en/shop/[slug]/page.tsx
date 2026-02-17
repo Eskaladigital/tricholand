@@ -114,6 +114,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 <span className="text-sm text-marron-claro">/ {product.unit_label}</span>
               </div>
               <p className="text-xs text-marron-claro mt-1">{t.shop.priceNote}</p>
+              <p className="text-xs text-marron-claro mt-0.5">⏱️ {t.shop.preparationTime}</p>
 
               {product.stock_qty !== null && (
                 <p className={`text-sm mt-2 font-semibold ${isLowStock ? 'text-terracota' : 'text-verde'}`}>

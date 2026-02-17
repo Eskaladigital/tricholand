@@ -73,6 +73,7 @@ export const es: Dictionary = {
     addAnotherFullLot: 'Añadir otro lote completo',
     addAdditionalLot: 'Añadir lote adicional',
     totalPlants: 'plantas',
+    preparationTime: '7 días de preparación del pedido + tiempo de transporte',
   },
   services: {
     title: 'Servicios',
@@ -84,7 +85,7 @@ export const es: Dictionary = {
       },
       {
         title: 'Envíos Europa',
-        description: 'España 48–72h (o menos). UE: 3 días. Reino Unido: 5–7 días laborables. Logística y embalaje especializado para cactáceas, con temperatura controlada según la estación (refrigerado o calefactado) garantizando la calidad durante el transporte.',
+        description: 'España 48–72h (o menos). UE: 3 días. Reino Unido: 5–7 días laborables. Logística y embalaje especializado para cactáceas, con temperatura controlada según la estación (refrigerado o calefactado) garantizando la calidad durante el transporte. Tiempo de preparación del pedido: 7 días laborables, más el tiempo de transporte.',
       },
       {
         title: 'Documentación',

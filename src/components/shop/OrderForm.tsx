@@ -141,9 +141,10 @@ export function OrderForm({ locale }: OrderFormProps) {
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-xl font-bold uppercase mb-4">
               {t.yourOrder} ({itemCount} {itemCount === 1 ? t.product : t.products})
             </h2>
-            <div className="bg-verde-claro text-verde px-4 py-2 mb-4 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold">
+            <div className="bg-verde-claro text-verde px-4 py-2 mb-2 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold">
               Total: {totalUnits} {shopT.totalPlants}
             </div>
+            <p className="text-xs text-marron-claro mb-4">⏱️ {shopT.preparationTime}</p>
 
             <div className="space-y-4 mb-6">
               {items.map((item) => {
@@ -482,6 +483,7 @@ export function OrderForm({ locale }: OrderFormProps) {
           </div>
           <p className="text-xs text-marron-claro mt-3">{t.pricesExclVat} · {t.shippingConfirmedInQuote}</p>
           <p className="text-xs text-verde-oscuro italic mt-1">{t.vatExemptionNote}</p>
+          <p className="text-xs text-marron-claro mt-2">⏱️ {shopT.preparationTime}</p>
         </div>
       </aside>
     </div>

@@ -73,6 +73,7 @@ export const nl: Dictionary = {
     addAnotherFullLot: 'Nog een volle partij toevoegen',
     addAdditionalLot: 'Extra partij toevoegen',
     totalPlants: 'planten',
+    preparationTime: '7 dagen orderbereiding + verzendtijd',
   },
   services: {
     title: 'Diensten',
@@ -84,7 +85,7 @@ export const nl: Dictionary = {
       },
       {
         title: 'Leveringen Europa',
-        description: 'Spanje 48–72u (of minder). EU: 3 dagen. VK: 5–7 werkdagen. Gespecialiseerde logistiek en verpakking voor cactussen, temperatuur gecontroleerd volgens seizoen (gekoeld of verwarmd) voor kwaliteit tijdens transport.',
+        description: 'Spanje 48–72u (of minder). EU: 3 dagen. VK: 5–7 werkdagen. Gespecialiseerde logistiek en verpakking voor cactussen, temperatuur gecontroleerd volgens seizoen (gekoeld of verwarmd) voor kwaliteit tijdens transport. Orderbereiding: 7 werkdagen, plus verzendtijd.',
       },
       {
         title: 'Documentatie',
