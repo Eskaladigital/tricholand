@@ -72,6 +72,8 @@ export interface Dictionary {
     addAdditionalLot: string
     totalPlants: string
     preparationTime: string
+    professionalOnlyTitle: string
+    professionalOnlyNotice: string
   }
   services: {
     title: string

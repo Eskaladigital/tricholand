@@ -11,8 +11,26 @@ const statusLabels: Record<string, string> = {
 }
 
 export default async function ContactsPage() {
-  const contacts = await getContacts()
+  let contacts: Awaited<ReturnType<typeof getContacts>> = []
+  let error: string | null = null
+
+  try {
+    contacts = await getContacts()
+  } catch (e) {
+    error = e instanceof Error ? e.message : 'Error al cargar contactos'
+  }
+
   const newCount = contacts.filter((c) => c.status === 'new').length
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 p-6 rounded">
+        <h2 className="font-bold text-red-800 mb-2">Error al cargar contactos</h2>
+        <p className="text-sm text-red-700">{error}</p>
+        <p className="text-xs text-red-600 mt-2">Comprueba que la tabla contacts existe en Supabase y que tienes permisos.</p>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -65,7 +83,7 @@ export default async function ContactsPage() {
                       </td>
                       <td className="px-4 py-3 text-marron-claro">{contact.company || '—'}</td>
                       <td className="px-4 py-3">
-                        <a href={`mailto:${contact.email}`} className="text-naranja hover:underline text-xs" onClick={(e) => e.stopPropagation()}>
+                        <a href={`mailto:${contact.email}`} className="text-naranja hover:underline text-xs">
                           {contact.email}
                         </a>
                       </td>

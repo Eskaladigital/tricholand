@@ -74,6 +74,8 @@ export const it: Dictionary = {
     addAdditionalLot: 'Aggiungi lotto aggiuntivo',
     totalPlants: 'piante',
     preparationTime: '7 giorni di preparazione ordine + tempo di spedizione',
+    professionalOnlyTitle: 'Vendita B2B esclusiva — Solo professionisti',
+    professionalOnlyNotice: 'Vendiamo solo a professionisti. I prezzi mostrati non sono per privati. Dopo aver effettuato l\'ordine, dovrete attestare la vostra condizione di professionista con Certificato di attività economiche (AEAT spagnolo) o Partita IVA verificabile in VIES. Solo allora saranno convalidati termini e prezzi. Senza attestazione non potrete rifiutare l\'ordine; Tricholand potrà adeguare i prezzi al dettaglio a propria discrezione.',
   },
   services: {
     title: 'Servizi',

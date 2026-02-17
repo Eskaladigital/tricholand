@@ -45,9 +45,11 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(new URL('/administrator/dashboard', request.url))
   }
 
-  // Si está en ruta protegida sin sesión → login
+  // Si está en ruta protegida sin sesión → login (con redirect para volver tras login)
   if (isProtectedAdmin && !user) {
-    return NextResponse.redirect(new URL('/administrator/login', request.url))
+    const loginUrl = new URL('/administrator/login', request.url)
+    loginUrl.searchParams.set('redirect', pathname)
+    return NextResponse.redirect(loginUrl)
   }
 
   return supabaseResponse

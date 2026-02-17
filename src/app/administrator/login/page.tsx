@@ -1,11 +1,13 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
-export default function AdminLoginPage() {
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirect') || '/administrator/dashboard'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -26,7 +28,9 @@ export default function AdminLoginPage() {
           : authError.message)
       }
 
-      router.push('/administrator/dashboard')
+      // Redirigir a la página solicitada o al dashboard
+      const target = redirectTo.startsWith('/administrator/') ? redirectTo : '/administrator/dashboard'
+      router.push(target)
       router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error de autenticación')
@@ -98,5 +102,13 @@ export default function AdminLoginPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Cargando...</div>}>
+      <LoginForm />
+    </Suspense>
   )
 }

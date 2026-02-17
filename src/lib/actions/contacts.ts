@@ -1,6 +1,6 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/api'
 
 export interface ContactRow {
   id: string
@@ -22,7 +22,7 @@ export interface ContactRow {
 }
 
 export async function getContactById(id: string): Promise<ContactRow | null> {
-  const supabase = await createClient()
+  const supabase = createServiceClient()
   const { data, error } = await supabase
     .from('contacts')
     .select('*')
@@ -34,7 +34,7 @@ export async function getContactById(id: string): Promise<ContactRow | null> {
 }
 
 export async function getContacts(): Promise<ContactRow[]> {
-  const supabase = await createClient()
+  const supabase = createServiceClient()
   const { data, error } = await supabase
     .from('contacts')
     .select('*')
@@ -53,14 +53,14 @@ export async function updateContactStatus(
   const validStatuses: ContactStatusValue[] = ['new', 'read', 'replied', 'archived', 'spam']
   if (!validStatuses.includes(status)) return { error: 'Estado no válido' }
 
-  const supabase = await createClient()
+  const supabase = createServiceClient()
   const { error } = await supabase.from('contacts').update({ status }).eq('id', id)
   if (error) return { error: error.message }
   return {}
 }
 
 export async function deleteContact(id: string): Promise<{ error?: string }> {
-  const supabase = await createClient()
+  const supabase = createServiceClient()
   const { error } = await supabase.from('contacts').delete().eq('id', id)
   if (error) return { error: error.message }
   return {}

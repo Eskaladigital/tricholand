@@ -38,6 +38,16 @@ export default async function TiendaPage() {
           </div>
         </div>
 
+        {/* Aviso B2B exclusivo — muy visible */}
+        <div className="mb-8 p-6 bg-amber-50 border-2 border-amber-400">
+          <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold uppercase text-amber-900 mb-2">
+            ⚠️ {t.shop.professionalOnlyTitle}
+          </h2>
+          <p className="text-sm text-amber-900/90 leading-relaxed">
+            {t.shop.professionalOnlyNotice}
+          </p>
+        </div>
+
         {/* Info bar */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {[
