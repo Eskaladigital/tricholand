@@ -75,7 +75,7 @@ export const nl: Dictionary = {
     totalPlants: 'planten',
     preparationTime: '7 dagen orderbereiding + verzendtijd',
     professionalOnlyTitle: 'B2B exclusief — Alleen professionals',
-    professionalOnlyNotice: 'Wij verkopen alleen aan professionals. De getoonde prijzen zijn niet voor particulieren. Na het plaatsen van uw bestelling moet u uw professionele status aantonen met een Certificaat van economische activiteiten (Spaanse AEAT) of een btw-nummer verifieerbaar in VIES. Pas dan worden de voorwaarden en prijzen gevalideerd. Zonder bewijs kunt u de bestelling niet weigeren; Tricholand kan de prijzen naar eigen goeddunken aanpassen aan consumentenprijzen.',
+    professionalOnlyNotice: 'Wij verkopen alleen aan professionals. De getoonde prijzen zijn niet voor particulieren. Na het plaatsen van uw bestelling moet u uw professionele status aantonen met een Certificaat van economische activiteiten (Spaanse AEAT) of een btw-nummer verifieerbaar in VIES. Pas dan worden de voorwaarden en prijzen gevalideerd. Zonder bewijs kunt u de bestelling niet weigeren; Tricholand kan deze annuleren of de prijzen aanpassen aan consumentenprijzen.',
   },
   services: {
     title: 'Diensten',

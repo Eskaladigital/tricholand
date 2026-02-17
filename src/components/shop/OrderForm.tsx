@@ -411,6 +411,12 @@ export function OrderForm({ locale }: OrderFormProps) {
                 <p><span className="text-marron-claro">{t.countryLabel}</span> {customer.country}</p>
                 {customer.vat_id && <p><span className="text-marron-claro">{t.vatIdLabel}</span> {customer.vat_id}</p>}
               </div>
+
+              {/* Aviso B2B — condiciones profesionales (justo antes de enviar) */}
+              <div className="mt-6 p-4 bg-amber-50 border-2 border-amber-400">
+                <h3 className="font-bold text-sm uppercase text-amber-900 mb-2">⚠️ {shopT.professionalOnlyTitle}</h3>
+                <p className="text-xs text-amber-900/90 leading-relaxed">{shopT.professionalOnlyNotice}</p>
+              </div>
             </div>
 
             {error && (
@@ -484,6 +490,10 @@ export function OrderForm({ locale }: OrderFormProps) {
           <p className="text-xs text-marron-claro mt-3">{t.pricesExclVat} · {t.shippingConfirmedInQuote}</p>
           <p className="text-xs text-verde-oscuro italic mt-1">{t.vatExemptionNote}</p>
           <p className="text-xs text-marron-claro mt-2">⏱️ {shopT.preparationTime}</p>
+          <div className="mt-3 p-3 bg-amber-50 border border-amber-400 rounded">
+            <p className="text-xs font-bold text-amber-900 mb-1">⚠️ {shopT.professionalOnlyTitle}</p>
+            <p className="text-[11px] text-amber-900/90 leading-relaxed">{shopT.professionalOnlyNotice}</p>
+          </div>
         </div>
       </aside>
     </div>

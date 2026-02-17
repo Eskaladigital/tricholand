@@ -232,6 +232,14 @@ ${tr.orderSubtotalNote}
 </tr>
 </table>
 
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+<tr>
+<td style="padding:16px;background-color:#fef3c7;border:2px solid #f59e0b;border-radius:4px;">
+<p style="margin:0;font-size:13px;line-height:1.6;color:#78350f;">⚠️ ${tr.orderProfessionalConditions}</p>
+</td>
+</tr>
+</table>
+
 <p style="margin:0 0 8px;font-size:14px;line-height:1.6;">
 ${tr.orderQuestion} <a href="mailto:info@tricholand.com" style="color:${COLORS.naranja};">info@tricholand.com</a>.
 </p>

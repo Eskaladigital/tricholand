@@ -75,7 +75,7 @@ export const fr: Dictionary = {
     totalPlants: 'plantes',
     preparationTime: '7 jours de préparation de commande + délai de livraison',
     professionalOnlyTitle: 'Vente B2B exclusive — Professionnels uniquement',
-    professionalOnlyNotice: 'Nous vendons uniquement aux professionnels. Les prix affichés ne sont pas pour les particuliers. Après avoir passé commande, vous devrez justifier votre statut de professionnel par un Certificat d\'activités économiques (AEAT espagnol) ou un numéro de TVA vérifiable dans VIES. Seulement alors les conditions et prix seront validés. Sans justification, vous ne pourrez pas refuser la commande ; Tricholand pourra ajuster les prix au détail selon son appréciation.',
+    professionalOnlyNotice: 'Nous vendons uniquement aux professionnels. Les prix affichés ne sont pas pour les particuliers. Après avoir passé commande, vous devrez justifier votre statut de professionnel par un Certificat d\'activités économiques (AEAT espagnol) ou un numéro de TVA vérifiable dans VIES. Seulement alors les conditions et prix seront validés. Sans justification, vous ne pourrez pas refuser la commande ; Tricholand pourra l\'annuler ou ajuster les prix au détail selon son appréciation.',
   },
   services: {
     title: 'Services',

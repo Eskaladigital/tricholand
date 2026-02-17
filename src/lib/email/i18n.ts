@@ -69,6 +69,7 @@ interface EmailTranslations {
   orderQuestion: string
   orderThanks: string
   subtotalEstimated: string
+  orderProfessionalConditions: string
 
   // contactClientEmail
   contactReceived: string
@@ -142,6 +143,7 @@ const translations: Record<EmailLocale, EmailTranslations> = {
     orderQuestion: 'Si tienes alguna pregunta, no dudes en contactarnos en',
     orderThanks: 'Gracias por confiar en Tricholand.',
     subtotalEstimated: 'Base imponible (sin IVA)',
+    orderProfessionalConditions: 'Venta exclusiva B2B — Solo profesionales. Los precios indicados son para profesionales. Para validar tu pedido debes acreditar tu condici&oacute;n de profesional enviando por email a info@tricholand.com el Certificado de actividades econ&oacute;micas (AEAT) o NIF-IVA verificable en VIES. Solo entonces se validar&aacute;n t&eacute;rminos y precios. Si no acreditas ser profesional, no podr&aacute;s rechazar el pedido; Tricholand podr&aacute; cancelarlo o ajustar los precios a venta a particular seg&uacute;n considere.',
     contactReceived: 'Consulta recibida',
     contactHello: 'Hola',
     contactConfirmation: 'Hemos recibido tu consulta correctamente. Nuestro equipo la revisar&aacute; y te responder&aacute; a <strong>{email}</strong> lo antes posible.',
@@ -206,6 +208,7 @@ const translations: Record<EmailLocale, EmailTranslations> = {
     orderQuestion: 'If you have any questions, feel free to contact us at',
     orderThanks: 'Thank you for trusting Tricholand.',
     subtotalEstimated: 'Subtotal (excl. VAT)',
+    orderProfessionalConditions: 'B2B exclusive — Professionals only. The prices shown are for professionals. To validate your order you must prove your professional status by emailing info@tricholand.com your Certificate of economic activities (Spanish AEAT) or a VAT number verifiable in VIES. Only then will terms and prices be validated. If you cannot prove you are a professional, you may not reject the order; Tricholand may cancel it or adjust prices to retail at its discretion.',
     contactReceived: 'Inquiry received',
     contactHello: 'Hello',
     contactConfirmation: 'We have received your inquiry successfully. Our team will review it and reply to <strong>{email}</strong> as soon as possible.',
@@ -270,6 +273,7 @@ const translations: Record<EmailLocale, EmailTranslations> = {
     orderQuestion: 'Bei Fragen k&ouml;nnen Sie uns gerne kontaktieren unter',
     orderThanks: 'Vielen Dank f&uuml;r Ihr Vertrauen in Tricholand.',
     subtotalEstimated: 'Zwischensumme (ohne MwSt.)',
+    orderProfessionalConditions: 'B2B exklusiv — Nur f&uuml;r Fachleute. Die angezeigten Preise gelten f&uuml;r Fachleute. Zur Validierung Ihrer Bestellung m&uuml;ssen Sie Ihren Fachleute-Status per E-Mail an info@tricholand.com nachweisen: Zertifikat &uuml;ber wirtschaftliche T&auml;tigkeit (spanische AEAT) oder in VIES verifizierbare USt-IdNr. Erst dann werden Bedingungen und Preise best&auml;tigt. Ohne Nachweis k&ouml;nnen Sie die Bestellung nicht ablehnen; Tricholand kann sie stornieren oder die Preise auf Endverbraucherpreise anpassen.',
     contactReceived: 'Anfrage eingegangen',
     contactHello: 'Hallo',
     contactConfirmation: 'Wir haben Ihre Anfrage erfolgreich erhalten. Unser Team wird sie pr&uuml;fen und so schnell wie m&ouml;glich an <strong>{email}</strong> antworten.',
@@ -334,6 +338,7 @@ const translations: Record<EmailLocale, EmailTranslations> = {
     orderQuestion: 'Si vous avez des questions, n\'h&eacute;sitez pas &agrave; nous contacter &agrave;',
     orderThanks: 'Merci de votre confiance envers Tricholand.',
     subtotalEstimated: 'Sous-total (HT)',
+    orderProfessionalConditions: 'Vente B2B exclusive — Professionnels uniquement. Les prix indiqu&eacute;s sont pour les professionnels. Pour valider votre commande, vous devez justifier votre statut de professionnel en envoyant par email &agrave; info@tricholand.com le Certificat d\'activit&eacute;s &eacute;conomiques (AEAT espagnol) ou un num&eacute;ro de TVA v&eacute;rifiable dans VIES. Seulement alors les conditions et prix seront valid&eacute;s. Sans justification, vous ne pourrez pas refuser la commande ; Tricholand pourra l\'annuler ou ajuster les prix au d&eacute;tail.',
     contactReceived: 'Demande re&ccedil;ue',
     contactHello: 'Bonjour',
     contactConfirmation: 'Nous avons bien re&ccedil;u votre demande. Notre &eacute;quipe l\'examinera et vous r&eacute;pondra &agrave; <strong>{email}</strong> dans les meilleurs d&eacute;lais.',
@@ -398,6 +403,7 @@ const translations: Record<EmailLocale, EmailTranslations> = {
     orderQuestion: 'Se hai domande, non esitare a contattarci a',
     orderThanks: 'Grazie per la fiducia in Tricholand.',
     subtotalEstimated: 'Subtotale (IVA esclusa)',
+    orderProfessionalConditions: 'Vendita B2B esclusiva — Solo professionisti. I prezzi indicati sono per professionisti. Per convalidare il tuo ordine devi attestare la tua condizione di professionista inviando per email a info@tricholand.com il Certificato di attivit&agrave; economiche (AEAT spagnolo) o Partita IVA verificabile in VIES. Solo allora saranno convalidati termini e prezzi. Senza attestazione non potrai rifiutare l\'ordine; Tricholand potr&agrave; annullarlo o adeguare i prezzi al dettaglio.',
     contactReceived: 'Richiesta ricevuta',
     contactHello: 'Ciao',
     contactConfirmation: 'Abbiamo ricevuto correttamente la tua richiesta. Il nostro team la esaminer&agrave; e ti risponder&agrave; a <strong>{email}</strong> il prima possibile.',
@@ -462,6 +468,7 @@ const translations: Record<EmailLocale, EmailTranslations> = {
     orderQuestion: 'Als u vragen heeft, neem gerust contact met ons op via',
     orderThanks: 'Bedankt voor uw vertrouwen in Tricholand.',
     subtotalEstimated: 'Subtotaal (excl. btw)',
+    orderProfessionalConditions: 'B2B exclusief — Alleen professionals. De getoonde prijzen zijn voor professionals. Om uw bestelling te valideren moet u uw professionele status aantonen door te e-mailen naar info@tricholand.com het Certificaat van economische activiteiten (Spaanse AEAT) of een btw-nummer verifieerbaar in VIES. Pas dan worden voorwaarden en prijzen gevalideerd. Zonder bewijs kunt u de bestelling niet weigeren; Tricholand kan deze annuleren of de prijzen aanpassen aan consumentenprijzen.',
     contactReceived: 'Aanvraag ontvangen',
     contactHello: 'Hallo',
     contactConfirmation: 'We hebben uw aanvraag succesvol ontvangen. Ons team zal deze bekijken en zo snel mogelijk reageren naar <strong>{email}</strong>.',
@@ -526,6 +533,7 @@ const translations: Record<EmailLocale, EmailTranslations> = {
     orderQuestion: 'Se tiver alguma pergunta, n&atilde;o hesite em contactar-nos em',
     orderThanks: 'Obrigado pela confian&ccedil;a na Tricholand.',
     subtotalEstimated: 'Subtotal (sem IVA)',
+    orderProfessionalConditions: 'Venda B2B exclusiva — Apenas profissionais. Os pre&ccedil;os indicados s&atilde;o para profissionais. Para validar o seu pedido deve comprovar a sua condi&ccedil;&atilde;o de profissional enviando por email para info@tricholand.com o Certificado de atividades econ&oacute;micas (AEAT espanhol) ou NIF-IVA verific&aacute;vel no VIES. S&oacute; ent&atilde;o ser&atilde;o validados os termos e pre&ccedil;os. Sem comprova&ccedil;&atilde;o n&atilde;o poder&aacute; rejeitar o pedido; a Tricholand poder&aacute; cancel&aacute;-lo ou ajustar os pre&ccedil;os a venda a particular.',
     contactReceived: 'Consulta recebida',
     contactHello: 'Ol&aacute;',
     contactConfirmation: 'Recebemos a sua consulta com sucesso. A nossa equipa ir&aacute; revis&aacute;-la e responder&aacute; para <strong>{email}</strong> o mais breve poss&iacute;vel.',
