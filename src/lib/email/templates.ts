@@ -240,6 +240,27 @@ ${tr.orderSubtotalNote}
 </tr>
 </table>
 
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+<tr>
+<td style="padding:16px;background-color:${COLORS.crudo};border:1px solid ${COLORS.linea};">
+<p style="margin:0 0 12px;font-size:13px;font-weight:bold;color:${COLORS.marron};">${tr.orderAddMoreVarietiesTitle}</p>
+<p style="margin:0 0 16px;font-size:13px;line-height:1.6;color:${COLORS.marronClaro};">${tr.orderAddMoreVarieties}</p>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td style="padding-right:12px;vertical-align:top;">
+<img src="https://www.tricholand.com/images/varieties/Trichocereus_Bridgessi_1.webp" alt="Trichocereus Bridgesii" width="140" height="105" style="display:block;max-width:140px;height:auto;border:1px solid ${COLORS.linea};" />
+<p style="margin:6px 0 0;font-size:11px;font-weight:bold;text-align:center;color:${COLORS.marron};">${tr.orderBridgesii}</p>
+</td>
+<td style="vertical-align:top;">
+<img src="https://www.tricholand.com/images/varieties/Trichocereus_terscheckii_1.webp" alt="Trichocereus Terscheckii" width="140" height="105" style="display:block;max-width:140px;height:auto;border:1px solid ${COLORS.linea};" />
+<p style="margin:6px 0 0;font-size:11px;font-weight:bold;text-align:center;color:${COLORS.marron};">${tr.orderTerscheckii}</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+
 <p style="margin:0 0 8px;font-size:14px;line-height:1.6;">
 ${tr.orderQuestion} <a href="mailto:info@tricholand.com" style="color:${COLORS.naranja};">info@tricholand.com</a>.
 </p>
