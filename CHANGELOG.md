@@ -2,6 +2,20 @@
 
 Todos los cambios notables del proyecto Tricholand Web.
 
+## [1.2.5] - 2026-02
+
+### Corregido (SEO / Blog)
+
+- **Slugs del blog en 6 idiomas**: Los 564 artículos traducidos (94 posts × 6 idiomas) tenían títulos y slugs en español en lugar del idioma correspondiente (ej: `/de/blog/como-crear-un-vivero-casero...` en vez de `/de/blog/wie-man-eine-heimzucht...`). Re-traducidos todos los títulos, descripciones, slugs e image_alt con OpenAI
+- **Títulos con tags HTML**: Algunos títulos traducidos contenían `<h1>`, `<title>` dentro del texto; corregidos en la re-traducción
+
+### Añadido
+
+- **hreflang en sitemap para blog**: Las entradas del blog en `sitemap.xml` ahora incluyen `alternates` con hreflang apuntando a los slugs correctos de cada idioma. Nueva función `getAllBlogAlternates()` en `src/lib/blog.ts`
+- **Modo `--retranslate-all`** en `scripts/translate-blog-posts.mjs`: re-traduce título + descripción + slug de todos los posts existentes. Soporta `--dry-run`, `--locale XX`, `--full` (incluye contenido)
+
+---
+
 ## [1.2.4] - 2026-02
 
 ### Corregido (i18n)

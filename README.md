@@ -38,7 +38,8 @@ npm run dev
 - **Emails en idioma del cliente**: confirmación pedido, validación, pago confirmado, datos bancarios
 - **Página pública de pedido multiidioma**: `/pedido/[order_number]` — standalone, detecta el locale del pedido
 - **Sistema de traducciones** con Supabase + OpenAI
-- **SEO**: sitemap, robots, meta alternates por idioma
+- **SEO**: sitemap con hreflang (blog incluido), robots, meta alternates por idioma
+- **Blog multiidioma**: slugs traducidos por idioma (94 posts × 7 locales), fallback por `source_slug` para URLs antiguas
 - **Google Analytics** (GA4)
 - **Favicon** con logo sobre fondo blanco
 - **PWA** en panel administrator (instalable)
@@ -220,6 +221,11 @@ NEXT_PUBLIC_SITE_URL=https://www.tricholand.com
 | `npm run migrate:customers` | Migrar datos a tabla customers |
 
 **Scripts de blog (ejecutar con `node`):**
+- `node scripts/translate-blog-posts.mjs` — Traduce posts nuevos (ES → 6 idiomas)
+- `node scripts/translate-blog-posts.mjs --retranslate-all` — Re-traduce título + descripción + slug de TODOS los posts existentes
+- `node scripts/translate-blog-posts.mjs --retranslate-all --full` — Re-traduce TODO (incluye contenido)
+- `node scripts/translate-blog-posts.mjs --retranslate-all --dry-run` — Simular re-traducción sin escribir
+- `node scripts/translate-blog-posts.mjs --retranslate-all --locale de` — Re-traducir solo un idioma
 - `node scripts/migrate-blog-markdown-to-html.mjs` — Convierte contenido Markdown → HTML en blog_posts
 - `node scripts/ai-blog-perfect.mjs` — Limpia y optimiza HTML con OpenAI; `--translate` traduce a 6 idiomas
 - `node scripts/ai-blog-perfect.mjs --slug mi-articulo` — Procesar un artículo por slug
@@ -229,10 +235,14 @@ NEXT_PUBLIC_SITE_URL=https://www.tricholand.com
 
 ## Blog — Contenido e imágenes
 
+- **Slugs por idioma**: Cada artículo tiene un slug traducido por locale (tabla `blog_posts` con `UNIQUE(slug, locale)`). El `source_slug` vincula todas las traducciones del mismo artículo.
 - **Renderizado**: `renderBlogContent()` en `src/lib/blog-content.ts` convierte Markdown o HTML híbrido a HTML (público y admin).
 - **Fallback de imagen**: Las traducciones (EN, NL, FR, etc.) sin imagen usan la del artículo ES (`getPostBySlug` y `getPostsMeta`).
+- **Fallback de URL**: Si se accede con un slug antiguo (español) en un idioma no-ES, `getPostBySlug` busca por `source_slug` y la página redirige al slug correcto.
+- **hreflang**: `generateMetadata` genera `alternates.languages` con los slugs correctos de cada idioma. El sitemap también incluye hreflang para blog via `getAllBlogAlternates()`.
 - **Revalidación**: Páginas de blog con `revalidate = 10` (todos los idiomas).
 - **API de traducción**: `POST /api/blog/translate` con `source_slug` genera traducciones desde el artículo ES.
+- **Re-traducción masiva**: `node scripts/translate-blog-posts.mjs --retranslate-all` re-traduce títulos, descripciones y slugs de todos los posts existentes.
 
 ---
 
@@ -434,10 +444,13 @@ Configura las mismas variables de entorno en el panel de tu proveedor.
 
 ## SEO
 
-- **Sitemap**: `/sitemap.xml` (generado automáticamente)
-- **Robots**: `/robots.txt`
-- Meta alternates por idioma en todas las páginas
-- Incluye: home, variedades, tienda, blog, catálogo, contacto, etc.
+- **Sitemap**: `/sitemap.xml` (generado automáticamente con hreflang)
+  - Páginas estáticas: alternates por idioma vía `getAlternateUrls()`
+  - Blog: alternates con slugs traducidos por idioma vía `getAllBlogAlternates()`
+  - Productos y variedades: alternates por idioma
+- **Robots**: `/robots.txt` (permite todo excepto `/administrator/` y `/api/`)
+- **Meta alternates** en `<head>` de todas las páginas (via `generateMetadata`)
+- **Blog**: cada artículo tiene slug propio por idioma (ej: `/es/blog/guia-cultivo-trichocereus` → `/de/blog/leitfaden-anbau-trichocereus`). Fallback por `source_slug` para URLs antiguas con redirect automático
 
 ---
 

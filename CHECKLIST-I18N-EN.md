@@ -49,9 +49,21 @@ Revisión de contenido hardcodeado en español en páginas de otros idiomas. Cob
 
 ---
 
+### Correcciones aplicadas (2026-02, slugs blog)
+
+| Cambio | Detalle |
+|--------|---------|
+| 564 artículos del blog | Títulos, descripciones y slugs re-traducidos de español al idioma correcto en los 6 idiomas (EN, NL, FR, DE, IT, PT) |
+| Sitemap hreflang blog | Añadidos `alternates` con hreflang a las entradas del blog en `sitemap.xml` via `getAllBlogAlternates()` |
+| Script `--retranslate-all` | Nuevo modo en `translate-blog-posts.mjs` para re-traducir títulos y slugs masivamente |
+
+---
+
 ## Checklist para futuras revisiones
 
 1. **Componentes compartidos**: Verificar que reciben `locale` y `dict` correctos (ContactFormWizard, OrderForm, ShopGrid, BlogGrid, etc.).
 2. **Páginas estáticas**: Si se añaden nuevas páginas con contenido, traducir a los 7 idiomas.
 3. **Variedades**: `getVarietyForLocale` ya soporta traducciones; completar `VARIETY_TRANSLATIONS` para todos los slugs si falta alguno.
 4. **URLs internas**: Usar `getFullPath(locale, 'contact')` o `/${locale}/...` en lugar de rutas fijas.
+5. **Blog — nuevos artículos**: Al crear un artículo nuevo en español y traducirlo, verificar que el slug generado en cada idioma sea correcto (no mezcla de idiomas). Si hay problemas, ejecutar `node scripts/translate-blog-posts.mjs --retranslate-all --locale XX`.
+6. **Sitemap**: Las entradas del blog ahora incluyen hreflang. Si se añaden nuevas secciones dinámicas, añadir alternates equivalentes en `src/lib/sitemap-urls.ts`.
