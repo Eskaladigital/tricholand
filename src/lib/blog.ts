@@ -211,6 +211,21 @@ export async function getSlugsByLocaleForArticle(slug: string, locale: string): 
   return Object.fromEntries(all.map((r) => [r.locale, r.slug]))
 }
 
+/** Devuelve un mapa source_slug → { locale: slug } para generar hreflang en el sitemap */
+export async function getAllBlogAlternates(): Promise<Map<string, Record<string, string>>> {
+  const { data } = await supabase
+    .from('blog_posts')
+    .select('source_slug, locale, slug')
+    .eq('status', 'published')
+
+  const map = new Map<string, Record<string, string>>()
+  for (const row of data || []) {
+    if (!map.has(row.source_slug)) map.set(row.source_slug, {})
+    map.get(row.source_slug)![row.locale] = row.slug
+  }
+  return map
+}
+
 export async function getAllPostSlugs(locale: string): Promise<string[]> {
   const effectiveLocale = getEffectiveLocale(locale)
 

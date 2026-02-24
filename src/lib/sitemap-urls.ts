@@ -2,7 +2,7 @@ import { getAllVarietySlugs } from '@/content/varieties/es/data'
 import { getPath, getAlternateUrls } from '@/lib/i18n/paths'
 
 const EN_VARIETY_LANDING_SLUGS = ['trichocereus-pachanoi-for-sale-uk', 'trichocereus-pachanoi-for-sale-europe']
-import { getAllPostSlugs } from '@/lib/blog'
+import { getAllPostSlugs, getAllBlogAlternates } from '@/lib/blog'
 import { getActiveProducts } from '@/lib/actions/products'
 
 const BASE_URL = 'https://www.tricholand.com'
@@ -65,9 +65,19 @@ export async function getSitemapEntries() {
   const blogSlugsByLocale = Object.fromEntries(
     await Promise.all(LOCALES.map(async (l) => [l, await getAllPostSlugs(l)]))
   )
+  const blogAlternates = await getAllBlogAlternates()
   const products = await getActiveProducts()
 
   const entries: { url: string; lastModified: string; changeFrequency: 'weekly' | 'monthly'; priority: number; alternates?: { languages: Record<string, string> } }[] = []
+
+  // Índice reverso: { "en": { "some-slug": "source_slug" }, ... }
+  const blogSlugToSource: Record<string, Record<string, string>> = {}
+  for (const loc of LOCALES) blogSlugToSource[loc] = {}
+  for (const [sourceSlug, altMap] of blogAlternates.entries()) {
+    for (const [loc, s] of Object.entries(altMap)) {
+      blogSlugToSource[loc][s] = sourceSlug
+    }
+  }
 
   const homeAlternates: Record<string, string> = { 'x-default': `${BASE_URL}/es` }
   for (const loc of LOCALES) {
@@ -129,11 +139,21 @@ export async function getSitemapEntries() {
       }
     }
     for (const slug of blogSlugs) {
+      const sourceSlug = blogSlugToSource[locale]?.[slug]
+      let languages: Record<string, string> | undefined
+      if (sourceSlug) {
+        const altMap = blogAlternates.get(sourceSlug)!
+        languages = { 'x-default': `${BASE_URL}/es/blog/${altMap['es'] || slug}` }
+        for (const loc of LOCALES) {
+          if (altMap[loc]) languages[loc] = `${BASE_URL}/${loc}/blog/${altMap[loc]}`
+        }
+      }
       entries.push({
         url: `${BASE_URL}/${locale}/blog/${slug}`,
         lastModified: now,
         changeFrequency: 'monthly',
         priority: 0.5,
+        ...(languages && { alternates: { languages } }),
       })
     }
     for (const p of products) {

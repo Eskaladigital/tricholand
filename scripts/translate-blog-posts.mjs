@@ -8,6 +8,10 @@
  *   node scripts/translate-blog-posts.mjs --dry-run
  *   node scripts/translate-blog-posts.mjs --update-slugs (actualizar slugs de traducciones existentes)
  *   node scripts/translate-blog-posts.mjs --fix-slug   (corregir slug EN del post enfermedades fúngicas)
+ *   node scripts/translate-blog-posts.mjs --retranslate-all            (re-traduce título+descripción+slug de TODOS los posts existentes)
+ *   node scripts/translate-blog-posts.mjs --retranslate-all --dry-run  (muestra qué cambiaría sin escribir)
+ *   node scripts/translate-blog-posts.mjs --retranslate-all --locale de (solo alemán)
+ *   node scripts/translate-blog-posts.mjs --retranslate-all --full     (re-traduce TODO: título, descripción, contenido y slug)
  *
  * Requiere: OPENAI_API_KEY, NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
  */
@@ -153,7 +157,143 @@ RULES:
   return results.join('\n\n')
 }
 
+async function retranslateAll() {
+  const dryRun = process.argv.includes('--dry-run')
+  const fullMode = process.argv.includes('--full')
+  const localeArg = process.argv.includes('--locale') ? process.argv[process.argv.indexOf('--locale') + 1] : null
+  const targetLocales = localeArg && TARGET_LOCALES.includes(localeArg) ? [localeArg] : TARGET_LOCALES
+
+  console.log('\n🔄 RE-TRADUCCIÓN de artículos existentes (ES → ' + targetLocales.map((l) => l.toUpperCase()).join(', ') + ')')
+  console.log(`   Modo: ${fullMode ? 'COMPLETO (título + descripción + contenido + slug)' : 'TÍTULOS (título + descripción + slug)'}`)
+  if (dryRun) console.log('   ⚠️  DRY RUN — no se escribirá nada\n')
+  else console.log('')
+
+  const { data: postsEs, error: errEs } = await supabase
+    .from('blog_posts')
+    .select('slug, title, description, content, date, image, image_alt, tags, reading_time')
+    .eq('locale', 'es')
+    .eq('status', 'published')
+
+  if (errEs) {
+    console.error('❌ Error leyendo posts ES:', errEs.message)
+    process.exit(1)
+  }
+
+  if (!postsEs || postsEs.length === 0) {
+    console.log('   No hay artículos en español.')
+    return
+  }
+
+  console.log(`   📚 ${postsEs.length} artículos en español encontrados\n`)
+
+  let totalDone = 0
+  let totalSkipped = 0
+  let totalErrors = 0
+
+  for (const locale of targetLocales) {
+    const langName = LOCALE_NAMES[locale]
+    const tags = TAGS_BY_LOCALE[locale] ?? TAGS_BY_LOCALE.en
+
+    const { data: existingRows } = await supabase
+      .from('blog_posts')
+      .select('source_slug, slug, title, description')
+      .eq('locale', locale)
+
+    const existingBySource = new Map((existingRows || []).map((r) => [r.source_slug, r]))
+
+    const toRetranslate = postsEs.filter((p) => existingBySource.has(p.slug))
+
+    console.log(`\n${'─'.repeat(50)}`)
+    console.log(`📌 ${langName} (${locale}): ${toRetranslate.length} artículos a re-traducir`)
+
+    if (toRetranslate.length === 0) {
+      console.log('   ✅ No hay traducciones existentes para este idioma.')
+      continue
+    }
+
+    for (const postEs of toRetranslate) {
+      const existing = existingBySource.get(postEs.slug)
+      try {
+        console.log(`\n   🔄 [${locale}] ${postEs.slug}`)
+        console.log(`      Título ES: "${postEs.title.substring(0, 60)}..."`)
+        console.log(`      Título ${locale} actual: "${existing.title.substring(0, 60)}..."`)
+        console.log(`      Slug ${locale} actual: ${existing.slug}`)
+
+        if (dryRun) {
+          totalDone++
+          continue
+        }
+
+        const titleTr = await translateText(postEs.title, 'title', locale)
+        await new Promise((r) => setTimeout(r, 300))
+
+        const descriptionTr = await translateText(postEs.description || postEs.title, 'description', locale)
+        await new Promise((r) => setTimeout(r, 300))
+
+        const newSlug = SLUG_OVERRIDES[postEs.slug]?.[locale] ?? slugify(titleTr)
+
+        console.log(`      Título ${locale} nuevo: "${titleTr.substring(0, 60)}..."`)
+        console.log(`      Slug ${locale} nuevo: ${newSlug}`)
+
+        if (fullMode) {
+          const contentTr = await translateText(postEs.content, 'content', locale)
+          await new Promise((r) => setTimeout(r, 300))
+
+          const { error } = await supabase.from('blog_posts').upsert(
+            {
+              source_slug: postEs.slug,
+              slug: newSlug,
+              title: titleTr,
+              description: descriptionTr,
+              date: postEs.date,
+              image: postEs.image,
+              image_alt: titleTr,
+              tags,
+              reading_time: postEs.reading_time,
+              content: contentTr,
+              locale,
+              status: 'published',
+            },
+            { onConflict: 'source_slug,locale' }
+          )
+          if (error) throw error
+        } else {
+          const { error } = await supabase
+            .from('blog_posts')
+            .update({
+              title: titleTr,
+              description: descriptionTr,
+              slug: newSlug,
+              image_alt: titleTr,
+            })
+            .eq('source_slug', postEs.slug)
+            .eq('locale', locale)
+          if (error) throw error
+        }
+
+        totalDone++
+        console.log(`      ✅ Actualizado`)
+
+        await new Promise((r) => setTimeout(r, 600))
+      } catch (err) {
+        totalErrors++
+        console.error(`      ❌ Error: ${err.message}`)
+      }
+    }
+  }
+
+  console.log(`\n${'═'.repeat(50)}`)
+  console.log(`✅ Re-traducidos: ${totalDone}`)
+  if (totalSkipped) console.log(`⏭️  Omitidos: ${totalSkipped}`)
+  if (totalErrors) console.log(`❌ Errores: ${totalErrors}`)
+  console.log(`${'═'.repeat(50)}\n`)
+}
+
 async function main() {
+  if (process.argv.includes('--retranslate-all')) {
+    return retranslateAll()
+  }
+
   const fixSlug = process.argv.includes('--fix-slug')
   if (fixSlug) {
     const sourceSlug = 'guia-de-enfermedades-fungicas-en-cactus-como-prevenir-y-tratarlas'
