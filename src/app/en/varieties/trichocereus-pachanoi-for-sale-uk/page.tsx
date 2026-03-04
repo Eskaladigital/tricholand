@@ -136,10 +136,10 @@ export default function PachanoiForSaleUK() {
               Request a Quote →
             </Link>
             <Link
-              href={getFullPath(LOCALE, 'shop')}
+              href={getFullPath(LOCALE, 'varieties')}
               className="bg-blanco/10 backdrop-blur text-blanco border border-blanco/30 px-7 py-3.5 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-blanco/20 transition-colors"
             >
-              Browse Shop
+              View All Varieties
             </Link>
           </div>
         </div>
@@ -390,43 +390,50 @@ export default function PachanoiForSaleUK() {
         </div>
       </section>
 
-      {/* JSON-LD structured data */}
+      {/* JSON-LD: Organization + FAQPage */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Product',
-            name: 'Trichocereus Pachanoi (San Pedro Cactus)',
-            description:
-              'Wholesale Trichocereus Pachanoi plants from a specialist nursery in Spain. B2B only. EU Plant Passport included. Shipping to UK and Europe.',
-            brand: { '@type': 'Brand', name: 'Tricholand' },
-            image: `${BASE_URL}/images/varieties/Trichocereus_Pachanoi_1.webp`,
-            category: 'Plants > Cacti > Trichocereus',
-            offers: {
-              '@type': 'Offer',
-              priceCurrency: 'EUR',
-              availability: 'https://schema.org/InStock',
-              seller: {
-                '@type': 'Organization',
-                name: 'Tricholand',
-                url: BASE_URL,
-                address: {
-                  '@type': 'PostalAddress',
-                  addressLocality: 'Murcia',
-                  addressCountry: 'ES',
-                },
+          __html: JSON.stringify([
+            {
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'Tricholand',
+              url: BASE_URL,
+              logo: `${BASE_URL}/images/icons/logo_tricho_yellow_200_200.webp`,
+              description: 'Specialist Trichocereus producer nursery in Murcia, Spain. B2B wholesale for professionals across Europe and the UK.',
+              address: {
+                '@type': 'PostalAddress',
+                addressLocality: 'Murcia',
+                addressRegion: 'Murcia',
+                addressCountry: 'ES',
+              },
+              contactPoint: {
+                '@type': 'ContactPoint',
+                email: 'info@tricholand.com',
+                contactType: 'sales',
+                availableLanguage: ['English', 'Spanish'],
               },
               areaServed: [
                 { '@type': 'Country', name: 'United Kingdom' },
                 { '@type': 'Country', name: 'Spain' },
+                { '@type': 'Country', name: 'France' },
+                { '@type': 'Country', name: 'Germany' },
+                { '@type': 'Country', name: 'Netherlands' },
+                { '@type': 'Country', name: 'Italy' },
+                { '@type': 'Country', name: 'Portugal' },
               ],
-              eligibleRegion: {
-                '@type': 'GeoShape',
-                name: 'Europe',
-              },
             },
-          }),
+            {
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: FAQ.map((f) => ({
+                '@type': 'Question',
+                name: f.q,
+                acceptedAnswer: { '@type': 'Answer', text: f.a },
+              })),
+            },
+          ]),
         }}
       />
     </>
