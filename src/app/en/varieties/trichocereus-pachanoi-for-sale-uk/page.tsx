@@ -10,7 +10,7 @@ const SLUG = 'trichocereus-pachanoi-for-sale-uk'
 export const metadata: Metadata = {
   title: 'Trichocereus Pachanoi for Sale UK — Wholesale B2B | Tricholand',
   description:
-    'Buy Trichocereus Pachanoi (San Pedro cactus) wholesale in the UK. B2B specialist nursery in Spain, shipping across Europe with EU Plant Passport. Minimum order 200 units.',
+    'Buy Trichocereus Pachanoi (San Pedro cactus) wholesale in the UK. B2B specialist nursery in Spain, shipping across Europe with EU Plant Passport. Minimum order 750 units.',
   keywords: [
     'trichocereus pachanoi for sale uk',
     'san pedro cactus for sale uk',
@@ -54,8 +54,8 @@ const BENEFITS = [
   },
   {
     icon: '📦',
-    title: 'Minimum Order 200 Units',
-    desc: 'Our minimum order is 200 plants per variety — perfect for garden centres, nurseries, landscapers and specialist retailers.',
+    title: 'Minimum Order 750 Units',
+    desc: 'Our minimum order is 750 plants per variety, with additional increments of 150 units. Perfect for garden centres, nurseries, landscapers and specialist retailers.',
   },
   {
     icon: '💰',
@@ -81,7 +81,7 @@ const FAQ = [
   },
   {
     q: 'What is the minimum order quantity?',
-    a: 'Our minimum order is 200 plants per variety. For mixed orders combining different Trichocereus varieties (Pachanoi, Peruvianus, Bridgesii), we can arrange custom pallets.',
+    a: 'Our minimum order is 750 plants per variety (one full lot). After the initial order, you can add increments of 150 units. For mixed orders combining different Trichocereus varieties (Pachanoi, Peruvianus, Bridgesii), we can arrange custom pallets.',
   },
   {
     q: 'How long does shipping take to the UK?',
@@ -126,7 +126,7 @@ export default function PachanoiForSaleUK() {
           </h1>
           <p className="text-lg lg:text-xl text-blanco/85 mt-4 max-w-2xl">
             Specialist nursery-grown San Pedro cacti shipped directly from Spain to the UK.
-            EU Plant Passport included. Wholesale pricing from 200 units.
+            EU Plant Passport included. Wholesale pricing from 750 units.
           </p>
           <div className="flex flex-wrap gap-3 mt-8">
             <Link

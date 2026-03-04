@@ -10,7 +10,7 @@ const SLUG = 'trichocereus-pachanoi-venta-espana'
 export const metadata: Metadata = {
   title: 'Trichocereus Pachanoi en Venta España — Mayorista B2B | Tricholand',
   description:
-    'Comprar Trichocereus Pachanoi al por mayor en España, vivero productor B2B en Murcia, Pasaporte Fitosanitario UE, mínimo 200 unidades',
+    'Comprar Trichocereus Pachanoi al por mayor en España, vivero productor B2B en Murcia, Pasaporte Fitosanitario UE, mínimo 750 unidades',
   keywords: [
     'trichocereus pachanoi en venta',
     'san pedro cactus comprar españa',
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Trichocereus Pachanoi en Venta España — Mayorista B2B | Tricholand',
     description:
-      'Trichocereus Pachanoi al por mayor desde nuestro vivero en Murcia. Pasaporte Fitosanitario UE incluido. Envío nacional en 24-48h. Mínimo 200 unidades.',
+      'Trichocereus Pachanoi al por mayor desde nuestro vivero en Murcia. Pasaporte Fitosanitario UE incluido. Envío nacional en 24-48h. Mínimo 750 unidades.',
     images: ['/images/varieties/Trichocereus_Pachanoi_1.webp'],
     type: 'website',
     locale: 'es_ES',
@@ -54,8 +54,8 @@ const BENEFITS = [
   },
   {
     icon: '📦',
-    title: 'Mínimo 200 unidades',
-    desc: 'Pedido mínimo de 200 plantas por variedad — ideal para garden centers, viveros, paisajistas y distribuidores profesionales.',
+    title: 'Mínimo 750 unidades',
+    desc: 'Pedido mínimo de 750 plantas por variedad, con incrementos posteriores de 150 unidades. Ideal para garden centers, viveros, paisajistas y distribuidores profesionales.',
   },
   {
     icon: '💰',
@@ -81,7 +81,7 @@ const FAQ = [
   },
   {
     q: '¿Cuál es el pedido mínimo?',
-    a: 'El pedido mínimo es de 200 plantas por variedad. En pedidos mixtos con varias variedades (Pachanoi, Peruvianus, Bridgesii) podemos preparar paletas combinadas según sus necesidades.',
+    a: 'El pedido mínimo es de 750 plantas por variedad (un lote completo). Después puede añadir incrementos de 150 unidades. En pedidos mixtos con varias variedades (Pachanoi, Peruvianus, Bridgesii) podemos preparar paletas combinadas según sus necesidades.',
   },
   {
     q: '¿Cuánto tarda el envío dentro de España?',
@@ -126,7 +126,7 @@ export default function PachanoiVentaEspana() {
           </h1>
           <p className="text-lg lg:text-xl text-blanco/85 mt-4 max-w-2xl">
             San Pedro desde un vivero productor en Murcia. Envío nacional en 24-48h. Pasaporte Fitosanitario UE incluido.
-            Precios de mayorista a partir de 200 unidades.
+            Precios de mayorista a partir de 750 unidades.
           </p>
           <div className="flex flex-wrap gap-3 mt-8">
             <Link

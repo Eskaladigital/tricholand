@@ -10,7 +10,7 @@ const SLUG = 'trichocereus-pachanoi-te-koop-nederland'
 export const metadata: Metadata = {
   title: 'Trichocereus Pachanoi te Koop Nederland — Groothandel B2B | Tricholand',
   description:
-    'Trichocereus Pachanoi (San Pedro cactus) groothandel in Nederland. B2B-kwekerij in Spanje, levering heel Europa met EU Plantenpaspoort. Minimum order 200 stuks.',
+    'Trichocereus Pachanoi (San Pedro cactus) groothandel in Nederland. B2B-kwekerij in Spanje, levering heel Europa met EU Plantenpaspoort. Minimum order 750 stuks.',
   keywords: [
     'trichocereus pachanoi te koop',
     'san pedro cactus kopen nederland',
@@ -54,8 +54,8 @@ const BENEFITS = [
   },
   {
     icon: '📦',
-    title: 'Min 200 stuks',
-    desc: 'Onze minimum order is 200 planten per variëteit — ideaal voor tuincentra, kwekerijen, hoveniers en gespecialiseerde retailers.',
+    title: 'Min 750 stuks',
+    desc: 'Onze minimum order is 750 planten per variëteit, daarna in stappen van 150 stuks. Ideaal voor tuincentra, kwekerijen, hoveniers en gespecialiseerde retailers.',
   },
   {
     icon: '💰',
@@ -81,7 +81,7 @@ const FAQ = [
   },
   {
     q: 'Wat is de minimum orderhoeveelheid?',
-    a: 'Onze minimum order is 200 planten per variëteit. Bij gemengde orders met verschillende Trichocereus-variëteiten (Pachanoi, Peruvianus, Bridgesii) kunnen we aangepaste pallets samenstellen.',
+    a: 'Onze minimum order is 750 planten per variëteit (één volledig lot). Daarna kunt u bijbestellen in stappen van 150 stuks. Bij gemengde orders met verschillende Trichocereus-variëteiten (Pachanoi, Peruvianus, Bridgesii) kunnen we aangepaste pallets samenstellen.',
   },
   {
     q: 'Hoe lang duurt de levering naar Nederland?',
@@ -126,7 +126,7 @@ export default function PachanoiTeKoopNederland() {
           </h1>
           <p className="text-lg lg:text-xl text-blanco/85 mt-4 max-w-2xl">
             San Pedro-cactussen van een gespecialiseerde kwekerij, direct geleverd vanuit Spanje naar Nederland.
-            EU Plantenpaspoort inbegrepen. Groothandelsprijzen vanaf 200 stuks.
+            EU Plantenpaspoort inbegrepen. Groothandelsprijzen vanaf 750 stuks.
           </p>
           <div className="flex flex-wrap gap-3 mt-8">
             <Link

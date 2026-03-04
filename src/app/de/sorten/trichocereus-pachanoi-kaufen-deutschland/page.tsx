@@ -10,7 +10,7 @@ const SLUG = 'trichocereus-pachanoi-kaufen-deutschland'
 export const metadata: Metadata = {
   title: 'Trichocereus Pachanoi kaufen Deutschland — Großhandel B2B | Tricholand',
   description:
-    'Trichocereus Pachanoi Großhandel kaufen Deutschland, B2B Gärtnerei Spanien, EU-Pflanzenpass, ab 200 Stück',
+    'Trichocereus Pachanoi Großhandel kaufen Deutschland, B2B Gärtnerei Spanien, EU-Pflanzenpass, ab 750 Stück',
   keywords: [
     'trichocereus pachanoi kaufen',
     'san pedro kaktus kaufen deutschland',
@@ -54,8 +54,8 @@ const BENEFITS = [
   },
   {
     icon: '📦',
-    title: 'Min 200 Stück',
-    desc: 'Unsere Mindestbestellmenge beträgt 200 Pflanzen pro Sorte — ideal für Gartencenter, Gärtnereien, Landschaftsarchitekten und Fachhändler.',
+    title: 'Min 750 Stück',
+    desc: 'Unsere Mindestbestellmenge beträgt 750 Pflanzen pro Sorte, danach in Schritten von 150 Stück. Ideal für Gartencenter, Gärtnereien, Landschaftsarchitekten und Fachhändler.',
   },
   {
     icon: '💰',
@@ -81,7 +81,7 @@ const FAQ = [
   },
   {
     q: 'Wie hoch ist die Mindestbestellmenge?',
-    a: 'Unsere Mindestbestellmenge beträgt 200 Pflanzen pro Sorte. Bei gemischten Bestellungen mit verschiedenen Trichocereus-Sorten (Pachanoi, Peruvianus, Bridgesii) können wir individuelle Paletten zusammenstellen.',
+    a: 'Unsere Mindestbestellmenge beträgt 750 Pflanzen pro Sorte (ein komplettes Los). Danach können Sie in Schritten von 150 Stück nachbestellen. Bei gemischten Bestellungen mit verschiedenen Trichocereus-Sorten (Pachanoi, Peruvianus, Bridgesii) können wir individuelle Paletten zusammenstellen.',
   },
   {
     q: 'Wie lange dauert die Lieferung nach Deutschland?',
@@ -126,7 +126,7 @@ export default function PachanoiKaufenDeutschland() {
           </h1>
           <p className="text-lg lg:text-xl text-blanco/85 mt-4 max-w-2xl">
             San Pedro-Kakteen von einer spezialisierten Gärtnerei, direkt aus Spanien nach Deutschland geliefert.
-            EU-Pflanzenpass inklusive. Großhandelspreise ab 200 Stück.
+            EU-Pflanzenpass inklusive. Großhandelspreise ab 750 Stück.
           </p>
           <div className="flex flex-wrap gap-3 mt-8">
             <Link

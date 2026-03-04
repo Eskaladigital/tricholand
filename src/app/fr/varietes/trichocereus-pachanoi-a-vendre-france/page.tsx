@@ -10,7 +10,7 @@ const SLUG = 'trichocereus-pachanoi-a-vendre-france'
 export const metadata: Metadata = {
   title: 'Trichocereus Pachanoi à Vendre France — Grossiste B2B | Tricholand',
   description:
-    'Achetez du Trichocereus Pachanoi (cactus San Pedro) en gros en France. Pépinière B2B en Espagne, livraison France avec Passeport Phytosanitaire UE. Commande minimum 200 unités.',
+    'Achetez du Trichocereus Pachanoi (cactus San Pedro) en gros en France. Pépinière B2B en Espagne, livraison France avec Passeport Phytosanitaire UE. Commande minimum 750 unités.',
   keywords: [
     'trichocereus pachanoi à vendre',
     'san pedro cactus france',
@@ -54,8 +54,8 @@ const BENEFITS = [
   },
   {
     icon: '📦',
-    title: 'Minimum 200 unités',
-    desc: 'Commande minimum de 200 plants par variété — idéal pour jardineries, pépinières, paysagistes et revendeurs spécialisés.',
+    title: 'Minimum 750 unités',
+    desc: 'Commande minimum de 750 plants par variété, puis par incréments de 150 unités. Idéal pour jardineries, pépinières, paysagistes et revendeurs spécialisés.',
   },
   {
     icon: '💰',
@@ -81,7 +81,7 @@ const FAQ = [
   },
   {
     q: 'Quelle est la quantité minimum de commande ?',
-    a: 'Notre minimum est de 200 plants par variété. Pour les commandes mixtes combinant différentes variétés de Trichocereus (Pachanoi, Peruvianus, Bridgesii), nous pouvons organiser des palettes sur mesure.',
+    a: 'Notre minimum est de 750 plants par variété (un lot complet). Vous pouvez ensuite ajouter des incréments de 150 unités. Pour les commandes mixtes combinant différentes variétés de Trichocereus (Pachanoi, Peruvianus, Bridgesii), nous pouvons organiser des palettes sur mesure.',
   },
   {
     q: 'Délai de livraison vers la France ?',
@@ -126,7 +126,7 @@ export default function PachanoiAVendreFrance() {
           </h1>
           <p className="text-lg lg:text-xl text-blanco/85 mt-4 max-w-2xl">
             Cactus San Pedro de pépinière spécialisée, expédiés directement d&apos;Espagne vers la France.
-            Passeport Phytosanitaire UE inclus. Tarifs grossiste à partir de 200 unités.
+            Passeport Phytosanitaire UE inclus. Tarifs grossiste à partir de 750 unités.
           </p>
           <div className="flex flex-wrap gap-3 mt-8">
             <Link

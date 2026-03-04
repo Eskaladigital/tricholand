@@ -10,7 +10,7 @@ const SLUG = 'trichocereus-pachanoi-vendita-italia'
 export const metadata: Metadata = {
   title: 'Trichocereus Pachanoi in Vendita Italia — Ingrosso B2B | Tricholand',
   description:
-    'Trichocereus Pachanoi all\'ingrosso in Italia, vivaio B2B in Spagna, Passaporto Fitosanitario UE, minimo 200 unità. Consegna diretta in tutta Italia.',
+    'Trichocereus Pachanoi all\'ingrosso in Italia, vivaio B2B in Spagna, Passaporto Fitosanitario UE, minimo 750 unità. Consegna diretta in tutta Italia.',
   keywords: [
     'trichocereus pachanoi vendita',
     'san pedro cactus italia',
@@ -54,8 +54,8 @@ const BENEFITS = [
   },
   {
     icon: '📦',
-    title: 'Min 200 unità',
-    desc: 'L\'ordine minimo è di 200 piante per varietà — ideale per garden center, vivai, paesaggisti e rivenditori specializzati.',
+    title: 'Min 750 unità',
+    desc: 'L\'ordine minimo è di 750 piante per varietà, con incrementi successivi di 150 unità. Ideale per garden center, vivai, paesaggisti e rivenditori specializzati.',
   },
   {
     icon: '💰',
@@ -81,7 +81,7 @@ const FAQ = [
   },
   {
     q: 'Qual è l\'ordine minimo?',
-    a: 'L\'ordine minimo è di 200 piante per varietà. Per ordini misti con diverse varietà di Trichocereus (Pachanoi, Peruvianus, Bridgesii) possiamo preparare pallet personalizzati.',
+    a: 'L\'ordine minimo è di 750 piante per varietà (un lotto completo). Successivamente è possibile aggiungere incrementi di 150 unità. Per ordini misti con diverse varietà di Trichocereus (Pachanoi, Peruvianus, Bridgesii) possiamo preparare pallet personalizzati.',
   },
   {
     q: 'Quanto tempo richiede la consegna in Italia?',
@@ -126,7 +126,7 @@ export default function PachanoiVenditaItalia() {
           </h1>
           <p className="text-lg lg:text-xl text-blanco/85 mt-4 max-w-2xl">
             Cactus San Pedro da vivaio specializzato, consegna diretta dalla Spagna all&apos;Italia.
-            Passaporto Fitosanitario UE incluso. Prezzi da ingrosso da 200 unità.
+            Passaporto Fitosanitario UE incluso. Prezzi da ingrosso da 750 unità.
           </p>
           <div className="flex flex-wrap gap-3 mt-8">
             <Link

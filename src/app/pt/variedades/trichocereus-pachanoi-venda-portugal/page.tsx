@@ -10,7 +10,7 @@ const SLUG = 'trichocereus-pachanoi-venda-portugal'
 export const metadata: Metadata = {
   title: 'Trichocereus Pachanoi à Venda Portugal — Grossista B2B | Tricholand',
   description:
-    'Comprar Trichocereus Pachanoi por grosso em Portugal, viveiro B2B em Espanha, Passaporte Fitossanitário UE, mínimo 200 unidades',
+    'Comprar Trichocereus Pachanoi por grosso em Portugal, viveiro B2B em Espanha, Passaporte Fitossanitário UE, mínimo 750 unidades',
   keywords: [
     'trichocereus pachanoi à venda',
     'san pedro cactus portugal',
@@ -54,8 +54,8 @@ const BENEFITS = [
   },
   {
     icon: '📦',
-    title: 'Mín. 200 unidades',
-    desc: 'Encomenda mínima de 200 plantas por variedade — ideal para centros de jardinagem, viveiros, paisagistas e retalhistas especializados.',
+    title: 'Mín. 750 unidades',
+    desc: 'Encomenda mínima de 750 plantas por variedade, depois em incrementos de 150 unidades. Ideal para centros de jardinagem, viveiros, paisagistas e retalhistas especializados.',
   },
   {
     icon: '💰',
@@ -81,7 +81,7 @@ const FAQ = [
   },
   {
     q: 'Qual é a quantidade mínima de encomenda?',
-    a: 'O nosso mínimo é de 200 plantas por variedade. Para encomendas mistas com diferentes variedades de Trichocereus (Pachanoi, Peruvianus, Bridgesii), podemos preparar paletes à medida.',
+    a: 'O nosso mínimo é de 750 plantas por variedade (um lote completo). Depois pode acrescentar incrementos de 150 unidades. Para encomendas mistas com diferentes variedades de Trichocereus (Pachanoi, Peruvianus, Bridgesii), podemos preparar paletes à medida.',
   },
   {
     q: 'Quanto tempo demora a entrega a Portugal?',
@@ -126,7 +126,7 @@ export default function PachanoiVendaPortugal() {
           </h1>
           <p className="text-lg lg:text-xl text-blanco/85 mt-4 max-w-2xl">
             Cactos San Pedro de viveiro especializado, expedidos diretamente de Espanha para Portugal.
-            Passaporte Fitossanitário UE incluído. Preços grossista a partir de 200 unidades.
+            Passaporte Fitossanitário UE incluído. Preços grossista a partir de 750 unidades.
           </p>
           <div className="flex flex-wrap gap-3 mt-8">
             <Link

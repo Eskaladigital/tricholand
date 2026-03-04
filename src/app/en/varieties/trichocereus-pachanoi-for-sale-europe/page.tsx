@@ -10,7 +10,7 @@ const SLUG = 'trichocereus-pachanoi-for-sale-europe'
 export const metadata: Metadata = {
   title: 'Trichocereus Pachanoi for Sale Europe — Wholesale B2B | Tricholand',
   description:
-    'Buy Trichocereus Pachanoi (San Pedro cactus) wholesale in Europe. B2B nursery in Spain shipping to EU-27 & UK with EU Plant Passport included. Minimum order 200 units.',
+    'Buy Trichocereus Pachanoi (San Pedro cactus) wholesale in Europe. B2B nursery in Spain shipping to EU-27 & UK with EU Plant Passport included. Minimum order 750 units.',
   keywords: [
     'trichocereus pachanoi for sale europe',
     'san pedro cactus wholesale europe',
@@ -55,8 +55,8 @@ const BENEFITS = [
   },
   {
     icon: '📦',
-    title: 'Minimum Order 200 Units',
-    desc: 'Start with 200 plants per variety — ideal for garden centres, nurseries, landscapers, wholesalers and specialist retailers.',
+    title: 'Minimum Order 750 Units',
+    desc: 'Start with 750 plants per variety, with additional increments of 150 units. Ideal for garden centres, nurseries, landscapers, wholesalers and specialist retailers.',
   },
   {
     icon: '💰',
@@ -101,7 +101,7 @@ const FAQ = [
   },
   {
     q: 'What is the minimum order quantity?',
-    a: 'Our minimum order is 200 plants per variety. You can combine different Trichocereus varieties (Pachanoi, Peruvianus, Bridgesii, Terscheckii) in a single shipment to reach the minimum.',
+    a: 'Our minimum order is 750 plants per variety (one full lot). After the initial order, you can add increments of 150 units. You can combine different Trichocereus varieties (Pachanoi, Peruvianus, Bridgesii, Terscheckii) in a single shipment.',
   },
   {
     q: 'How long does shipping take within Europe?',
@@ -142,7 +142,7 @@ export default function PachanoiForSaleEurope() {
           </h1>
           <p className="text-lg lg:text-xl text-blanco/85 mt-4 max-w-2xl">
             Wholesale San Pedro cacti grown in our nursery in Murcia, Spain — shipped across
-            all of Europe with EU Plant Passport included. From 200 units.
+            all of Europe with EU Plant Passport included. From 750 units.
           </p>
           <div className="flex flex-wrap gap-3 mt-8">
             <Link
