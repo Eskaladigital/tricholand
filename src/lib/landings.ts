@@ -176,3 +176,50 @@ export async function getAllLandingAlternates(): Promise<Map<string, Record<stri
   }
   return map
 }
+
+/**
+ * Returns the slug for each locale for the language switcher.
+ * For landings: returns translated slugs from Supabase.
+ * For static varieties: returns the same slug for all locales.
+ */
+export async function getSlugsByLocaleForVarietyOrLanding(
+  slug: string,
+  locale: string
+): Promise<Record<string, string> | null> {
+  const effectiveLocale = getEffectiveLocale(locale)
+  const alternates = await getAllLandingAlternates()
+
+  // Find source_slug: by slug+locale in alternates, or by slug in DB (any locale)
+  let sourceSlug: string | null = null
+  for (const [src, altMap] of alternates.entries()) {
+    if (altMap[effectiveLocale] === slug) {
+      sourceSlug = src
+      break
+    }
+  }
+  if (!sourceSlug) {
+    const { data: row } = await supabase
+      .from('landing_pages')
+      .select('source_slug')
+      .eq('slug', slug)
+      .eq('status', 'published')
+      .limit(1)
+      .single()
+    sourceSlug = row?.source_slug ?? null
+  }
+
+  if (sourceSlug && alternates.has(sourceSlug)) {
+    return alternates.get(sourceSlug)!
+  }
+
+  // Not a landing — treat as static variety (same slug in all locales)
+  const { getAllVarietySlugs } = await import('@/content/varieties/es/data')
+  const varietySlugs = getAllVarietySlugs()
+  if (!varietySlugs.includes(slug)) return null
+
+  const result: Record<string, string> = {}
+  for (const loc of LOCALES) {
+    result[loc] = slug
+  }
+  return result
+}

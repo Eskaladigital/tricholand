@@ -26,6 +26,7 @@ export function Header({ locale, dict }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [langDropdownOpen, setLangDropdownOpen] = useState(false)
   const [blogSlugsByLocale, setBlogSlugsByLocale] = useState<Record<string, string> | null>(null)
+  const [varietySlugsByLocale, setVarietySlugsByLocale] = useState<Record<string, string> | null>(null)
   const pathname = usePathname()
 
   // Obtener ruta sin locale para construir enlaces de idioma
@@ -34,8 +35,9 @@ export function Header({ locale, dict }: HeaderProps) {
     ? '/' + pathSegments.slice(1).join('/')
     : ''
 
-  // En páginas de blog, obtener el slug correcto para cada idioma (cada idioma tiene su propio slug)
+  const VARIETY_PATH_SEGMENTS = ['varieties', 'variedades', 'varietes', 'varieteiten', 'varieta', 'sorten']
   const isBlogPost = pathSegments[1] === 'blog' && pathSegments[2]
+  const isVarietyPage = pathSegments.length >= 3 && VARIETY_PATH_SEGMENTS.includes(pathSegments[1])
   const currentSlug = pathSegments[2]
 
   useEffect(() => {
@@ -49,12 +51,29 @@ export function Header({ locale, dict }: HeaderProps) {
     }
   }, [isBlogPost, currentSlug, locale])
 
+  useEffect(() => {
+    if (isVarietyPage && currentSlug && locale) {
+      fetch(`/api/variety-alternate-slugs?slug=${encodeURIComponent(currentSlug)}&locale=${locale}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then(setVarietySlugsByLocale)
+        .catch(() => setVarietySlugsByLocale(null))
+    } else {
+      setVarietySlugsByLocale(null)
+    }
+  }, [isVarietyPage, currentSlug, locale])
+
   const getHrefForLocale = (locCode: string) => {
     if (isBlogPost && blogSlugsByLocale?.[locCode]) {
       return `/${locCode}/blog/${blogSlugsByLocale[locCode]}`
     }
     if (isBlogPost && !blogSlugsByLocale?.[locCode]) {
       return `/${locCode}/blog`
+    }
+    if (isVarietyPage && varietySlugsByLocale?.[locCode]) {
+      return getFullPath(locCode, 'varieties', varietySlugsByLocale[locCode])
+    }
+    if (isVarietyPage && !varietySlugsByLocale?.[locCode]) {
+      return getFullPath(locCode, 'varieties')
     }
     if (pathWithoutLocale) {
       return getPathForLocaleSwitch(pathWithoutLocale, locale, locCode)
