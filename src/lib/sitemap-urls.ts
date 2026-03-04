@@ -1,7 +1,15 @@
 import { getAllVarietySlugs } from '@/content/varieties/es/data'
 import { getPath, getAlternateUrls } from '@/lib/i18n/paths'
 
-const EN_VARIETY_LANDING_SLUGS = ['trichocereus-pachanoi-for-sale-uk', 'trichocereus-pachanoi-for-sale-europe']
+const VARIETY_LANDING_SLUGS: Record<string, string[]> = {
+  en: ['trichocereus-pachanoi-for-sale-uk', 'trichocereus-pachanoi-for-sale-europe'],
+  fr: ['trichocereus-pachanoi-a-vendre-france'],
+  de: ['trichocereus-pachanoi-kaufen-deutschland'],
+  nl: ['trichocereus-pachanoi-te-koop-nederland'],
+  it: ['trichocereus-pachanoi-vendita-italia'],
+  pt: ['trichocereus-pachanoi-venda-portugal'],
+  es: ['trichocereus-pachanoi-venta-espana'],
+}
 import { getAllPostSlugs, getAllBlogAlternates } from '@/lib/blog'
 import { getActiveProducts } from '@/lib/actions/products'
 
@@ -43,10 +51,8 @@ export async function getSitemapUrls(): Promise<{ url: string; label?: string }[
     for (const slug of varietySlugs) {
       urls.push({ url: `${BASE_URL}/${locale}/${getPath(locale, 'varieties')}/${slug}` })
     }
-    if (locale === 'en') {
-      for (const slug of EN_VARIETY_LANDING_SLUGS) {
-        urls.push({ url: `${BASE_URL}/en/varieties/${slug}` })
-      }
+    for (const slug of VARIETY_LANDING_SLUGS[locale] || []) {
+      urls.push({ url: `${BASE_URL}/${locale}/${getPath(locale, 'varieties')}/${slug}` })
     }
     for (const slug of blogSlugs) {
       urls.push({ url: `${BASE_URL}/${locale}/blog/${slug}` })
@@ -127,16 +133,13 @@ export async function getSitemapEntries() {
         alternates: { languages: getAlternateUrls('varieties', slug) },
       })
     }
-    if (locale === 'en') {
-      for (const slug of EN_VARIETY_LANDING_SLUGS) {
-        entries.push({
-          url: `${BASE_URL}/en/varieties/${slug}`,
-          lastModified: now,
-          changeFrequency: 'monthly',
-          priority: 0.7,
-          alternates: { languages: getAlternateUrls('varieties', slug) },
-        })
-      }
+    for (const slug of VARIETY_LANDING_SLUGS[locale] || []) {
+      entries.push({
+        url: `${BASE_URL}/${locale}/${getPath(locale, 'varieties')}/${slug}`,
+        lastModified: now,
+        changeFrequency: 'monthly',
+        priority: 0.7,
+      })
     }
     for (const slug of blogSlugs) {
       const sourceSlug = blogSlugToSource[locale]?.[slug]
