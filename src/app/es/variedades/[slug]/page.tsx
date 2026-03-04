@@ -5,17 +5,40 @@ import { notFound } from 'next/navigation'
 import { getVarietyForLocale, getAllVarietySlugs } from '@/content/varieties/es/data'
 import { getFullPath, getAlternatesMetadata } from '@/lib/i18n/paths'
 import { getDictionary } from '@/lib/i18n'
+import { getLandingBySlug, getAllLandingSlugs } from '@/lib/landings'
+import { PachanoiLanding } from '@/components/landings/PachanoiLanding'
 
 const LOCALE = 'es'
 
+export const dynamicParams = true
+export const revalidate = 60
+
 export async function generateStaticParams() {
-  return getAllVarietySlugs().map((slug) => ({ slug }))
+  const varietySlugs = getAllVarietySlugs().map((slug) => ({ slug }))
+  const landingSlugs = (await getAllLandingSlugs(LOCALE)).map((slug) => ({ slug }))
+  return [...varietySlugs, ...landingSlugs]
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const variety = getVarietyForLocale(slug, LOCALE)
-  if (!variety) return { title: 'Variedad no encontrada' }
+  if (!variety) {
+    const landing = await getLandingBySlug(slug, LOCALE)
+    if (!landing) return { title: 'Variedad no encontrada' }
+    return {
+      title: landing.metaTitle,
+      description: landing.metaDescription,
+      keywords: landing.metaKeywords,
+      alternates: { canonical: `https://www.tricholand.com/${LOCALE}/variedades/${slug}` },
+      openGraph: {
+        title: landing.metaTitle,
+        description: landing.metaDescription,
+        images: [landing.config.heroImage],
+        type: 'website',
+        locale: landing.ogLocale,
+      },
+    }
+  }
 
   return {
     title: `${variety.name} — ${variety.commonName}`,
@@ -34,7 +57,11 @@ export default async function VarietyPage({ params }: { params: Promise<{ slug: 
   const variety = getVarietyForLocale(slug, LOCALE)
   const t = getDictionary(LOCALE)
 
-  if (!variety) notFound()
+  if (!variety) {
+    const landing = await getLandingBySlug(slug, LOCALE)
+    if (!landing) notFound()
+    return <PachanoiLanding locale={LOCALE} content={landing.content} config={landing.config} />
+  }
 
   const stockColors = {
     available: 'text-verde',

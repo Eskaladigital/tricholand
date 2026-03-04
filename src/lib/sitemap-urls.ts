@@ -1,15 +1,6 @@
 import { getAllVarietySlugs } from '@/content/varieties/es/data'
 import { getPath, getAlternateUrls } from '@/lib/i18n/paths'
-
-const VARIETY_LANDING_SLUGS: Record<string, string[]> = {
-  en: ['trichocereus-pachanoi-for-sale-uk', 'trichocereus-pachanoi-for-sale-europe'],
-  fr: ['trichocereus-pachanoi-a-vendre-france'],
-  de: ['trichocereus-pachanoi-kaufen-deutschland'],
-  nl: ['trichocereus-pachanoi-te-koop-nederland'],
-  it: ['trichocereus-pachanoi-vendita-italia'],
-  pt: ['trichocereus-pachanoi-venda-portugal'],
-  es: ['trichocereus-pachanoi-venta-espana'],
-}
+import { getAllLandingSlugs, getAllLandingAlternates } from '@/lib/landings'
 import { getAllPostSlugs, getAllBlogAlternates } from '@/lib/blog'
 import { getActiveProducts } from '@/lib/actions/products'
 
@@ -32,15 +23,17 @@ const STATIC_PATH_KEYS = [
 
 export async function getSitemapUrls(): Promise<{ url: string; label?: string }[]> {
   const varietySlugs = getAllVarietySlugs()
-  const blogSlugsByLocale = Object.fromEntries(
-    await Promise.all(LOCALES.map(async (l) => [l, await getAllPostSlugs(l)]))
-  )
-  const products = await getActiveProducts()
+  const [blogSlugsByLocale, landingSlugsByLocale, products] = await Promise.all([
+    Promise.all(LOCALES.map(async (l) => [l, await getAllPostSlugs(l)] as const)).then(Object.fromEntries),
+    Promise.all(LOCALES.map(async (l) => [l, await getAllLandingSlugs(l)] as const)).then(Object.fromEntries),
+    getActiveProducts(),
+  ])
 
   const urls: { url: string; label?: string }[] = []
 
   for (const locale of LOCALES) {
     const blogSlugs = blogSlugsByLocale[locale] || []
+    const landingSlugs = landingSlugsByLocale[locale] || []
     for (const { key, label } of STATIC_PATH_KEYS) {
       const path = key === '' ? '' : key === 'blog' ? '/blog' : `/${getPath(locale, key)}`
       urls.push({
@@ -51,7 +44,7 @@ export async function getSitemapUrls(): Promise<{ url: string; label?: string }[
     for (const slug of varietySlugs) {
       urls.push({ url: `${BASE_URL}/${locale}/${getPath(locale, 'varieties')}/${slug}` })
     }
-    for (const slug of VARIETY_LANDING_SLUGS[locale] || []) {
+    for (const slug of landingSlugs) {
       urls.push({ url: `${BASE_URL}/${locale}/${getPath(locale, 'varieties')}/${slug}` })
     }
     for (const slug of blogSlugs) {
@@ -68,11 +61,13 @@ export async function getSitemapUrls(): Promise<{ url: string; label?: string }[
 export async function getSitemapEntries() {
   const now = new Date().toISOString()
   const varietySlugs = getAllVarietySlugs()
-  const blogSlugsByLocale = Object.fromEntries(
-    await Promise.all(LOCALES.map(async (l) => [l, await getAllPostSlugs(l)]))
-  )
-  const blogAlternates = await getAllBlogAlternates()
-  const products = await getActiveProducts()
+  const [blogSlugsByLocale, landingSlugsByLocale, blogAlternates, landingAlternates, products] = await Promise.all([
+    Promise.all(LOCALES.map(async (l) => [l, await getAllPostSlugs(l)] as const)).then(Object.fromEntries),
+    Promise.all(LOCALES.map(async (l) => [l, await getAllLandingSlugs(l)] as const)).then(Object.fromEntries),
+    getAllBlogAlternates(),
+    getAllLandingAlternates(),
+    getActiveProducts(),
+  ])
 
   const entries: { url: string; lastModified: string; changeFrequency: 'weekly' | 'monthly'; priority: number; alternates?: { languages: Record<string, string> } }[] = []
 
@@ -133,12 +128,23 @@ export async function getSitemapEntries() {
         alternates: { languages: getAlternateUrls('varieties', slug) },
       })
     }
-    for (const slug of VARIETY_LANDING_SLUGS[locale] || []) {
+    for (const slug of landingSlugsByLocale[locale] || []) {
+      let languages: Record<string, string> | undefined
+      for (const [sourceSlug, altMap] of landingAlternates.entries()) {
+        if (altMap[locale] === slug) {
+          languages = { 'x-default': `${BASE_URL}/en/${getPath('en', 'varieties')}/${altMap['en'] || slug}` }
+          for (const loc of LOCALES) {
+            if (altMap[loc]) languages[loc] = `${BASE_URL}/${loc}/${getPath(loc, 'varieties')}/${altMap[loc]}`
+          }
+          break
+        }
+      }
       entries.push({
         url: `${BASE_URL}/${locale}/${getPath(locale, 'varieties')}/${slug}`,
         lastModified: now,
         changeFrequency: 'monthly',
         priority: 0.7,
+        ...(languages && { alternates: { languages } }),
       })
     }
     for (const slug of blogSlugs) {
