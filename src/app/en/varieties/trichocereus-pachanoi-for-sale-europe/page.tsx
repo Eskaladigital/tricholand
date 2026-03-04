@@ -8,28 +8,27 @@ const BASE_URL = 'https://www.tricholand.com'
 const SLUG = 'trichocereus-pachanoi-for-sale-europe'
 
 export const metadata: Metadata = {
-  title: 'Trichocereus Pachanoi for Sale in Europe — Wholesale B2B | Tricholand',
+  title: 'Trichocereus Pachanoi for Sale Europe — Wholesale B2B | Tricholand',
   description:
-    'Buy Trichocereus Pachanoi (San Pedro cactus) wholesale across Europe. Specialist B2B nursery in Spain. EU Plant Passport included. Free intra-EU phytosanitary. Minimum order 200 units.',
+    'Buy Trichocereus Pachanoi (San Pedro cactus) wholesale in Europe. B2B nursery in Spain shipping to EU-27 & UK with EU Plant Passport included. Minimum order 200 units.',
   keywords: [
     'trichocereus pachanoi for sale europe',
     'san pedro cactus wholesale europe',
-    'trichocereus wholesale europe',
+    'trichocereus wholesale',
     'buy trichocereus pachanoi europe',
     'cactus wholesale europe',
-    'trichocereus nursery europe',
+    'trichocereus nursery spain',
     'B2B cactus supplier europe',
-    'trichocereus pachanoi buy online',
-    'san pedro cactus nursery spain',
     'columnar cactus wholesale',
+    'san pedro cactus nursery',
   ],
   alternates: {
     canonical: `${BASE_URL}/en/varieties/${SLUG}`,
   },
   openGraph: {
-    title: 'Trichocereus Pachanoi for Sale in Europe — Wholesale B2B | Tricholand',
+    title: 'Trichocereus Pachanoi for Sale Europe — Wholesale B2B | Tricholand',
     description:
-      'Buy Trichocereus Pachanoi wholesale from a specialist nursery in Spain. EU Plant Passport included. Shipping across all of Europe.',
+      'Buy Trichocereus Pachanoi wholesale from a specialist nursery in Spain. EU Plant Passport included. Shipping across Europe.',
     images: ['/images/varieties/Trichocereus_Pachanoi_1.webp'],
     type: 'website',
     locale: 'en',
@@ -37,83 +36,84 @@ export const metadata: Metadata = {
 }
 
 const SIZES = [
-  { range: '15–20 cm', label: 'Young seedlings', desc: 'Perfect for growing on, grafting stock or retail resale in your market' },
-  { range: '25–35 cm', label: 'Juvenile plants', desc: 'Robust root system, ready for garden centre display or landscaping projects' },
-  { range: '35–55 cm', label: 'Established plants', desc: 'Our best-selling wholesale size across Europe — impactful and cold-hardy' },
-  { range: '55–80 cm', label: 'Specimen size', desc: 'Premium statement pieces for high-end landscaping and specialist retailers' },
-]
-
-const COUNTRIES = [
-  'Germany', 'France', 'Netherlands', 'Belgium', 'Italy', 'Portugal',
-  'Austria', 'Poland', 'Czech Republic', 'Denmark', 'Sweden',
-  'Ireland', 'Greece', 'Hungary', 'Romania', 'Croatia',
+  { range: '15–20 cm', label: 'Young seedlings', desc: 'Perfect for growing on, grafting stock or retail resale across Europe' },
+  { range: '25–35 cm', label: 'Juvenile plants', desc: 'Strong root system, ready for garden centre shelves' },
+  { range: '35–55 cm', label: 'Established plants', desc: 'Our best-selling wholesale size — the sweet spot of impact and value' },
+  { range: '55–80 cm', label: 'Specimen size', desc: 'Premium pieces for landscaping projects and high-end retail' },
 ]
 
 const BENEFITS = [
   {
     icon: '🌱',
     title: 'EU Plant Passport Included',
-    desc: 'Every shipment includes an official EU Plant Passport — the standard phytosanitary document for intra-EU plant trade. No additional import permits needed within the EU.',
+    desc: 'Every order ships with an official EU Plant Passport — no extra paperwork for EU-27 countries. Full phytosanitary compliance for UK imports too.',
   },
   {
     icon: '🚛',
-    title: 'Shipping Across All of Europe',
-    desc: 'We ship palletised orders directly from Murcia to any EU country. Temperature-controlled transport available for Northern European destinations in winter.',
+    title: 'Shipping Across Europe',
+    desc: 'Palletised shipments from Murcia to any EU country and the UK. Regular routes to France, Germany, Netherlands, Italy, Portugal, Belgium and more.',
   },
   {
     icon: '📦',
     title: 'Minimum Order 200 Units',
-    desc: 'Our minimum order is 200 plants per variety — ideal for garden centres, nurseries, landscapers, retailers and municipal projects across Europe.',
+    desc: 'Start with 200 plants per variety — ideal for garden centres, nurseries, landscapers, wholesalers and specialist retailers.',
   },
   {
     icon: '💰',
-    title: 'Competitive Nursery-Direct Prices',
-    desc: 'No middlemen, no importers — you buy directly from the producer. Volume discounts available from 750 units. Custom quotes within 24 hours.',
+    title: 'Nursery-Direct Pricing',
+    desc: 'No middlemen. You buy directly from the producer. Volume discounts for orders over 750 units. Custom quote within 24 hours.',
   },
   {
     icon: '☀️',
     title: 'Field-Grown in Murcia, Spain',
-    desc: 'Our Trichocereus are field-grown year-round under the Spanish Mediterranean sun — producing stronger, more resilient plants than greenhouse-grown alternatives.',
+    desc: 'Mediterranean sun-grown Trichocereus produce stronger, healthier plants with superior root systems compared to greenhouse-grown alternatives.',
   },
   {
     icon: '🤝',
     title: 'Multilingual B2B Support',
-    desc: 'We communicate in English, Spanish, French and German. Dedicated account manager for European clients. Flexible payment terms for regular customers.',
+    desc: 'We speak English, Spanish, French and German. Dedicated account management, flexible payment terms and reliable supply all year round.',
   },
+]
+
+const COUNTRIES = [
+  { name: 'France', flag: '🇫🇷' },
+  { name: 'Germany', flag: '🇩🇪' },
+  { name: 'Netherlands', flag: '🇳🇱' },
+  { name: 'Belgium', flag: '🇧🇪' },
+  { name: 'Italy', flag: '🇮🇹' },
+  { name: 'Portugal', flag: '🇵🇹' },
+  { name: 'United Kingdom', flag: '🇬🇧' },
+  { name: 'Austria', flag: '🇦🇹' },
+  { name: 'Ireland', flag: '🇮🇪' },
+  { name: 'Switzerland', flag: '🇨🇭' },
+  { name: 'Poland', flag: '🇵🇱' },
+  { name: 'Czech Republic', flag: '🇨🇿' },
 ]
 
 const FAQ = [
   {
-    q: 'Do I need an import permit to buy Trichocereus within the EU?',
-    a: 'No. Within the European Union, our EU Plant Passport is sufficient for the transport and sale of Trichocereus Pachanoi. No additional import permits or phytosanitary certificates are needed for intra-EU trade.',
+    q: 'Which European countries do you ship to?',
+    a: 'We ship to all EU-27 member states and the United Kingdom. Our most frequent routes cover France, Germany, Netherlands, Belgium, Italy, Portugal, Austria, Ireland and Switzerland. For other destinations, contact us for a shipping quote.',
   },
   {
-    q: 'Which countries do you ship to?',
-    a: 'We ship to all 27 EU member states plus the UK, Switzerland and Norway. Our most active markets are Germany, France, the Netherlands, Belgium, Italy, Portugal, Austria and Poland.',
+    q: 'Is an EU Plant Passport included?',
+    a: 'Yes. Every shipment includes an official EU Plant Passport at no extra cost. This is mandatory for intra-EU plant trade and ensures compliance with all phytosanitary regulations.',
   },
   {
     q: 'What is the minimum order quantity?',
-    a: 'Our minimum order is 200 plants per variety. You can combine different Trichocereus varieties (Pachanoi, Peruvianus, Bridgesii, Terscheckii) on the same pallet to meet the minimum.',
+    a: 'Our minimum order is 200 plants per variety. You can combine different Trichocereus varieties (Pachanoi, Peruvianus, Bridgesii, Terscheckii) in a single shipment to reach the minimum.',
   },
   {
-    q: 'How long does European delivery take?',
-    a: 'We allow 7 days for order preparation. Delivery times vary: 2–3 days for Spain, Portugal and France; 3–5 days for Germany, Benelux, Italy and Austria; 5–7 days for Scandinavia, Eastern Europe and the UK.',
+    q: 'How long does shipping take within Europe?',
+    a: 'Typical delivery times: France 2–3 days, Germany/Netherlands/Belgium 3–4 days, Italy/Portugal 2–3 days, UK 5–7 days, Eastern Europe 4–6 days. We allow 7 days for order preparation before dispatch.',
   },
   {
-    q: 'Can I visit the nursery before ordering?',
-    a: 'Absolutely. We welcome professional buyers to visit our nursery in Murcia by appointment. You can see our production first-hand, select plants directly and discuss your requirements with our team.',
+    q: 'Can Trichocereus Pachanoi survive European winters?',
+    a: 'Trichocereus Pachanoi tolerates brief frosts down to -2°C when the soil is dry. In Mediterranean climates (Spain, Portugal, southern France, Italy) it thrives outdoors year-round. In northern Europe it performs well in sheltered positions or as a seasonal outdoor display.',
   },
   {
-    q: 'Do you offer intra-community VAT exemption?',
-    a: 'Yes. If you have a valid EU VAT number (verified via VIES), we apply the intra-community VAT exemption on your invoices. This applies to all B2B orders shipped to another EU member state.',
-  },
-  {
-    q: 'What sizes are most popular in Europe?',
-    a: 'The 35–55 cm range is our best seller across all European markets. Garden centres in Northern Europe particularly favour the 25–35 cm size, while Mediterranean markets and landscapers prefer 55–80 cm specimens.',
-  },
-  {
-    q: 'Are the plants frost-hardy for Northern European climates?',
-    a: 'Trichocereus Pachanoi tolerates brief frosts down to -2°C with dry soil. In Northern Europe, they are best grown in pots that can be moved indoors during winter, or in sheltered south-facing positions with frost protection.',
+    q: 'Do you offer exclusivity for my region?',
+    a: 'We offer preferred supplier agreements for high-volume clients. Contact us to discuss exclusivity terms for your market or region.',
   },
 ]
 
@@ -123,8 +123,8 @@ export default function PachanoiForSaleEurope() {
       {/* Hero */}
       <section className="relative min-h-[70vh] flex items-end">
         <Image
-          src="/images/varieties/Trichocereus_Pachanoi_1.webp"
-          alt="Trichocereus Pachanoi — San Pedro cactus wholesale across Europe"
+          src="/images/varieties/Trichocereus_Pachanoi_2.webp"
+          alt="Trichocereus Pachanoi — San Pedro cactus wholesale for European buyers"
           fill
           className="object-cover"
           priority
@@ -133,7 +133,7 @@ export default function PachanoiForSaleEurope() {
         <div className="absolute inset-0 bg-gradient-to-t from-negro/80 via-negro/30 to-transparent" />
         <div className="relative z-10 w-full px-5 lg:px-8 pb-12 lg:pb-16 max-w-5xl mx-auto">
           <span className="inline-block bg-naranja text-blanco px-3 py-1.5 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold tracking-widest uppercase mb-4">
-            B2B Wholesale · Europe-Wide Delivery
+            B2B Wholesale · EU &amp; UK Delivery
           </span>
           <h1 className="font-[family-name:var(--font-archivo-narrow)] text-4xl lg:text-6xl font-bold text-blanco uppercase leading-[1.05]">
             Trichocereus Pachanoi
@@ -141,8 +141,8 @@ export default function PachanoiForSaleEurope() {
             <span className="text-naranja">for Sale in Europe</span>
           </h1>
           <p className="text-lg lg:text-xl text-blanco/85 mt-4 max-w-2xl">
-            Specialist nursery-grown San Pedro cacti shipped directly from Spain across Europe.
-            EU Plant Passport included. Wholesale pricing from 200 units.
+            Wholesale San Pedro cacti grown in our nursery in Murcia, Spain — shipped across
+            all of Europe with EU Plant Passport included. From 200 units.
           </p>
           <div className="flex flex-wrap gap-3 mt-8">
             <Link
@@ -152,10 +152,10 @@ export default function PachanoiForSaleEurope() {
               Request a Quote →
             </Link>
             <Link
-              href={getFullPath(LOCALE, 'shop')}
+              href={getFullPath(LOCALE, 'varieties')}
               className="bg-blanco/10 backdrop-blur text-blanco border border-blanco/30 px-7 py-3.5 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-blanco/20 transition-colors"
             >
-              Browse Shop
+              View All Varieties
             </Link>
           </div>
         </div>
@@ -165,9 +165,8 @@ export default function PachanoiForSaleEurope() {
       <section className="bg-negro text-crudo">
         <div className="max-w-5xl mx-auto px-5 lg:px-8 py-5 flex flex-wrap justify-center gap-x-10 gap-y-2 text-sm font-[family-name:var(--font-archivo-narrow)] uppercase tracking-wide">
           <span>EU Plant Passport ✓</span>
-          <span>Direct from Producer ✓</span>
-          <span>All EU Countries ✓</span>
-          <span>Intra-EU VAT Exempt ✓</span>
+          <span>Producer Nursery ✓</span>
+          <span>EU-27 &amp; UK Shipping ✓</span>
           <span>Quote in 24h ✓</span>
         </div>
       </section>
@@ -177,28 +176,27 @@ export default function PachanoiForSaleEurope() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="font-[family-name:var(--font-archivo-narrow)] text-2xl lg:text-3xl font-bold uppercase mb-6 pb-3 border-b-2 border-negro">
-              Why Trichocereus Pachanoi?
+              The Most Popular Columnar Cactus in Europe
             </h2>
             <p className="text-marron-claro leading-relaxed mb-4">
-              <strong className="text-negro">Trichocereus Pachanoi</strong> (San Pedro) is one of the most commercially
-              successful columnar cacti in the European market. Native to the Andes of Ecuador and Peru,
-              it thrives across Southern and Central Europe and can be grown in pots anywhere on the continent.
-              Its popularity with consumers has surged in recent years, driven by the growing trend for
-              drought-tolerant, low-maintenance landscaping.
+              <strong className="text-negro">Trichocereus Pachanoi</strong> (San Pedro) is the best-selling
+              columnar cactus across European garden centres, nurseries and landscaping projects.
+              Its striking blue-green colour, elegant form and fast growth rate make it an irresistible
+              choice for consumers — and a reliable profit driver for B2B buyers.
             </p>
             <p className="text-marron-claro leading-relaxed mb-4">
-              With its striking blue-green colour, elegant columnar form and fast growth rate (up to 30 cm per year),
-              it is a proven seller in garden centres, specialist plant shops and landscaping projects across
-              Germany, France, the Netherlands, Italy, Portugal and beyond.
+              Native to the Andes of Ecuador and Peru, it adapts remarkably well to Mediterranean and
+              temperate European climates. Under optimal conditions it grows up to 30 cm per year and
+              produces spectacular nocturnal white flowers up to 22 cm in diameter.
             </p>
             <ul className="space-y-2 mt-6">
               {[
-                'Fast growth: up to 30 cm/year in Mediterranean climates',
-                'Tolerates -2°C — grow outdoors in Southern Europe, in pots elsewhere',
+                'Fast growth: up to 30 cm/year — visible results for end consumers',
+                'Hardy to -2°C — thrives outdoors in southern and western Europe',
                 'Spectacular 22 cm white nocturnal flowers',
-                'Minimal maintenance — drought-tolerant once established',
-                'Excellent as rootstock for professional grafting',
-                'High consumer demand across all European markets',
+                'Minimal maintenance — ideal low-care plant for retail',
+                'Excellent as rootstock for grafting',
+                'Proven high demand across all European markets',
               ].map((h) => (
                 <li key={h} className="flex items-start gap-3">
                   <span className="text-naranja font-bold mt-0.5">→</span>
@@ -210,7 +208,7 @@ export default function PachanoiForSaleEurope() {
           <div className="relative aspect-[4/5] bg-crudo">
             <Image
               src="/images/products/producto_trichocereus_pachanoi_1.webp"
-              alt="Trichocereus Pachanoi ready for wholesale dispatch across Europe"
+              alt="Trichocereus Pachanoi plants ready for European wholesale dispatch"
               fill
               className="object-cover"
               unoptimized
@@ -226,7 +224,7 @@ export default function PachanoiForSaleEurope() {
             Available Sizes
           </h2>
           <p className="text-marron-claro text-center mb-10">
-            All sizes field-grown at our nursery in Murcia, Spain — shipped directly across Europe
+            Field-grown at our nursery in Murcia, Spain — shipped directly to your door across Europe
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {SIZES.map((s) => (
@@ -253,15 +251,15 @@ export default function PachanoiForSaleEurope() {
       {/* Photo gallery strip */}
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-0">
         {[
-          '/images/varieties/Trichocereus_Pachanoi_2.webp',
+          '/images/varieties/Trichocereus_Pachanoi_1.webp',
           '/images/products/producto_trichocereus_pachanoi_bio_1_v2.webp',
           '/images/vivero/vivero_mayorista_cactus.webp',
-          '/images/products/producto_trichocereus_pachanoi_2.webp',
+          '/images/products/producto_trichocereus_pachanoi_bio_3.webp',
         ].map((src, i) => (
           <div key={i} className="relative aspect-square">
             <Image
               src={src}
-              alt={`Trichocereus Pachanoi nursery production image ${i + 1}`}
+              alt={`Trichocereus Pachanoi nursery — wholesale Europe image ${i + 1}`}
               fill
               className="object-cover"
               unoptimized
@@ -270,30 +268,27 @@ export default function PachanoiForSaleEurope() {
         ))}
       </section>
 
-      {/* We ship to */}
-      <section className="px-5 lg:px-8 py-16 lg:py-20 max-w-5xl mx-auto text-center">
-        <h2 className="font-[family-name:var(--font-archivo-narrow)] text-2xl lg:text-3xl font-bold uppercase mb-2">
+      {/* We ship across Europe */}
+      <section className="px-5 lg:px-8 py-16 lg:py-20 max-w-5xl mx-auto">
+        <h2 className="font-[family-name:var(--font-archivo-narrow)] text-2xl lg:text-3xl font-bold uppercase mb-2 text-center">
           We Ship Across Europe
         </h2>
-        <p className="text-marron-claro mb-10 max-w-2xl mx-auto">
-          Direct palletised delivery from our nursery in Murcia, Spain to your door.
-          EU Plant Passport included — no additional import paperwork within the EU.
+        <p className="text-marron-claro text-center mb-10 max-w-2xl mx-auto">
+          Regular palletised shipments from our nursery in Murcia to all major European markets
         </p>
-        <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
           {COUNTRIES.map((c) => (
-            <span
-              key={c}
-              className="bg-crudo border border-linea px-4 py-2 font-[family-name:var(--font-archivo-narrow)] text-sm font-semibold"
-            >
-              {c}
-            </span>
+            <div key={c.name} className="bg-crudo border border-linea p-4 text-center">
+              <span className="text-2xl block mb-1">{c.flag}</span>
+              <p className="font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide">{c.name}</p>
+            </div>
           ))}
-          <span className="bg-negro text-crudo px-4 py-2 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold">
-            + UK, Switzerland, Norway
-          </span>
         </div>
-        <p className="text-xs text-marron-claro mt-6">
-          Delivery times: 2–3 days Iberian Peninsula · 3–5 days Central Europe · 5–7 days Scandinavia &amp; Eastern Europe
+        <p className="text-center mt-6 text-sm text-marron-claro">
+          + all other EU-27 countries.{' '}
+          <Link href={getFullPath(LOCALE, 'contact')} className="text-naranja font-semibold hover:underline">
+            Ask for a shipping quote
+          </Link>
         </p>
       </section>
 
@@ -304,7 +299,7 @@ export default function PachanoiForSaleEurope() {
             Why Buy from Tricholand?
           </h2>
           <p className="text-marron-claro text-center mb-12 max-w-2xl mx-auto">
-            We are a specialist Trichocereus producer nursery based in Murcia, Spain —
+            We are a specialist Trichocereus producer nursery in Murcia, Spain —
             one of Europe&apos;s premier cactus-growing regions. We sell exclusively B2B.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -321,13 +316,13 @@ export default function PachanoiForSaleEurope() {
         </div>
       </section>
 
-      {/* Nursery */}
+      {/* Nursery section */}
       <section className="bg-negro text-crudo px-5 lg:px-8 py-16 lg:py-20">
         <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="relative aspect-[4/3]">
             <Image
               src="/images/vivero/productores_cactus_2.webp"
-              alt="Tricholand nursery — Trichocereus producer in Murcia, Spain"
+              alt="Tricholand nursery — Trichocereus producers in Murcia, Spain"
               fill
               className="object-cover"
               unoptimized
@@ -339,17 +334,14 @@ export default function PachanoiForSaleEurope() {
             </h2>
             <p className="text-crudo/80 leading-relaxed mb-4">
               Tricholand is a family-run nursery in the Murcia region of south-east Spain, specialising
-              exclusively in Trichocereus and columnar cacti. Our plants are field-grown year-round under
-              the Mediterranean sun, producing stronger and more resilient specimens with superior root
-              systems compared to greenhouse-grown alternatives from Northern Europe.
-            </p>
-            <p className="text-crudo/80 leading-relaxed mb-4">
-              We supply garden centres, wholesale nurseries, landscaping firms and specialist retailers
-              in over 15 European countries. Our clients value our consistent quality, competitive
-              producer-direct pricing and professional logistics.
+              exclusively in Trichocereus and columnar cacti. Our plants are field-grown under over
+              300 days of sunshine per year — producing stronger, healthier specimens that arrive
+              in peak condition anywhere in Europe.
             </p>
             <p className="text-crudo/80 leading-relaxed mb-6">
-              Visits are welcome by appointment — come see our production and select your plants in person.
+              We supply garden centres, wholesale nurseries, landscaping firms and specialist retailers
+              across France, Germany, Netherlands, Belgium, Italy, Portugal, the UK and beyond.
+              Reliable quality, competitive pricing and hassle-free logistics — that&apos;s the Tricholand promise.
             </p>
             <Link
               href={`/${LOCALE}/about-us`}
@@ -440,45 +432,45 @@ export default function PachanoiForSaleEurope() {
         </div>
       </section>
 
-      {/* JSON-LD structured data */}
+      {/* JSON-LD: Organization + FAQPage */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Product',
-            name: 'Trichocereus Pachanoi (San Pedro Cactus) — Wholesale Europe',
-            description:
-              'Wholesale Trichocereus Pachanoi plants from a specialist producer nursery in Spain. B2B only. EU Plant Passport included. Shipping across all of Europe.',
-            brand: { '@type': 'Brand', name: 'Tricholand' },
-            image: `${BASE_URL}/images/varieties/Trichocereus_Pachanoi_1.webp`,
-            category: 'Plants > Cacti > Trichocereus',
-            offers: {
-              '@type': 'Offer',
-              priceCurrency: 'EUR',
-              availability: 'https://schema.org/InStock',
-              seller: {
-                '@type': 'Organization',
-                name: 'Tricholand',
-                url: BASE_URL,
-                address: {
-                  '@type': 'PostalAddress',
-                  addressLocality: 'Murcia',
-                  addressCountry: 'ES',
-                },
+          __html: JSON.stringify([
+            {
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'Tricholand',
+              url: BASE_URL,
+              logo: `${BASE_URL}/images/icons/logo_tricho_yellow_200_200.webp`,
+              description: 'Specialist Trichocereus producer nursery in Murcia, Spain. B2B wholesale for professionals across Europe.',
+              address: {
+                '@type': 'PostalAddress',
+                addressLocality: 'Murcia',
+                addressRegion: 'Murcia',
+                addressCountry: 'ES',
               },
-              eligibleRegion: {
+              contactPoint: {
+                '@type': 'ContactPoint',
+                email: 'info@tricholand.com',
+                contactType: 'sales',
+                availableLanguage: ['English', 'Spanish', 'French', 'German'],
+              },
+              areaServed: {
                 '@type': 'GeoShape',
                 name: 'Europe',
               },
-              areaServed: [
-                { '@type': 'Place', name: 'European Union' },
-                { '@type': 'Country', name: 'United Kingdom' },
-                { '@type': 'Country', name: 'Switzerland' },
-                { '@type': 'Country', name: 'Norway' },
-              ],
             },
-          }),
+            {
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: FAQ.map((f) => ({
+                '@type': 'Question',
+                name: f.q,
+                acceptedAnswer: { '@type': 'Answer', text: f.a },
+              })),
+            },
+          ]),
         }}
       />
     </>
