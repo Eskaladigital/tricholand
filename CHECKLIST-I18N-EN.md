@@ -57,13 +57,21 @@ Revisión de contenido hardcodeado en español en páginas de otros idiomas. Cob
 | Sitemap hreflang blog | Añadidos `alternates` con hreflang a las entradas del blog en `sitemap.xml` via `getAllBlogAlternates()` |
 | Script `--retranslate-all` | Nuevo modo en `translate-blog-posts.mjs` para re-traducir títulos y slugs masivamente |
 
+### Correcciones aplicadas (2026-02, landings B2B y selector de idioma)
+
+| Cambio | Detalle |
+|--------|---------|
+| Landings B2B en Supabase | 8 landings Pachanoi migradas a tabla `landing_pages`; slugs traducidos por idioma |
+| Selector de idioma variedades/landings | Header consulta `/api/variety-alternate-slugs` y construye enlaces con el slug correcto (ej: FR → trichocereus-pachanoi-a-vendre-france, EN → trichocereus-pachanoi-for-sale-uk) |
+
 ---
 
 ## Checklist para futuras revisiones
 
 1. **Componentes compartidos**: Verificar que reciben `locale` y `dict` correctos (ContactFormWizard, OrderForm, ShopGrid, BlogGrid, etc.).
 2. **Páginas estáticas**: Si se añaden nuevas páginas con contenido, traducir a los 7 idiomas.
-3. **Variedades**: `getVarietyForLocale` ya soporta traducciones; completar `VARIETY_TRANSLATIONS` para todos los slugs si falta alguno.
+3. **Variedades y landings**: `getVarietyForLocale` soporta variedades estáticas; las landings B2B están en Supabase con slugs traducidos. El selector de idioma usa `/api/variety-alternate-slugs` para ambos.
 4. **URLs internas**: Usar `getFullPath(locale, 'contact')` o `/${locale}/...` en lugar de rutas fijas.
 5. **Blog — nuevos artículos**: Al crear un artículo nuevo en español y traducirlo, verificar que el slug generado en cada idioma sea correcto (no mezcla de idiomas). Si hay problemas, ejecutar `node scripts/translate-blog-posts.mjs --retranslate-all --locale XX`.
-6. **Sitemap**: Las entradas del blog ahora incluyen hreflang. Si se añaden nuevas secciones dinámicas, añadir alternates equivalentes en `src/lib/sitemap-urls.ts`.
+6. **Sitemap**: Blog y landings incluyen hreflang. Si se añaden nuevas secciones dinámicas, añadir alternates en `src/lib/sitemap-urls.ts`.
+7. **Landings B2B**: Contenido en Supabase (`landing_pages`). Para nuevas landings: `seed-landings.mjs` o `translate-landings.mjs`.

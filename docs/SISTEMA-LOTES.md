@@ -1,5 +1,7 @@
 # Sistema de Lotes B2B - Tricholand
 
+> **Referencias**: Las landings B2B Pachanoi (UK, Europe, España, Francia, etc.) en `/varieties/` mencionan estos valores (750 uds mínimo, 150 uds incremento) en sus FAQs y beneficios. Contenido en Supabase (`landing_pages`).
+
 ## Concepto
 
 Los productos se venden en **lotes mayoristas** con un sistema flexible que permite:

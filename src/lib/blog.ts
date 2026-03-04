@@ -142,22 +142,47 @@ export async function getPostBySlug(slug: string, locale: string): Promise<BlogP
     return post
   }
 
-  // URL antigua: slug en español en idioma no-ES. Buscar por source_slug y redirigir al slug correcto.
+  // URL antigua: slug en español (o mixto español+sufijo) en idioma no-ES. Buscar por source_slug.
   if (effectiveLocale !== 'es') {
-    const { data: bySource } = await supabase
+    // 1) Slug exacto como source_slug (ej: /de/blog/como-crear-un-vivero... con slug español puro)
+    type BlogRow = Parameters<typeof rowToPost>[0] & { source_slug?: string }
+    let bySource: BlogRow | null = null
+    const { data: exact } = await supabase
       .from('blog_posts')
       .select('slug, title, description, date, image, image_alt, tags, reading_time, content, source_slug')
       .eq('source_slug', slug)
       .eq('locale', effectiveLocale)
       .eq('status', 'published')
       .single()
+    bySource = exact
+
+    // 2) Slug mixto (ej: como-crear-un-vivero-casero-de-trichocereus-praktische-schritte): probar prefix como source_slug
+    if (!bySource && slug.includes('-')) {
+      let candidate = slug
+      while (candidate.includes('-')) {
+        candidate = candidate.replace(/-[^-]+$/, '')
+        if (candidate.length < 10) break
+        const { data: byPrefix } = await supabase
+          .from('blog_posts')
+          .select('slug, title, description, date, image, image_alt, tags, reading_time, content, source_slug')
+          .eq('source_slug', candidate)
+          .eq('locale', effectiveLocale)
+          .eq('status', 'published')
+          .single()
+        if (byPrefix) {
+          bySource = byPrefix
+          break
+        }
+      }
+    }
+
     if (bySource) {
       const post = rowToPost(bySource)
-      if (!post.image && (bySource as { source_slug?: string }).source_slug) {
+      if (!post.image && bySource.source_slug) {
         const { data: esPost } = await supabase
           .from('blog_posts')
           .select('image, image_alt')
-          .eq('source_slug', (bySource as { source_slug: string }).source_slug)
+          .eq('source_slug', bySource.source_slug)
           .eq('locale', 'es')
           .eq('status', 'published')
           .single()

@@ -24,13 +24,14 @@ npm run dev
 ## Características
 
 - **7 idiomas**: ES, EN, NL, FR, DE, IT, PT — formulario de pedido, checkout, página de pedido, emails y PDFs 100% traducidos
-- **Selector de idioma** en navbar (menú desplegable)
+- **Selector de idioma** en navbar (menú desplegable) — slugs traducidos para blog y variedades/landings desde Supabase
 - **Tienda B2B** con carrito, lotes mayoristas y solicitud de presupuesto
 - **Sistema de lotes flexible**: pedido mínimo + incrementos adicionales (ej: 750 uds mínimo, después de 150 en 150)
 - **Transparencia IVA B2B**: base imponible + IVA estimado (21%) visibles en todo el flujo de compra
 - **Nota exención IVA intracomunitario** para entregas UE con NIF-IVA válido
 - **Selector de país** en checkout: 28 países permitidos (UE-27 + UK), nombres traducidos y ordenados por locale
 - **Catálogo de variedades** con fichas detalladas
+- **Landings B2B Pachanoi** por país/idioma (UK, Europe, España, Francia, Alemania, Países Bajos, Italia, Portugal) — contenido en Supabase, slugs traducidos
 - **Blog** con artículos técnicos
 - **Panel de administración** (productos, pedidos, clientes, contactos, blog, media, configuración)
 - **Pipeline automatizado de pedidos**: validación → proforma PDF → email al cliente → pago → factura
@@ -220,6 +221,13 @@ NEXT_PUBLIC_SITE_URL=https://www.tricholand.com
 | `npm run import:blog` | Importar blog desde CSV |
 | `npm run migrate:customers` | Migrar datos a tabla customers |
 
+**Scripts de landings (ejecutar con `node`):**
+- `node scripts/seed-landings.mjs` — Insertar 8 landings B2B Pachanoi en Supabase
+- `node scripts/seed-landings.mjs --dry-run` — Simular sin insertar
+- `node scripts/translate-landings.mjs` — Traducir landings a otros idiomas (OpenAI)
+- `node scripts/translate-landings.mjs --locale fr` — Solo francés
+- `node scripts/translate-landings.mjs --dry-run` — Simular sin escribir
+
 **Scripts de blog (ejecutar con `node`):**
 - `node scripts/translate-blog-posts.mjs` — Traduce posts nuevos (ES → 6 idiomas)
 - `node scripts/translate-blog-posts.mjs --retranslate-all` — Re-traduce título + descripción + slug de TODOS los posts existentes
@@ -243,6 +251,16 @@ NEXT_PUBLIC_SITE_URL=https://www.tricholand.com
 - **Revalidación**: Páginas de blog con `revalidate = 10` (todos los idiomas).
 - **API de traducción**: `POST /api/blog/translate` con `source_slug` genera traducciones desde el artículo ES.
 - **Re-traducción masiva**: `node scripts/translate-blog-posts.mjs --retranslate-all` re-traduce títulos, descripciones y slugs de todos los posts existentes.
+
+---
+
+## Landings B2B (variedades)
+
+- **Contenido en Supabase**: Las landings B2B Pachanoi (UK, Europe, España, Francia, etc.) están en la tabla `landing_pages` con `slug`, `source_slug`, `content` (JSONB) y `config` (JSONB).
+- **Rutas dinámicas**: Se sirven bajo `/varieties/[slug]` (o equivalentes por idioma). Si el slug no es una variedad estática, se busca en `landing_pages`.
+- **Selector de idioma**: El Header consulta `/api/variety-alternate-slugs` para obtener el slug traducido de cada landing y construir los enlaces correctos al cambiar de idioma.
+- **Sitemap**: Las landings se incluyen en el sitemap con hreflang vía `getAllLandingAlternates()`.
+- **Scripts**: `seed-landings.mjs` inserta las 8 landings; `translate-landings.mjs` traduce a otros idiomas con OpenAI.
 
 ---
 
@@ -323,20 +341,22 @@ Convierte in situ en `images/` (no mueve nada a `public/`).
 tricholand-web/
 ├── src/
 │   ├── app/                    # App Router (Next.js 15)
-│   │   ├── es/, en/, nl/, fr/, de/, it/, pt/   # 7 idiomas (variedades, tienda, blog, contacto...)
+│   │   ├── es/, en/, nl/, fr/, de/, it/, pt/   # 7 idiomas (variedades, tienda, blog, landings, contacto...)
 │   │   ├── administrator/      # Panel admin (protegido)
 │   │   ├── pedido/[order_number]  # Página pública del pedido (standalone, multiidioma, pago, factura)
-│   │   └── api/                # API routes (contact, orders, payments, webhooks, transfer)
+│   │   └── api/                # API routes (contact, orders, payments, webhooks, transfer, variety-alternate-slugs)
 │   ├── components/
 │   │   ├── layout/             # Header, Footer
 │   │   ├── home/               # Hero, StatsBar, CatalogPreview, etc.
 │   │   ├── shop/               # ShopGrid, CartButton, OrderForm
 │   │   ├── contact/            # ContactFormWizard
 │   │   ├── varieties/          # CatalogGrid
+│   │   ├── landings/           # PachanoiLanding (B2B por país)
 │   │   └── admin/              # AdminSidebar, ProductForm
-│   ├── content/                # Datos estáticos (variedades, blog, productos)
+│   ├── content/                # Datos estáticos (variedades, productos)
 │   ├── lib/
 │   │   ├── i18n/               # Diccionarios por idioma
+│   │   ├── landings.ts         # Lectura landings B2B desde Supabase
 │   │   ├── shop/               # Cart context
 │   │   ├── email/              # Templates y i18n de emails
 │   │   ├── pdf/                # Generación proformas y facturas
@@ -350,6 +370,8 @@ tricholand-web/
 │   ├── translate-blog-posts.mjs # Traducción posts del blog
 │   ├── migrate-blog-markdown-to-html.mjs # Markdown → HTML en blog_posts
 │   ├── ai-blog-perfect.mjs     # Limpieza SEO + traducción con OpenAI
+│   ├── seed-landings.mjs       # Seed landings B2B Pachanoi en Supabase
+│   ├── translate-landings.mjs # Traducir landings con OpenAI
 │   ├── generate-locales.mjs    # Generador de páginas por idioma
 │   ├── generate-favicon.mjs    # Favicon desde logo (fondo blanco)
 │   ├── convert-images-to-webp.mjs   # Conversión PNG/JPG → WebP en images/
@@ -360,6 +382,7 @@ tricholand-web/
 ├── supabase/
 │   ├── schema.sql              # Schema principal (products, orders, contacts, settings)
 │   ├── translations-schema.sql # Tablas content + translations
+│   ├── landing-pages-schema.sql # Tabla landing_pages (B2B por país/idioma)
 │   └── storage-bucket.sql       # Bucket order-documents (proformas, facturas)
 ├── images/                     # Imágenes fuente para Supabase (gitignore)
 └── public/
@@ -388,17 +411,21 @@ Ejecuta los schemas **en este orden** en el SQL Editor de Supabase:
    - `translations` — traducciones por locale
    - Vista `content_with_translations`
 
-3. **`supabase/blog-posts-schema.sql`** — Blog:
+3. **`supabase/landing-pages-schema.sql`** — Landings B2B:
+   - `landing_pages` — páginas B2B por locale (slug, source_slug, content, config)
+   - RLS y políticas
+
+4. **`supabase/blog-posts-schema.sql`** — Blog:
    - `blog_posts` — artículos por locale (slug, source_slug, content, meta)
    - RLS y políticas
 
-4. **`supabase/blog-posts-slug-migration.sql`** — Migración opcional si ya tienes blog_posts sin source_slug
+5. **`supabase/blog-posts-slug-migration.sql`** — Migración opcional si ya tienes blog_posts sin source_slug
 
-5. **`supabase/customers-schema.sql`** — Clientes unificados:
+6. **`supabase/customers-schema.sql`** — Clientes unificados:
    - `customers` — unifica contactos y pedidos (email, contadores, mailing_consent)
    - RLS y políticas
 
-6. **`supabase/storage-bucket.sql`** — Bucket para documentos de pedidos:
+7. **`supabase/storage-bucket.sql`** — Bucket para documentos de pedidos:
    - `order-documents` — proformas y facturas PDF
    - Políticas de acceso (lectura pública, escritura service role)
 

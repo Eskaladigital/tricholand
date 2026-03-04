@@ -2,6 +2,34 @@
 
 Todos los cambios notables del proyecto Tricholand Web.
 
+## [1.2.6] - 2026-02
+
+### Añadido
+
+- **Landings B2B en Supabase**: Migración de las 8 landings B2B Pachanoi (UK, Europe, España, Francia, Alemania, Países Bajos, Italia, Portugal) de archivos estáticos a la tabla `landing_pages` en Supabase
+- **Componente `PachanoiLanding`**: Renderizado dinámico de landings desde `content` y `config` (JSONB)
+- **`src/lib/landings.ts`**: Funciones `getLandingBySlug`, `getAllLandingSlugs`, `getAllLandingAlternates`, `getSlugsByLocaleForVarietyOrLanding`
+- **API `/api/variety-alternate-slugs`**: Devuelve el slug traducido por idioma para variedades y landings (usado por el selector de idioma)
+- **Selector de idioma para variedades/landings**: El Header consulta la API y construye enlaces con el slug correcto al cambiar de idioma (ej: FR `trichocereus-pachanoi-a-vendre-france` → EN `trichocereus-pachanoi-for-sale-uk`)
+- **Sitemap dinámico para landings**: `getSitemapEntries` lee slugs desde Supabase con hreflang alternates
+- **Scripts**: `seed-landings.mjs` (insertar 8 landings), `translate-landings.mjs` (traducir con OpenAI)
+
+### Modificado
+
+- **Rutas `/varieties/[slug]`** (7 idiomas): Fallback a `landing_pages` si el slug no es una variedad estática; `dynamicParams`, `revalidate = 60`
+- **Estructura**: Eliminadas 8 carpetas de landings estáticas (~3500 líneas)
+
+### Archivos nuevos
+
+- `supabase/landing-pages-schema.sql` — Tabla `landing_pages` con RLS
+- `src/lib/landings.ts` — Lectura landings desde Supabase
+- `src/components/landings/PachanoiLanding.tsx` — Componente reutilizable
+- `src/app/api/variety-alternate-slugs/route.ts` — API para selector de idioma
+- `scripts/seed-landings.mjs` — Seed de landings
+- `scripts/translate-landings.mjs` — Traducción de landings
+
+---
+
 ## [1.2.5] - 2026-02
 
 ### Corregido (SEO / Blog)
