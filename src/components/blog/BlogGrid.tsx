@@ -27,6 +27,7 @@ interface BlogGridProps {
 }
 
 const POSTS_PER_PAGE = 12
+const MAX_VISIBLE_POSTS = 48 // Límite para SEO (evitar demasiados enlaces salientes)
 
 export function BlogGrid({ posts, locale, dict }: BlogGridProps) {
   const [search, setSearch] = useState('')
@@ -57,8 +58,8 @@ export function BlogGrid({ posts, locale, dict }: BlogGridProps) {
     return result
   }, [posts, activeTag, search])
 
-  const visible = filtered.slice(0, visibleCount)
-  const hasMore = visibleCount < filtered.length
+  const visible = filtered.slice(0, Math.min(visibleCount, MAX_VISIBLE_POSTS))
+  const hasMore = visibleCount < filtered.length && visibleCount < MAX_VISIBLE_POSTS
 
   // Featured post (first one)
   const featured = visible[0]
