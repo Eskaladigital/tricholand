@@ -7,7 +7,7 @@ import { getDictionary } from '@/lib/i18n'
 export const revalidate = 60
 
 export const metadata: Metadata = {
-  title: 'Blog',
+  title: 'Blog Trichocereus — Guias de cultivo',
   description: 'Blog Tricholand: guias técnicas sobre cultivo, cuidados, enxertos e propagação de Trichocereus. Recursos para profissionais e entusiastas.',
   alternates: getBlogIndexAlternates('pt'),
   openGraph: {

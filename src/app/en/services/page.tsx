@@ -5,7 +5,7 @@ import { CertificationsBar } from '@/components/home/CertificationsBar'
 import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
-  title: 'Services',
+  title: 'Wholesale Services — Tricholand',
   description: 'Tricholand services: wholesale Trichocereus sales, Europe-wide shipping, EU/UK phytosanitary documentation and custom cultivation.',
   alternates: getAlternatesMetadata('en', 'services'),
 }

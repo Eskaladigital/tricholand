@@ -5,7 +5,7 @@ import { en } from '@/lib/i18n/en'
 import { StatsBar } from '@/components/home/StatsBar'
 import { getAlternatesMetadata } from '@/lib/i18n/paths'
 export const metadata: Metadata = {
-  title: 'About Us',
+  title: 'About Us — Tricholand Nursery Murcia',
   description: 'Meet Tricholand: producer nursery specialized in Trichocereus and columnar cacti in Murcia, Spain. 5+ Trichocereus varieties, 2,500 m² of cultivation.',
   alternates: getAlternatesMetadata('en', 'about'),
 }

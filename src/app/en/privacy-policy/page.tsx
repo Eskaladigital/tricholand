@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy',
+  title: 'Privacy Policy — Tricholand Data Protection',
   description: 'Tricholand privacy policy and personal data protection.',
   robots: 'index, follow',
   alternates: getAlternatesMetadata('en', 'privacy'),

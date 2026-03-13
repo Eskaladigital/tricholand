@@ -4,7 +4,7 @@ import { de } from '@/lib/i18n/de'
 import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
-  title: 'Kontakt',
+  title: 'Kontakt — Gärtnerei Tricholand Murcia',
   description: 'Kontaktieren Sie Tricholand für ein Großhandelsangebot für Trichocereus. Antwort innerhalb von 24 Arbeitsstunden.',
   alternates: getAlternatesMetadata('de', 'contact'),
 }

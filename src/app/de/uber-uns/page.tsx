@@ -5,7 +5,7 @@ import { de } from '@/lib/i18n/de'
 import { getFullPath, getAlternatesMetadata } from '@/lib/i18n/paths'
 import { StatsBar } from '@/components/home/StatsBar'
 export const metadata: Metadata = {
-  title: 'Über uns',
+  title: 'Über uns — Gärtnerei Tricholand Murcia',
   description: 'Lernen Sie Tricholand kennen: Produzentengärtnerei spezialisiert auf Trichocereus und säulenförmige Kakteen in Murcia, Spanien. 5+ Trichocereus-Sorten, 2.500 m² Anbaufläche.',
   alternates: getAlternatesMetadata('de', 'about'),
 }

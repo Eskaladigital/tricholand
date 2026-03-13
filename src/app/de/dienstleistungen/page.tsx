@@ -5,7 +5,7 @@ import { getFullPath, getAlternatesMetadata } from '@/lib/i18n/paths'
 import { CertificationsBar } from '@/components/home/CertificationsBar'
 
 export const metadata: Metadata = {
-  title: 'Dienstleistungen',
+  title: 'Dienstleistungen Großhandel — Tricholand',
   description: 'Tricholand Dienstleistungen: Großhandel Trichocereus, Europaweiter Versand, EU/UK phytosanitäre Dokumentation und Anbau auf Bestellung.',
   alternates: getAlternatesMetadata('de', 'services'),
 }

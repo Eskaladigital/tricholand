@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { getSitemapUrls } from '@/lib/sitemap-urls'
 
 export const metadata: Metadata = {
-  title: 'Mapa del sitio',
+  title: 'Mapa del sitio — Tricholand',
   description: 'Índice de todas las páginas de Tricholand',
   robots: 'index, follow',
   alternates: {

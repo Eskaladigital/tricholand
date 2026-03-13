@@ -5,7 +5,7 @@ import { es } from '@/lib/i18n/es'
 import { StatsBar } from '@/components/home/StatsBar'
 import { getAlternatesMetadata } from '@/lib/i18n/paths'
 export const metadata: Metadata = {
-  title: 'Sobre nosotros',
+  title: 'Sobre nosotros — Vivero Tricholand Murcia',
   description: 'Conoce Tricholand: vivero productor especializado en Trichocereus y cactáceas columnares en Murcia, España. 5+ variedades de Trichocereus, 2.500 m² de cultivo.',
   alternates: getAlternatesMetadata('es', 'about'),
 }

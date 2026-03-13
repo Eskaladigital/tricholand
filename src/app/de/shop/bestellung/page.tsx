@@ -4,7 +4,7 @@ import { CartButton } from '@/components/shop/CartButton'
 import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
-  title: 'Bestellanfrage',
+  title: 'Bestellanfrage Großhandel B2B',
   description: 'Überprüfen und senden Sie Ihre B2B-Bestellanfrage. Sie erhalten innerhalb von 24h das endgültige Angebot.',
   alternates: getAlternatesMetadata('de', 'shopOrder'),
 }

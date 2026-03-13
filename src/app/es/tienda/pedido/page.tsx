@@ -4,7 +4,7 @@ import { CartButton } from '@/components/shop/CartButton'
 import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
-  title: 'Solicitud de pedido',
+  title: 'Solicitud de pedido mayorista B2B',
   description: 'Revisa y envía tu solicitud de pedido B2B. Recibirás presupuesto final en menos de 24h.',
   alternates: getAlternatesMetadata('es', 'shopOrder'),
 }
