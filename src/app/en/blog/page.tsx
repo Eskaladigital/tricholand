@@ -10,6 +10,14 @@ export const metadata: Metadata = {
   title: 'Blog',
   description: 'Tricholand blog: technical guides on cultivation, care, grafting and propagation of Trichocereus. Resources for professionals and enthusiasts.',
   alternates: getBlogIndexAlternates('en'),
+  openGraph: {
+    title: 'Blog | Tricholand',
+    description: 'Tricholand blog: technical guides on cultivation, care, grafting and propagation of Trichocereus. Resources for professionals and enthusiasts.',
+    url: 'https://www.tricholand.com/en/blog',
+    images: ['https://www.tricholand.com/images/og-image.webp'],
+    locale: 'en_US',
+    type: 'website',
+  },
 }
 
 export default async function BlogPage() {

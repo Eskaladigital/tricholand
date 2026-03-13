@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import { Archivo, Archivo_Narrow } from 'next/font/google'
+import { HtmlLangSetter } from '@/components/layout/HtmlLangSetter'
 import './globals.css'
 
 const archivo = Archivo({
@@ -63,8 +64,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html className={`${archivo.variable} ${archivoNarrow.variable}`}>
+    <html lang="es" className={`${archivo.variable} ${archivoNarrow.variable}`}>
       <body className={`${archivo.className} antialiased`}>
+        <HtmlLangSetter />
         {GA_ID && (
           <>
             <Script

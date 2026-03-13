@@ -10,6 +10,14 @@ export const metadata: Metadata = {
   title: 'Blog',
   description: 'Tricholand blog: technische gidsen over teelt, verzorging, enten en vermeerdering van Trichocereus. Bronnen voor professionals en liefhebbers.',
   alternates: getBlogIndexAlternates('nl'),
+  openGraph: {
+    title: 'Blog | Tricholand',
+    description: 'Tricholand blog: technische gidsen over teelt, verzorging, enten en vermeerdering van Trichocereus. Bronnen voor professionals en liefhebbers.',
+    url: 'https://www.tricholand.com/nl/blog',
+    images: ['https://www.tricholand.com/images/og-image.webp'],
+    locale: 'nl_NL',
+    type: 'website',
+  },
 }
 
 export default async function BlogPage() {

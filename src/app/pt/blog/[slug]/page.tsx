@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { getPostBySlug, getAllPostSlugs, getPostsMeta, getSlugsByLocaleForArticle } from '@/lib/blog'
 import { renderBlogContent } from '@/lib/blog-content'
-import { formatDate } from '@/lib/utils'
+import { formatDate, truncateDescription } from '@/lib/utils'
 import { getFullPath } from '@/lib/i18n/paths'
 
 const LOCALE = 'pt'
@@ -30,17 +30,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     : { [LOCALE]: `${BASE_URL}/${LOCALE}/blog/${slug}` }
   languages['x-default'] = languages['es'] ?? Object.values(languages)[0]
 
+  const desc = truncateDescription(post.description)
+
   return {
     title: post.title,
-    description: post.description,
+    description: desc,
     alternates: {
       canonical: `${BASE_URL}/${LOCALE}/blog/${slug}`,
       languages,
     },
     openGraph: {
       title: post.title,
-      description: post.description,
-      images: post.image ? [post.image] : [],
+      description: desc,
+      url: `${BASE_URL}/${LOCALE}/blog/${slug}`,
+      images: [post.image || `${BASE_URL}/images/og-image.webp`],
+      locale: 'pt_PT',
       type: 'article',
       publishedTime: post.date,
     },

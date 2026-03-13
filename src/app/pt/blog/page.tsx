@@ -10,6 +10,14 @@ export const metadata: Metadata = {
   title: 'Blog',
   description: 'Blog Tricholand: guias técnicas sobre cultivo, cuidados, enxertos e propagação de Trichocereus. Recursos para profissionais e entusiastas.',
   alternates: getBlogIndexAlternates('pt'),
+  openGraph: {
+    title: 'Blog | Tricholand',
+    description: 'Blog Tricholand: guias técnicas sobre cultivo, cuidados, enxertos e propagação de Trichocereus. Recursos para profissionais e entusiastas.',
+    url: 'https://www.tricholand.com/pt/blog',
+    images: ['https://www.tricholand.com/images/og-image.webp'],
+    locale: 'pt_PT',
+    type: 'website',
+  },
 }
 
 export default async function BlogPage() {
