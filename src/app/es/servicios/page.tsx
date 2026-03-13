@@ -26,9 +26,9 @@ export default function ServiciosPage() {
         <div className="max-w-3xl space-y-4 text-marron-claro leading-relaxed mb-12">
           <p>
             En Tricholand ofrecemos un servicio integral para profesionales del sector viverístico
-            y de jardinería. Desde la producción y cultivo hasta el envío con toda la documentación
+            y de jardinería. Desde la <Link href="/es/sobre-nosotros" className="text-naranja hover:underline">producción y cultivo en nuestras instalaciones</Link> hasta el envío con toda la documentación
             necesaria, nos encargamos de que recibas tus plantas en perfectas condiciones y con
-            todas las garantías legales.
+            todas las garantías legales. Descubre nuestro <Link href="/es/variedades" className="text-naranja hover:underline">catálogo completo de variedades</Link>.
           </p>
         </div>
 

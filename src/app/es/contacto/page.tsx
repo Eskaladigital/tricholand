@@ -18,7 +18,7 @@ export default function ContactoPage() {
             Contacto
           </h1>
           <p className="text-marron-claro mt-2">
-            Solicita tu presupuesto o haznos cualquier consulta. Respondemos en menos de 24h laborables.
+            Solicita tu presupuesto o haznos cualquier consulta sobre nuestras <Link href="/es/variedades" className="text-naranja hover:underline">variedades</Link> y <Link href="/es/servicios" className="text-naranja hover:underline">servicios</Link>. Respondemos en menos de 24h laborables.
           </p>
         </div>
 
@@ -74,7 +74,7 @@ export default function ContactoPage() {
                 <div>
                   <h4 className="font-bold mb-0.5">¿Hacéis envíos a particulares?</h4>
                   <p className="text-marron-claro">
-                    Somos un vivero mayorista B2B. Para compras pequeñas, podemos orientarte a distribuidores en tu zona.
+                    Somos un <Link href="/es/sobre-nosotros" className="text-naranja hover:underline">vivero mayorista B2B</Link>. Para compras pequeñas, podemos orientarte a distribuidores en tu zona.
                   </p>
                 </div>
                 <div>

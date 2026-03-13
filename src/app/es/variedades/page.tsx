@@ -31,7 +31,7 @@ export default function VariedadesPage() {
           Variedades
         </h1>
         <p className="text-marron-claro mt-2">
-          Todas las variedades de Trichocereus y cactáceas que producimos en nuestro vivero de Murcia
+          Todas las variedades de Trichocereus y cactáceas que producimos en <Link href="/es/sobre-nosotros" className="text-naranja hover:underline">nuestro vivero de Murcia</Link>. Consulta nuestros <Link href="/es/servicios" className="text-naranja hover:underline">servicios y condiciones de venta</Link>.
         </p>
       </div>
 

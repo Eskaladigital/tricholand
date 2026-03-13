@@ -31,7 +31,7 @@ export default function SobreNosotrosPage() {
               <p>
                 Tricholand es un vivero productor especializado en el cultivo y distribución mayorista
                 de cactus del género Trichocereus y otras cactáceas columnares. Desde nuestras
-                instalaciones de 2.500 m² en Murcia, España, cultivamos 5+ variedades de Trichocereus que
+                instalaciones de 2.500 m² en Murcia, España, cultivamos <Link href="/es/variedades" className="text-naranja hover:underline">más de 5 variedades de Trichocereus</Link> que
                 distribuimos a viveros, garden centers y distribuidores de toda Europa.
               </p>
               <p>
@@ -43,7 +43,7 @@ export default function SobreNosotrosPage() {
               <p>
                 Somos una empresa en continuo crecimiento con el objetivo de ofrecer a todos
                 nuestros clientes las plantas que necesiten al año, reservando parte del cultivo
-                para garantizar un stock adaptado a la demanda de cada cliente.
+                para garantizar un stock adaptado a la demanda de cada cliente. Consulta nuestros <Link href="/es/servicios" className="text-naranja hover:underline">servicios de cultivo por encargo</Link>.
               </p>
             </div>
           </div>
@@ -86,6 +86,7 @@ export default function SobreNosotrosPage() {
             {
               title: 'Certificación fitosanitaria',
               text: 'Todos nuestros ejemplares incluyen pasaporte fitosanitario UE. Documentación aduanera completa para exportación a UK.',
+              link: '/es/certificaciones',
             },
             {
               title: 'Más de 5 variedades de Trichocereus',
@@ -105,6 +106,11 @@ export default function SobreNosotrosPage() {
                 {item.title}
               </h3>
               <p className="text-sm text-marron-claro leading-relaxed">{item.text}</p>
+              {item.link && (
+                <Link href={item.link} className="inline-flex text-naranja text-xs font-semibold mt-2 hover:underline">
+                  Más información →
+                </Link>
+              )}
             </div>
           ))}
         </div>
