@@ -132,9 +132,10 @@ export async function getSitemapEntries() {
       let languages: Record<string, string> | undefined
       for (const [sourceSlug, altMap] of landingAlternates.entries()) {
         if (altMap[locale] === slug) {
-          languages = { 'x-default': `${BASE_URL}/en/${getPath('en', 'varieties')}/${altMap['en'] || slug}` }
+          const esFallback = altMap['es'] || slug
+          languages = { 'x-default': `${BASE_URL}/es/${getPath('es', 'varieties')}/${esFallback}` }
           for (const loc of LOCALES) {
-            if (altMap[loc]) languages[loc] = `${BASE_URL}/${loc}/${getPath(loc, 'varieties')}/${altMap[loc]}`
+            languages[loc] = `${BASE_URL}/${loc}/${getPath(loc, 'varieties')}/${altMap[loc] || esFallback}`
           }
           break
         }
@@ -152,9 +153,10 @@ export async function getSitemapEntries() {
       let languages: Record<string, string> | undefined
       if (sourceSlug) {
         const altMap = blogAlternates.get(sourceSlug)!
-        languages = { 'x-default': `${BASE_URL}/es/blog/${altMap['es'] || slug}` }
+        const esFallback = altMap['es'] || slug
+        languages = { 'x-default': `${BASE_URL}/es/blog/${esFallback}` }
         for (const loc of LOCALES) {
-          if (altMap[loc]) languages[loc] = `${BASE_URL}/${loc}/blog/${altMap[loc]}`
+          languages[loc] = `${BASE_URL}/${loc}/blog/${altMap[loc] || esFallback}`
         }
       }
       entries.push({

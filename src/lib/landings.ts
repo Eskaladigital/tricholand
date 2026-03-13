@@ -177,6 +177,51 @@ export async function getAllLandingAlternates(): Promise<Map<string, Record<stri
   return map
 }
 
+/** Build Next.js alternates metadata (canonical + hreflang) for a landing page. */
+export async function getLandingAlternatesMetadata(
+  slug: string,
+  locale: string
+): Promise<{ canonical: string; languages: Record<string, string> }> {
+  const { getFullPath } = await import('@/lib/i18n/paths')
+  const BASE = 'https://www.tricholand.com'
+  const effectiveLocale = getEffectiveLocale(locale)
+
+  const alternates = await getAllLandingAlternates()
+
+  let sourceSlug: string | null = null
+  for (const [src, altMap] of alternates.entries()) {
+    if (altMap[effectiveLocale] === slug) {
+      sourceSlug = src
+      break
+    }
+  }
+  if (!sourceSlug) {
+    const { data: row } = await supabase
+      .from('landing_pages')
+      .select('source_slug')
+      .eq('slug', slug)
+      .eq('status', 'published')
+      .limit(1)
+      .single()
+    sourceSlug = row?.source_slug ?? null
+  }
+
+  const languages: Record<string, string> = {}
+  if (sourceSlug && alternates.has(sourceSlug)) {
+    const altMap = alternates.get(sourceSlug)!
+    const esFallbackSlug = altMap['es'] || slug
+    for (const loc of LOCALES) {
+      languages[loc] = `${BASE}${getFullPath(loc, 'varieties', altMap[loc] || esFallbackSlug)}`
+    }
+  }
+  languages['x-default'] = languages['es'] ?? `${BASE}${getFullPath('es', 'varieties', slug)}`
+
+  return {
+    canonical: `${BASE}${getFullPath(effectiveLocale, 'varieties', slug)}`,
+    languages,
+  }
+}
+
 /**
  * Returns the slug for each locale for the language switcher.
  * For landings: returns translated slugs from Supabase.

@@ -22,12 +22,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = await getPostBySlug(slug, LOCALE)
   if (!post) return { title: 'Post non trovato' }
 
-  const slugsByLocale = await getSlugsByLocaleForArticle(slug, LOCALE)
+  const slugsByLocale = await getSlugsByLocaleForArticle(post.slug, LOCALE)
   const languages: Record<string, string> = slugsByLocale
     ? Object.fromEntries(
         Object.entries(slugsByLocale).map(([loc, s]) => [loc, `${BASE_URL}/${loc}/blog/${s}`])
       )
-    : { [LOCALE]: `${BASE_URL}/${LOCALE}/blog/${slug}` }
+    : { [LOCALE]: `${BASE_URL}/${LOCALE}/blog/${post.slug}` }
   languages['x-default'] = languages['es'] ?? Object.values(languages)[0]
 
   const desc = truncateDescription(post.description)

@@ -199,11 +199,13 @@ export async function getPostBySlug(slug: string, locale: string): Promise<BlogP
 }
 
 
-/** Devuelve el slug de este artículo en cada idioma (para el selector de idiomas) */
+/** Devuelve el slug de este artículo en cada idioma (para hreflang y selector de idiomas) */
 export async function getSlugsByLocaleForArticle(slug: string, locale: string): Promise<Record<string, string> | null> {
   const effectiveLocale = getEffectiveLocale(locale)
 
   let sourceSlug: string | null = null
+
+  // 1) Buscar por slug exacto en el locale actual
   const { data: bySlug } = await supabase
     .from('blog_posts')
     .select('source_slug')
@@ -213,15 +215,28 @@ export async function getSlugsByLocaleForArticle(slug: string, locale: string): 
     .single()
   sourceSlug = bySlug?.source_slug ?? null
 
-  if (!sourceSlug && effectiveLocale !== 'es') {
+  // 2) Buscar por source_slug (slug antiguo o slug de otro idioma)
+  if (!sourceSlug) {
     const { data: bySource } = await supabase
       .from('blog_posts')
       .select('source_slug')
       .eq('source_slug', slug)
-      .eq('locale', effectiveLocale)
       .eq('status', 'published')
+      .limit(1)
       .single()
     sourceSlug = bySource?.source_slug ?? null
+  }
+
+  // 3) Buscar por slug en cualquier locale (cobertura total)
+  if (!sourceSlug) {
+    const { data: anyLocale } = await supabase
+      .from('blog_posts')
+      .select('source_slug')
+      .eq('slug', slug)
+      .eq('status', 'published')
+      .limit(1)
+      .single()
+    sourceSlug = anyLocale?.source_slug ?? null
   }
 
   if (!sourceSlug) return null
@@ -233,7 +248,14 @@ export async function getSlugsByLocaleForArticle(slug: string, locale: string): 
     .eq('status', 'published')
 
   if (!all?.length) return null
-  return Object.fromEntries(all.map((r) => [r.locale, r.slug]))
+  const result = Object.fromEntries(all.map((r) => [r.locale, r.slug]))
+
+  // Rellenar idiomas sin traducción publicada con el slug de ES (fallback)
+  const esFallback = result['es'] ?? Object.values(result)[0]
+  for (const loc of BLOG_LOCALES) {
+    if (!result[loc]) result[loc] = esFallback
+  }
+  return result
 }
 
 /** Devuelve un mapa source_slug → { locale: slug } para generar hreflang en el sitemap */

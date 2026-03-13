@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import { getVarietyForLocale, getAllVarietySlugs } from '@/content/varieties/es/data'
 import { getFullPath, getAlternatesMetadata } from '@/lib/i18n/paths'
 import { getDictionary } from '@/lib/i18n'
-import { getLandingBySlug, getAllLandingSlugs } from '@/lib/landings'
+import { getLandingBySlug, getAllLandingSlugs, getLandingAlternatesMetadata } from '@/lib/landings'
 import { PachanoiLanding } from '@/components/landings/PachanoiLanding'
 
 const LOCALE = 'en'
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: landing.metaTitle,
       description: landing.metaDescription,
       keywords: landing.metaKeywords,
-      alternates: { canonical: `https://www.tricholand.com/${LOCALE}/varieties/${slug}` },
+      alternates: await getLandingAlternatesMetadata(slug, LOCALE),
       openGraph: {
         title: landing.metaTitle,
         description: landing.metaDescription,
