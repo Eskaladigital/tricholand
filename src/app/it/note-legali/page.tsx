@@ -4,7 +4,7 @@ import { getAlternatesMetadata } from '@/lib/i18n/paths'
 export const metadata: Metadata = {
   title: 'Avviso legale',
   description: 'Avviso legale e condizioni d\'uso del sito web Tricholand.',
-  robots: { index: false, follow: false },
+  robots: 'index, follow',
   alternates: getAlternatesMetadata('it', 'legal'),
 }
 

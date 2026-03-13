@@ -4,7 +4,7 @@ import { getAlternatesMetadata } from '@/lib/i18n/paths'
 export const metadata: Metadata = {
   title: 'Política de privacidad',
   description: 'Política de privacidad y protección de datos personales de Tricholand.',
-  robots: { index: false, follow: false },
+  robots: 'index, follow',
   alternates: getAlternatesMetadata('es', 'privacy'),
 }
 
