@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: 'Mapa del sitio',
   description: 'Índice de todas las páginas de Tricholand',
   robots: 'index, follow',
+  alternates: {
+    canonical: 'https://www.tricholand.com/sitemap',
+  },
 }
 
 export default async function SitemapPage() {
