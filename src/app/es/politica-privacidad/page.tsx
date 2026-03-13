@@ -75,6 +75,41 @@ export default function PoliticaPrivacidadPage() {
           Este sitio web no utiliza cookies de terceros ni cookies de seguimiento. Solo se utilizan
           cookies técnicas estrictamente necesarias para el funcionamiento de la web.
         </p>
+
+        <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
+          8. Seguridad de los datos
+        </h2>
+        <p>
+          Tricholand se compromete a proteger la información personal de los usuarios mediante medidas de seguridad técnicas y organizativas adecuadas. Los datos recogidos a través del formulario de contacto se almacenan de forma segura y solo son accesibles por el personal autorizado para gestionar las consultas comerciales. No compartimos, vendemos ni cedemos tus datos personales a terceros, salvo obligación legal.
+        </p>
+
+        <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
+          9. Transferencias internacionales de datos
+        </h2>
+        <p>
+          Los datos personales recogidos se almacenan en servidores ubicados dentro del Espacio Económico Europeo. En caso de utilizar servicios que impliquen transferencia de datos fuera del EEE, nos aseguraremos de que existan garantías adecuadas de protección conforme al RGPD, mediante cláusulas contractuales tipo aprobadas por la Comisión Europea o mecanismos equivalentes.
+        </p>
+
+        <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
+          10. Menores de edad
+        </h2>
+        <p>
+          Este sitio web está dirigido exclusivamente a profesionales y empresas del sector viverístico. No recogemos intencionadamente datos de menores de 18 años. Si detectamos que se han recogido datos de un menor sin el consentimiento de sus padres o tutores, procederemos a eliminarlos de inmediato.
+        </p>
+
+        <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
+          11. Modificaciones de la política de privacidad
+        </h2>
+        <p>
+          Tricholand se reserva el derecho de modificar esta política de privacidad en cualquier momento. Cualquier cambio será notificado mediante actualización de la fecha de "Última actualización" en la parte superior de este documento. Te recomendamos revisar esta política periódicamente para estar informado sobre cómo protegemos tu información personal.
+        </p>
+
+        <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
+          12. Contacto para cuestiones de privacidad
+        </h2>
+        <p>
+          Si tienes dudas, consultas o deseas ejercer tus derechos en materia de protección de datos, puedes contactar con nosotros en: <a href="mailto:info@tricholand.com" className="text-naranja hover:underline">info@tricholand.com</a>. Te responderemos en el plazo máximo de un mes desde la recepción de tu solicitud.
+        </p>
       </div>
     </section>
   )

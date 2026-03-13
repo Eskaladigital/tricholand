@@ -80,6 +80,49 @@ export default function VariedadesPage() {
           </Link>
         ))}
       </div>
+
+      {/* SEO Content Section */}
+      <div className="mt-16 pt-12 border-t-2 border-negro max-w-5xl mx-auto">
+        <h2 className="font-[family-name:var(--font-archivo-narrow)] text-2xl font-bold uppercase mb-6">
+          Variedades de Trichocereus: Catálogo completo de producción mayorista
+        </h2>
+        
+        <div className="space-y-6 text-marron-claro leading-relaxed">
+          <p>
+            En Tricholand cultivamos y distribuimos una amplia selección de cactus del género Trichocereus, especializándonos en las especies más demandadas por el mercado europeo. Nuestro catálogo incluye variedades clásicas como Trichocereus Pachanoi (San Pedro), Peruvianus, Bridgesii, Terscheckii, Macrogonus y Spachianus, todas cultivadas en nuestras propias instalaciones con <Link href="/es/certificaciones" className="text-naranja hover:underline">certificación fitosanitaria europea</Link>.
+          </p>
+          
+          <h3 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
+            ¿Qué hace especiales a nuestras variedades de Trichocereus?
+          </h3>
+          <p>
+            Todas nuestras plantas se cultivan en condiciones controladas en nuestro vivero de 2.500 m² en Murcia, España. El clima mediterráneo de la región, combinado con nuestro sistema de riego tecnificado y manejo fitosanitario profesional, nos permite ofrecer plantas de alta calidad con excelente enraizamiento y vigor vegetativo.
+          </p>
+          <p>
+            Cada variedad de Trichocereus tiene características únicas en cuanto a velocidad de crecimiento, resistencia al frío, diámetro de tallo y potencial ornamental. En las fichas individuales de cada variedad encontrarás información detallada sobre sus especificaciones técnicas, condiciones de cultivo recomendadas y disponibilidad actualizada.
+          </p>
+          
+          <h3 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
+            Disponibilidad y pedidos mayoristas
+          </h3>
+          <p>
+            Nuestro stock se actualiza regularmente según los ciclos de producción. Las variedades marcadas como "Disponible" están listas para envío inmediato tras el periodo de preparación (7 días laborables). Las variedades con stock "Limitado" requieren confirmación de disponibilidad antes de realizar el pedido.
+          </p>
+          <p>
+            Trabajamos exclusivamente en formato B2B con pedido mínimo de 100 unidades totales. Puedes combinar diferentes variedades y tamaños para alcanzar este mínimo. Para pedidos de gran volumen o cultivo por encargo de variedades específicas, consulta nuestros <Link href="/es/servicios" className="text-naranja hover:underline">servicios especiales para mayoristas</Link>.
+          </p>
+          <p>
+            Todos nuestros envíos incluyen pasaporte de planta europeo sin coste adicional, garantizando el cumplimiento de la normativa fitosanitaria para el movimiento de plantas dentro de la Unión Europea. Para exportaciones fuera de la UE, podemos gestionar el certificado fitosanitario internacional (coste adicional).
+          </p>
+          
+          <h3 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
+            Solicita información sobre nuestras variedades
+          </h3>
+          <p>
+            ¿Necesitas asesoramiento para elegir las variedades más adecuadas para tu negocio? ¿Quieres conocer disponibilidad y precios actualizados? <Link href="/es/contacto" className="text-naranja hover:underline">Contacta con nuestro equipo técnico</Link> y te enviaremos presupuesto detallado en menos de 24 horas laborables. También puedes consultar nuestro <Link href="/es/blog" className="text-naranja hover:underline">blog especializado en cultivo de Trichocereus</Link> para conocer más sobre las características y cuidados de cada variedad.
+          </p>
+        </div>
+      </div>
     </section>
   )
 }
