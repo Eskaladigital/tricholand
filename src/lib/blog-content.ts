@@ -22,6 +22,7 @@ function extractMarkdownFromHtml(html: string): string {
  * Renderiza el contenido del blog para la página pública.
  * Soporta: HTML puro, Markdown puro, o híbrido (HTML con Markdown dentro).
  * El frontend usa el mismo resultado que TinyMCE: HTML listo para renderizar.
+ * Añade dimensiones a las imágenes para evitar CLS (Cumulative Layout Shift).
  */
 export function renderBlogContent(content: string): string {
   if (!content) return ''
@@ -39,10 +40,36 @@ export function renderBlogContent(content: string): string {
     /^[\*\-]\s/m.test(trimmed) ||
     />#+\s/m.test(trimmed) || // híbrido: <p># Título
     />\*\*/m.test(trimmed) // híbrido: <p>**texto**
-  if (!hasMarkdown && trimmed.startsWith('<')) return content // HTML puro
-  let toConvert = content
-  if (trimmed.startsWith('<') && hasMarkdown) {
-    toConvert = extractMarkdownFromHtml(content)
+  
+  let html = ''
+  if (!hasMarkdown && trimmed.startsWith('<')) {
+    html = content // HTML puro
+  } else {
+    let toConvert = content
+    if (trimmed.startsWith('<') && hasMarkdown) {
+      toConvert = extractMarkdownFromHtml(content)
+    }
+    html = marked.parse(toConvert, { async: false }) as string
   }
-  return marked.parse(toConvert, { async: false }) as string
+  
+  // Añadir dimensiones a imágenes sin width/height para evitar CLS
+  html = html.replace(/<img\s+([^>]*?)>/gi, (match, attrs) => {
+    // Si ya tiene width y height, no modificar
+    if (/width\s*=/i.test(attrs) && /height\s*=/i.test(attrs)) {
+      return match
+    }
+    // Añadir dimensiones por defecto (16:9 aspect ratio, tamaño común blog)
+    const hasWidth = /width\s*=/i.test(attrs)
+    const hasHeight = /height\s*=/i.test(attrs)
+    let newAttrs = attrs
+    if (!hasWidth) {
+      newAttrs += ' width="800"'
+    }
+    if (!hasHeight) {
+      newAttrs += ' height="450"'
+    }
+    return `<img ${newAttrs}>`
+  })
+  
+  return html
 }
