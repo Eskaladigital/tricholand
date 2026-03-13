@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { truncateTitle } from './utils'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -94,7 +95,7 @@ function rowToLanding(row: {
     slug: row.slug,
     sourceSlug: row.source_slug,
     locale: row.locale,
-    metaTitle: row.meta_title,
+    metaTitle: truncateTitle(row.meta_title, 60),
     metaDescription: row.meta_description,
     metaKeywords: row.meta_keywords || [],
     ogLocale: row.og_locale || row.locale,

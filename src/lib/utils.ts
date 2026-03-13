@@ -28,6 +28,17 @@ export function truncateDescription(text: string, max = 155): string {
 }
 
 /**
+ * Trunca un título para SEO (máx 60 chars) cortando en frontera de palabra.
+ * Mantiene las palabras clave más relevantes al inicio.
+ */
+export function truncateTitle(text: string, max = 60): string {
+  if (!text || text.length <= max) return text
+  const truncated = text.slice(0, max)
+  const lastSpace = truncated.lastIndexOf(' ')
+  return lastSpace > 30 ? truncated.slice(0, lastSpace) : truncated
+}
+
+/**
  * Calcula tiempo de lectura estimado
  */
 export function readingTime(text: string): number {

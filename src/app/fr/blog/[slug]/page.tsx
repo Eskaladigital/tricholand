@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { getPostBySlug, getAllPostSlugs, getPostsMeta, getSlugsByLocaleForArticle } from '@/lib/blog'
 import { renderBlogContent } from '@/lib/blog-content'
-import { formatDate, truncateDescription } from '@/lib/utils'
+import { formatDate, truncateDescription, truncateTitle } from '@/lib/utils'
 import { getFullPath } from '@/lib/i18n/paths'
 
 const LOCALE = 'fr'
@@ -31,9 +31,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   languages['x-default'] = languages['es'] ?? Object.values(languages)[0]
 
   const desc = truncateDescription(post.description)
+  const pageTitle = truncateTitle(post.title, 60)
 
   return {
-    title: post.title,
+    title: pageTitle,
     description: desc,
     alternates: {
       canonical: `${BASE_URL}/${LOCALE}/blog/${slug}`,
