@@ -18,6 +18,7 @@ interface FormState {
   inquiry_type: InquiryType | null
   name: string
   company: string
+  vat_number: string
   email: string
   phone: string
   country: string
@@ -33,6 +34,7 @@ const initialState: FormState = {
   inquiry_type: null,
   name: '',
   company: '',
+  vat_number: '',
   email: '',
   phone: '',
   country: '',
@@ -84,6 +86,7 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
           inquiry_type: form.inquiry_type,
           name: form.name,
           company: form.company || undefined,
+          vat_number: form.vat_number || undefined,
           email: form.email,
           phone: form.phone || undefined,
           country: form.country,
@@ -316,18 +319,32 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
               </div>
 
               {form.contact_type === 'professional' && (
-                <div>
-                  <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">
-                    {cf.label_company}
-                  </label>
-                  <input
-                    type="text"
-                    value={form.company}
-                    onChange={(e) => update({ company: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja transition-colors"
-                    placeholder={cf.placeholder_company}
-                  />
-                </div>
+                <>
+                  <div>
+                    <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">
+                      {cf.label_company}
+                    </label>
+                    <input
+                      type="text"
+                      value={form.company}
+                      onChange={(e) => update({ company: e.target.value })}
+                      className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja transition-colors"
+                      placeholder={cf.placeholder_company}
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">
+                      {cf.label_vat}
+                    </label>
+                    <input
+                      type="text"
+                      value={form.vat_number}
+                      onChange={(e) => update({ vat_number: e.target.value })}
+                      className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja transition-colors"
+                      placeholder={cf.placeholder_vat}
+                    />
+                  </div>
+                </>
               )}
 
               <div>
@@ -477,6 +494,12 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
                 <div className="flex justify-between">
                   <span className="text-marron-claro">{cf.summary_company}</span>
                   <span className="font-semibold">{form.company}</span>
+                </div>
+              )}
+              {form.vat_number && (
+                <div className="flex justify-between">
+                  <span className="text-marron-claro">{cf.summary_vat}</span>
+                  <span className="font-semibold">{form.vat_number}</span>
                 </div>
               )}
               <div className="flex justify-between">

@@ -54,7 +54,7 @@ CREATE OR REPLACE FUNCTION upsert_customer_from_contact()
 RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO customers (
-    email, name, company, phone, country, city,
+    email, name, company, phone, country, city, vat_id,
     contact_count, last_contact_at, mailing_consent, mailing_consent_date
   )
   VALUES (
@@ -64,6 +64,7 @@ BEGIN
     NULLIF(TRIM(NEW.phone), ''),
     COALESCE(NULLIF(TRIM(NEW.country), ''), 'Desconocido'),
     NULLIF(TRIM(NEW.city), ''),
+    NULLIF(TRIM(COALESCE(NEW.vat_number, '')), ''),
     1,
     NEW.created_at,
     COALESCE(NEW.gdpr_consent, false),
@@ -75,6 +76,7 @@ BEGIN
     phone = COALESCE(NULLIF(TRIM(NEW.phone), ''), customers.phone),
     country = COALESCE(NULLIF(TRIM(NEW.country), ''), customers.country),
     city = COALESCE(NULLIF(TRIM(NEW.city), ''), customers.city),
+    vat_id = COALESCE(NULLIF(TRIM(NEW.vat_number), ''), customers.vat_id),
     contact_count = customers.contact_count + 1,
     last_contact_at = NEW.created_at,
     mailing_consent = COALESCE(NEW.gdpr_consent, customers.mailing_consent),

@@ -17,7 +17,8 @@
     "seed:blog": "node scripts/seed-blog-posts.mjs",
     "import:blog": "node scripts/import-blog-from-csv.mjs",
     "translate:blog": "node scripts/translate-blog-posts.mjs",
-    "migrate:customers": "node scripts/migrate-customers.mjs"
+    "migrate:customers": "node scripts/migrate-customers.mjs",
+    "db:check": "node scripts/check-db-schema.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",

@@ -280,6 +280,7 @@ ${tr.orderThanks}
 interface ContactEmailData {
   name: string
   company: string | null
+  vat_number?: string | null
   email: string
   phone: string | null
   country: string
@@ -308,6 +309,7 @@ Nueva consulta${isPro ? ' (Profesional)' : ''}
 <p style="margin:0 0 2px;font-size:11px;font-weight:bold;text-transform:uppercase;color:${COLORS.marronClaro};letter-spacing:1px;">Contacto</p>
 <p style="margin:0;font-size:14px;font-weight:bold;">${data.name}</p>
 ${data.company ? `<p style="margin:2px 0 0;font-size:13px;color:${COLORS.marronClaro};">${data.company}</p>` : ''}
+${data.vat_number ? `<p style="margin:2px 0 0;font-size:13px;color:${COLORS.marronClaro};">NIF / IVA: ${data.vat_number}</p>` : ''}
 <p style="margin:4px 0 0;font-size:13px;"><a href="mailto:${data.email}" style="color:${COLORS.naranja};">${data.email}</a></p>
 ${data.phone ? `<p style="margin:2px 0 0;font-size:13px;">${data.phone}</p>` : ''}
 <p style="margin:4px 0 0;font-size:13px;">${[data.city, data.country].filter(Boolean).join(', ')}</p>

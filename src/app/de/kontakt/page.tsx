@@ -69,7 +69,7 @@ export default function ContactoPage() {
               <div className="space-y-4 text-sm">
                 <div>
                   <h4 className="font-bold mb-0.5">Was ist die Mindestbestellung?</h4>
-                  <p className="text-marron-claro">100 Einheiten pro Bestellung.</p>
+                  <p className="text-marron-claro">200 Einheiten pro Bestellung.</p>
                 </div>
                 <div>
                   <h4 className="font-bold mb-0.5">Liefern Sie an Privatpersonen?</h4>

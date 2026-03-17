@@ -36,6 +36,7 @@ export interface Contact {
   inquiry_type: InquiryType
   name: string
   company: string | null
+  vat_number: string | null
   email: string
   phone: string | null
   country: string
@@ -57,6 +58,7 @@ export interface ContactFormData {
   inquiry_type: InquiryType
   name: string
   company?: string
+  vat_number?: string
   email: string
   phone?: string
   country: string

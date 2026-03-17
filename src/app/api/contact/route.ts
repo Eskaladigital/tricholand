@@ -10,6 +10,7 @@ interface ContactPayload {
   inquiry_type: string
   name: string
   company?: string
+  vat_number?: string
   email: string
   phone?: string
   country: string
@@ -50,6 +51,7 @@ export async function POST(request: NextRequest) {
       inquiry_type: body.inquiry_type || null,
       name: body.name,
       company: body.company || null,
+      vat_number: body.vat_number || null,
       email: body.email,
       phone: body.phone || null,
       country: body.country,
@@ -79,6 +81,7 @@ export async function POST(request: NextRequest) {
       const emailData = {
         name: body.name,
         company: body.company || null,
+        vat_number: body.vat_number || null,
         email: body.email,
         phone: body.phone || null,
         country: body.country,

@@ -81,6 +81,12 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
                   <p>{contact.company}</p>
                 </div>
               )}
+              {contact.vat_number && (
+                <div>
+                  <span className="block text-xs font-bold uppercase text-marron-claro mb-0.5">NIF / IVA</span>
+                  <p>{contact.vat_number}</p>
+                </div>
+              )}
             </div>
           </section>
 

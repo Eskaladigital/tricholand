@@ -143,6 +143,7 @@ export interface Dictionary {
     step3_title: string
     label_name: string
     label_company: string
+    label_vat: string
     label_email: string
     label_phone: string
     label_country: string
@@ -150,6 +151,7 @@ export interface Dictionary {
     label_message: string
     placeholder_name: string
     placeholder_company: string
+    placeholder_vat: string
     placeholder_phone: string
     placeholder_country: string
     placeholder_city: string
@@ -167,6 +169,7 @@ export interface Dictionary {
     summary_inquiry: string
     summary_name: string
     summary_company: string
+    summary_vat: string
     summary_email: string
     summary_phone: string
     summary_location: string

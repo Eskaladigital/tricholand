@@ -7,6 +7,7 @@ export interface ContactRow {
   created_at: string
   name: string
   company: string | null
+  vat_number: string | null
   email: string
   phone: string | null
   country: string

@@ -159,6 +159,7 @@ CREATE TABLE contacts (
 
   name TEXT NOT NULL,
   company TEXT,
+  vat_number TEXT,
   email TEXT NOT NULL,
   phone TEXT,
   country TEXT NOT NULL,
