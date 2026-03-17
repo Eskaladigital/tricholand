@@ -18,7 +18,7 @@ export const nl: Dictionary = {
   },
   header: {
     band_left: 'Murcia, Spanje · Producentenkwekerij · Exclusieve B2B verkoop',
-    band_right: 'Minimale bestelling 200 stuks · EU-plantenpaspoort inbegrepen',
+    band_right: 'Minimale bestelling 750 stuks · EU-plantenpaspoort inbegrepen',
   },
   hero: {
     badge: '● Actieve kwekerij',
@@ -83,7 +83,7 @@ export const nl: Dictionary = {
     items: [
       {
         title: 'Groothandel',
-        description: 'Bestellingen vanaf 200 stuks. Speciale voorwaarden voor volume. Betaling via bankoverschrijving.',
+        description: 'Bestellingen vanaf 750 stuks. Speciale voorwaarden voor volume. Betaling via bankoverschrijving.',
       },
       {
         title: 'Leveringen Europa',

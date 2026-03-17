@@ -109,7 +109,7 @@ export default function VariedadesPage() {
             Nuestro stock se actualiza regularmente según los ciclos de producción. Las variedades marcadas como "Disponible" están listas para envío inmediato tras el periodo de preparación (7 días laborables). Las variedades con stock "Limitado" requieren confirmación de disponibilidad antes de realizar el pedido.
           </p>
           <p>
-            Trabajamos exclusivamente en formato B2B con pedido mínimo de 200 unidades totales. Puedes combinar diferentes variedades y tamaños para alcanzar este mínimo. Para pedidos de gran volumen o cultivo por encargo de variedades específicas, consulta nuestros <Link href="/es/servicios" className="text-naranja hover:underline">servicios especiales para mayoristas</Link>.
+            Trabajamos exclusivamente en formato B2B con pedido mínimo de 750 unidades totales. Puedes combinar diferentes variedades y tamaños para alcanzar este mínimo. Para pedidos de gran volumen o cultivo por encargo de variedades específicas, consulta nuestros <Link href="/es/servicios" className="text-naranja hover:underline">servicios especiales para mayoristas</Link>.
           </p>
           <p>
             Todos nuestros envíos incluyen pasaporte de planta europeo sin coste adicional, garantizando el cumplimiento de la normativa fitosanitaria para el movimiento de plantas dentro de la Unión Europea. Para exportaciones fuera de la UE, podemos gestionar el certificado fitosanitario internacional (coste adicional).

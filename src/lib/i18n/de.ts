@@ -18,7 +18,7 @@ export const de: Dictionary = {
   },
   header: {
     band_left: 'Murcia, Spanien · Produzent · Exklusiver B2B-Verkauf',
-    band_right: 'Mindestbestellung 200 Stk · EU-Pflanzenpass inklusive',
+    band_right: 'Mindestbestellung 750 Stk · EU-Pflanzenpass inklusive',
   },
   hero: {
     badge: '● Aktive Gärtnerei',
@@ -83,7 +83,7 @@ export const de: Dictionary = {
     items: [
       {
         title: 'Großhandel',
-        description: 'Bestellungen ab 200 Einheiten. Sonderkonditionen bei Volumen. Zahlung per Banküberweisung.',
+        description: 'Bestellungen ab 750 Einheiten. Sonderkonditionen bei Volumen. Zahlung per Banküberweisung.',
       },
       {
         title: 'Versand Europa',

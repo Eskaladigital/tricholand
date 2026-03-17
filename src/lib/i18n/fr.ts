@@ -18,7 +18,7 @@ export const fr: Dictionary = {
   },
   header: {
     band_left: 'Murcie, Espagne · Pépinière productrice · Vente B2B exclusive',
-    band_right: 'Commande minimum 200 unités · Passeport végétal européen inclus',
+    band_right: 'Commande minimum 750 unités · Passeport végétal européen inclus',
   },
   hero: {
     badge: '● Pépinière active',
@@ -83,7 +83,7 @@ export const fr: Dictionary = {
     items: [
       {
         title: 'Vente en gros',
-        description: 'Commandes à partir de 200 unités. Conditions spéciales par volume. Paiement par virement bancaire.',
+        description: 'Commandes à partir de 750 unités. Conditions spéciales par volume. Paiement par virement bancaire.',
       },
       {
         title: 'Expéditions Europe',

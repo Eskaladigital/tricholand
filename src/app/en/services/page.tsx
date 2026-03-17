@@ -37,7 +37,7 @@ export default function ServiciosPage() {
               num: '01',
               title: 'Wholesale sales',
               details: [
-                'Minimum order: 200 units',
+                'Minimum order: 750 units',
                 'Special conditions for recurring orders and large volumes',
                 'Payment by bank transfer',
                 'Custom quote in less than 24 business hours',

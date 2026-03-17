@@ -236,7 +236,7 @@ INSERT INTO settings (key, value) VALUES
   ('company_name', '"Tricholand"'),
   ('company_email', '"info@tricholand.com"'),
   ('company_phone', '"+34 968 000 000"'),
-  ('min_order_units', '100'),
+  ('min_order_units', '750'),
   ('default_tax_rate', '21'),
   ('notify_email', '"info@tricholand.com"'),
   ('auto_reply', 'true');

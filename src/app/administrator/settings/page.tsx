@@ -20,7 +20,7 @@ export default function SettingsPage() {
       setCompanyName(s.company_name ?? 'Tricholand')
       setCompanyEmail(s.company_email ?? 'info@tricholand.com')
       setCompanyPhone(s.company_phone ?? '+34 968 000 000')
-      setMinOrderUnits(s.min_order_units ?? 100)
+      setMinOrderUnits(s.min_order_units ?? 750)
       setDefaultTaxRate(s.default_tax_rate ?? 21)
       setNotifyEmail(s.notify_email ?? 'info@tricholand.com')
       setAutoReply(s.auto_reply ?? true)

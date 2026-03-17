@@ -70,7 +70,7 @@ export default function ContactoPage() {
               <div className="space-y-4 text-sm">
                 <div>
                   <h4 className="font-bold mb-0.5">¿Cuál es el pedido mínimo?</h4>
-                  <p className="text-marron-claro">200 unidades por pedido.</p>
+                  <p className="text-marron-claro">750 unidades por pedido.</p>
                 </div>
                 <div>
                   <h4 className="font-bold mb-0.5">¿Hacéis envíos a particulares?</h4>
@@ -108,7 +108,7 @@ export default function ContactoPage() {
                 Tricholand es un vivero productor especializado en el cultivo y distribución mayorista de cactus del género Trichocereus. Desde nuestras instalaciones de 2.500 m² en Murcia, España, atendemos pedidos profesionales de viveros, garden centers y distribuidores de toda Europa.
               </p>
               <p>
-                Nuestro equipo técnico responde a todas las consultas en menos de 24 horas laborables, ofreciendo asesoramiento personalizado sobre variedades, disponibilidad, condiciones de envío y plazos de entrega. Trabajamos exclusivamente en formato B2B con pedido mínimo de 200 unidades.
+                Nuestro equipo técnico responde a todas las consultas en menos de 24 horas laborables, ofreciendo asesoramiento personalizado sobre variedades, disponibilidad, condiciones de envío y plazos de entrega. Trabajamos exclusivamente en formato B2B con pedido mínimo de 750 unidades.
               </p>
               <p>
                 Al contactar con nosotros recibirás información detallada sobre nuestras <Link href="/es/variedades" className="text-naranja hover:underline">variedades de Trichocereus disponibles</Link>, precios mayoristas actualizados, condiciones de pago y toda la documentación fitosanitaria necesaria para envíos dentro y fuera de la Unión Europea.
@@ -123,7 +123,7 @@ export default function ContactoPage() {
                 <strong className="text-negro">Venta exclusiva B2B:</strong> Solo atendemos pedidos de empresas y profesionales del sector viverístico. No realizamos ventas a particulares. Si buscas comprar en pequeñas cantidades, podemos orientarte a distribuidores en tu zona.
               </p>
               <p>
-                <strong className="text-negro">Pedido mínimo:</strong> El pedido mínimo es de 200 unidades por pedido total. Puedes combinar diferentes variedades y tamaños para alcanzar este mínimo.
+                <strong className="text-negro">Pedido mínimo:</strong> El pedido mínimo es de 750 unidades por pedido total. Puedes combinar diferentes variedades y tamaños para alcanzar este mínimo.
               </p>
               <p>
                 <strong className="text-negro">Tiempo de respuesta:</strong> Respondemos a todas las consultas en menos de 24 horas laborables. Si tu consulta es urgente, indícalo en el mensaje.

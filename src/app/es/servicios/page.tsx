@@ -39,7 +39,7 @@ export default function ServiciosPage() {
               num: '01',
               title: 'Venta mayorista',
               details: [
-                'Pedido mínimo: 200 unidades',
+                'Pedido mínimo: 750 unidades',
                 'Condiciones especiales para pedidos recurrentes y grandes volúmenes',
                 'Pago por transferencia bancaria',
                 'Presupuesto personalizado en menos de 24h laborables',

@@ -69,7 +69,7 @@ export default function ContactoPage() {
               <div className="space-y-4 text-sm">
                 <div>
                   <h4 className="font-bold mb-0.5">Wat is de minimale bestelling?</h4>
-                  <p className="text-marron-claro">200 stuks per bestelling.</p>
+                  <p className="text-marron-claro">750 stuks per bestelling.</p>
                 </div>
                 <div>
                   <h4 className="font-bold mb-0.5">Leveren jullie aan particulieren?</h4>

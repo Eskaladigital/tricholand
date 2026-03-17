@@ -37,7 +37,7 @@ export default function ServiciosPage() {
               num: '01',
               title: 'Venda por atacado',
               details: [
-                'Pedido mínimo: 200 unidades',
+                'Pedido mínimo: 750 unidades',
                 'Condições especiais para pedidos recorrentes e grandes volumes',
                 'Pagamento por transferência bancária',
                 'Orçamento personalizado em menos de 24 horas úteis',

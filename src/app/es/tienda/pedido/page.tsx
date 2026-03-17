@@ -57,7 +57,7 @@ export default function PedidoPage() {
                 Condiciones del pedido mayorista
               </h3>
               <p>
-                <strong className="text-negro">Pedido mínimo:</strong> 200 unidades totales por pedido. Puedes combinar diferentes variedades y tamaños de nuestra tienda para alcanzar este mínimo.
+                <strong className="text-negro">Pedido mínimo:</strong> 750 unidades totales por pedido. Puedes combinar diferentes variedades y tamaños de nuestra tienda para alcanzar este mínimo.
               </p>
               <p>
                 <strong className="text-negro">Condición de profesional:</strong> Venta exclusiva B2B. Tras recibir tu solicitud, deberás acreditar tu actividad profesional mediante CIF/NIF de empresa, certificado de actividades económicas (AEAT) o NIF-IVA verificable en VIES para empresas de la UE.

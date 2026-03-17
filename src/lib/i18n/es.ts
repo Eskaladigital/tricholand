@@ -18,7 +18,7 @@ export const es: Dictionary = {
   },
   header: {
     band_left: 'Murcia, España · Vivero productor · Venta B2B exclusiva',
-    band_right: 'Pedido mínimo 200 uds · Pasaporte de planta europeo incluido',
+    band_right: 'Pedido mínimo 750 uds · Pasaporte de planta europeo incluido',
   },
   hero: {
     badge: '● Vivero activo',
@@ -83,7 +83,7 @@ export const es: Dictionary = {
     items: [
       {
         title: 'Venta mayorista',
-        description: 'Pedidos desde 200 unidades. Condiciones especiales por volumen. Pago por transferencia bancaria.',
+        description: 'Pedidos desde 750 unidades. Condiciones especiales por volumen. Pago por transferencia bancaria.',
       },
       {
         title: 'Envíos Europa',

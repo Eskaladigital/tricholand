@@ -69,7 +69,7 @@ export default function ContactoPage() {
               <div className="space-y-4 text-sm">
                 <div>
                   <h4 className="font-bold mb-0.5">¿Cuál es el pedido mínimo?</h4>
-                  <p className="text-marron-claro">200 unidades por pedido.</p>
+                  <p className="text-marron-claro">750 unidades por pedido.</p>
                 </div>
                 <div>
                   <h4 className="font-bold mb-0.5">¿Hacéis envíos a particulares?</h4>

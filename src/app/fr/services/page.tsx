@@ -38,7 +38,7 @@ export default function ServiciosPage() {
               num: '01',
               title: 'Vente en gros',
               details: [
-                'Commande minimum : 200 unités',
+                'Commande minimum : 750 unités',
                 'Conditions spéciales pour commandes récurrentes et grands volumes',
                 'Paiement par virement',
                 'Devis personnalisé en moins de 24h ouvrées',

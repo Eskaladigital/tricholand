@@ -18,7 +18,7 @@ export const it: Dictionary = {
   },
   header: {
     band_left: 'Murcia, Spagna · Vivaio produttore · Vendita B2B esclusiva',
-    band_right: 'Ordine minimo 200 pz · Passaporto delle piante UE incluso',
+    band_right: 'Ordine minimo 750 pz · Passaporto delle piante UE incluso',
   },
   hero: {
     badge: '● Vivaio attivo',
@@ -83,7 +83,7 @@ export const it: Dictionary = {
     items: [
       {
         title: 'Vendita all\'ingrosso',
-        description: 'Ordini da 200 unità. Condizioni speciali per volume. Pagamento tramite bonifico bancario.',
+        description: 'Ordini da 750 unità. Condizioni speciali per volume. Pagamento tramite bonifico bancario.',
       },
       {
         title: 'Spedizioni Europa',

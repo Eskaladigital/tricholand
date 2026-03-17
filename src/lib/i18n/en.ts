@@ -18,7 +18,7 @@ export const en: Dictionary = {
   },
   header: {
     band_left: 'Murcia, Spain · Producer nursery · Exclusive B2B sales',
-    band_right: 'Minimum order 200 units · EU plant passport included',
+    band_right: 'Minimum order 750 units · EU plant passport included',
   },
   hero: {
     badge: '● Active nursery',
@@ -83,7 +83,7 @@ export const en: Dictionary = {
     items: [
       {
         title: 'Wholesale sales',
-        description: 'Orders from 200 units. Special conditions for volume. Payment by bank transfer.',
+        description: 'Orders from 750 units. Special conditions for volume. Payment by bank transfer.',
       },
       {
         title: 'Europe shipping',

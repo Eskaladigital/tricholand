@@ -18,7 +18,7 @@ export const pt: Dictionary = {
   },
   header: {
     band_left: 'Murcia, Espanha · Viveiro produtor · Venda B2B exclusiva',
-    band_right: 'Pedido mínimo 200 uds · Passaporte de planta europeu incluído',
+    band_right: 'Pedido mínimo 750 uds · Passaporte de planta europeu incluído',
   },
   hero: {
     badge: '● Viveiro ativo',
@@ -83,7 +83,7 @@ export const pt: Dictionary = {
     items: [
       {
         title: 'Venda por atacado',
-        description: 'Pedidos a partir de 200 unidades. Condições especiais por volume. Pagamento por transferência bancária.',
+        description: 'Pedidos a partir de 750 unidades. Condições especiais por volume. Pagamento por transferência bancária.',
       },
       {
         title: 'Envios Europa',
