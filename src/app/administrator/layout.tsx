@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { AdminLayoutShell } from '@/components/admin/AdminLayoutShell'
 import { PwaInstallPrompt } from '@/components/admin/PwaInstallPrompt'
+import { RootHtml } from '@/components/layout/RootHtml'
 
 export const metadata: Metadata = {
   title: 'Administración | Tricholand',
@@ -19,13 +20,19 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: '#1a1a1a',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#f5f5f0]">
-      <AdminLayoutShell>{children}</AdminLayoutShell>
-      <PwaInstallPrompt />
-    </div>
+    <RootHtml lang="es">
+      <div className="min-h-screen bg-[#f5f5f0]">
+        <AdminLayoutShell>{children}</AdminLayoutShell>
+        <PwaInstallPrompt />
+      </div>
+    </RootHtml>
   )
 }

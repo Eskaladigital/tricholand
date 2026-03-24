@@ -56,28 +56,51 @@ function genDict(loc) {
 const L = (loc) => `import { getDictionary } from '@/lib/i18n'\nconst dict = getDictionary('${loc.code}')\n`
 
 function genLayout(loc) {
+  const localesMap = { en: 'en_US', es: 'es_ES', de: 'de_DE', fr: 'fr_FR', it: 'it_IT', nl: 'nl_NL', pt: 'pt_PT' }
+  const currentLocale = localesMap[loc.code]
+  const alternates = Object.values(localesMap).filter(l => l !== currentLocale).map(l => \`'\${l}'\`).join(', ')
+
   return `import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { CartProvider } from '@/lib/shop/cart-context'
 import { getDictionary } from '@/lib/i18n'
+import { RootHtml } from '@/components/layout/RootHtml'
+import { defaultMetadata, defaultViewport } from '@/lib/metadata'
+import type { Metadata, Viewport } from 'next'
+
+export const viewport: Viewport = defaultViewport
+export const metadata: Metadata = {
+  ...defaultMetadata,
+  title: {
+    default: 'Tricholand · Vivero Productor de Trichocereus',
+    template: '%s | Tricholand',
+  },
+  openGraph: {
+    ...defaultMetadata.openGraph,
+    locale: '${currentLocale}',
+    alternateLocale: [${alternates}],
+  },
+}
 
 const dict = getDictionary('${loc.code}')
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div lang="${loc.code}">
+    <RootHtml lang="${loc.code}">
       <CartProvider>
         <Header locale="${loc.code}" dict={dict} />
         <main>{children}</main>
         <Footer locale="${loc.code}" dict={dict} />
       </CartProvider>
-    </div>
+    </RootHtml>
   )
 }
 `}
 
 function genHome(loc) {
-  return `import { getDictionary } from '@/lib/i18n'
+  return `import type { Metadata } from 'next'
+import { getHomeAlternates } from '@/lib/i18n/paths'
+import { getDictionary } from '@/lib/i18n'
 import { HeroSection } from '@/components/home/HeroSection'
 import { StatsBar } from '@/components/home/StatsBar'
 import { CatalogPreview } from '@/components/home/CatalogPreview'
@@ -86,6 +109,10 @@ import { CertificationsBar } from '@/components/home/CertificationsBar'
 import { CtaSection } from '@/components/home/CtaSection'
 
 const dict = getDictionary('${loc.code}')
+
+export const metadata: Metadata = {
+  alternates: getHomeAlternates('${loc.code}'),
+}
 
 export default function HomePage() {
   return (

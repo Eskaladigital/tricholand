@@ -180,6 +180,19 @@ export function getPathForLocaleSwitch(
   return `/${targetLocale}${pathWithoutLocale.startsWith('/') ? pathWithoutLocale : '/' + pathWithoutLocale}`
 }
 
+/** Alternates para el índice principal (/es, /en, etc) */
+export function getHomeAlternates(locale: string) {
+  const locales = ['es', 'en', 'de', 'fr', 'it', 'nl', 'pt'] as const
+  const languages: Record<string, string> = { 'x-default': `${BASE_URL}/es` }
+  for (const loc of locales) {
+    languages[loc] = `${BASE_URL}/${loc}`
+  }
+  return {
+    canonical: `${BASE_URL}/${locale}`,
+    languages,
+  }
+}
+
 /** Alternates para índice de blog (/blog igual en todos los locales) */
 export function getBlogIndexAlternates(locale: string) {
   const locales = ['es', 'en', 'de', 'fr', 'it', 'nl', 'pt'] as const

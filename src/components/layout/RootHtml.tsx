@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Script from 'next/script'
 import { Archivo, Archivo_Narrow } from 'next/font/google'
 import { HtmlLangSetter } from '@/components/layout/HtmlLangSetter'
-import './globals.css'
+import '@/app/globals.css'
 
 const archivo = Archivo({
   subsets: ['latin'],
@@ -20,53 +20,17 @@ const archivoNarrow = Archivo_Narrow({
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
-export const metadata: Metadata = {
-  title: {
-    default: 'Tricholand · Vivero Productor de Trichocereus',
-    template: '%s | Tricholand',
-  },
-  description: 'Vivero productor de Trichocereus y cactáceas columnares. Venta mayorista B2B para profesionales. Envíos a toda Europa desde Murcia, España.',
-  metadataBase: new URL('https://www.tricholand.com'),
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
-  icons: {
-    icon: '/favicon.png',
-    apple: '/apple-touch-icon.png',
-  },
-  openGraph: {
-    type: 'website',
-    siteName: 'Tricholand',
-    images: [
-      {
-        url: 'https://www.tricholand.com/images/og-image.webp',
-        width: 1200,
-        height: 630,
-        alt: 'Tricholand vivero de Trichocereus',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-}
-
-export default function RootLayout({
+export function RootHtml({
   children,
+  lang = 'es',
 }: {
   children: React.ReactNode
+  lang?: string
 }) {
   return (
-    <html lang="es" className={`${archivo.variable} ${archivoNarrow.variable}`}>
+    <html lang={lang} className={`${archivo.variable} ${archivoNarrow.variable}`}>
       <body className={`${archivo.className} antialiased`}>
-        <HtmlLangSetter />
+        {/* <HtmlLangSetter /> */}
         {GA_ID && (
           <>
             <Script

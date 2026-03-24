@@ -1,13 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { RootHtml } from '@/components/layout/RootHtml'
 import { defaultMetadata, defaultViewport } from '@/lib/metadata'
-import { Header } from '@/components/layout/Header'
-import { Footer } from '@/components/layout/Footer'
-import { CartProvider } from '@/lib/shop/cart-context'
-import { es } from '@/lib/i18n/es'
 
 export const viewport: Viewport = defaultViewport
-
 export const metadata: Metadata = {
   ...defaultMetadata,
   title: {
@@ -15,26 +10,12 @@ export const metadata: Metadata = {
     template: '%s | Tricholand',
   },
   description: 'Vivero productor de Trichocereus y cactáceas columnares. Venta mayorista B2B para profesionales. Envíos a toda Europa desde Murcia, España.',
-  
-  openGraph: {
-    ...defaultMetadata.openGraph,
-    locale: 'es_ES',
-    alternateLocale: ['en_US', 'de_DE', 'fr_FR', 'it_IT', 'nl_NL', 'pt_PT'],
-  },
 }
 
-export default function LayoutES({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootPageLayout({ children }: { children: React.ReactNode }) {
   return (
     <RootHtml lang="es">
-      <CartProvider>
-        <Header locale="es" dict={es} />
-        <main>{children}</main>
-        <Footer locale="es" dict={es} />
-      </CartProvider>
+      {children}
     </RootHtml>
   )
 }
