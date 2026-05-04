@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { createServiceClient } from '@/lib/supabase/api'
 import { sendMailPair } from '@/lib/email/transporter'
 import { contactAdminEmail, contactClientEmail } from '@/lib/email/templates'
@@ -71,6 +72,9 @@ export async function POST(request: NextRequest) {
     }
 
     addLog('Contacto guardado en BD')
+
+    revalidatePath('/administrator/contacts', 'layout')
+    revalidatePath('/administrator/dashboard')
 
     // --- 2. Enviar emails ---
     let emailAdmin = false

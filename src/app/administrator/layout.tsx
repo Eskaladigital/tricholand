@@ -3,6 +3,9 @@ import { AdminLayoutShell } from '@/components/admin/AdminLayoutShell'
 import { PwaInstallPrompt } from '@/components/admin/PwaInstallPrompt'
 import { RootHtml } from '@/components/layout/RootHtml'
 
+/** Evita que páginas del admin queden como HTML estático en build (p. ej. Contactos sin filas nuevas hasta redeploy). */
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Administración | Tricholand',
   robots: { index: false, follow: false },

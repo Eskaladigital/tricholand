@@ -2,6 +2,29 @@
 
 Todos los cambios notables del proyecto Tricholand Web.
 
+## [1.2.7] - 2026-03
+
+### Corregido (SEO / i18n)
+
+- **`<html lang>` y hreflang**: Arquitectura de múltiples root layouts con `RootHtml` para que el idioma del documento en SSR coincida con la URL (evita “hreflang and HTML lang mismatch” en herramientas como Ahrefs).
+- **Canonicals duplicados**: Eliminados `alternates.canonical` y `hreflang` de la home desde los `layout.tsx` de idioma; la home usa `getHomeAlternates()` en cada `page.tsx`. Así las páginas hijas no heredan el canonical de la portada.
+- **Open Graph**: En layouts de idioma ya no se fijan `openGraph.url`, `title` ni `description` globales; se mantienen `locale` y `alternateLocale` y el resto se infiere por página.
+
+### Añadido
+
+- **`src/components/layout/RootHtml.tsx`**: `<html>`, `<body>`, fuentes, GA.
+- **`src/lib/metadata.ts`**: `defaultMetadata` y `defaultViewport` compartidos.
+- **`src/app/(root)/`**: Grupo de rutas con layout para redirect `/` → `/es` y `not-found`.
+- **`getHomeAlternates()`** en `src/lib/i18n/paths.ts`: canonical + languages para `/es`, `/en`, etc.
+- **Layouts** en `pedido/` y `sitemap/` con `RootHtml` y metadatos coherentes.
+- **Scripts auxiliares** (`fix-layouts.mjs`, `fix-home-alternates.mjs`, `fix-opengraph.mjs`) y actualización de **`scripts/generate-locales.mjs`** para futuras regeneraciones.
+
+### Modificado
+
+- **`src/app/administrator/layout.tsx`**: Envuelto en `RootHtml` con viewport alineado al resto del sitio.
+
+---
+
 ## [1.2.6] - 2026-02
 
 ### Añadido

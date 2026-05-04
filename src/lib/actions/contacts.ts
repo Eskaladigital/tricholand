@@ -1,6 +1,13 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import { createServiceClient } from '@/lib/supabase/api'
+
+/** Invalida el árbol /administrator/contacts (listado + detalle) y el dashboard. */
+function revalidateContacts() {
+  revalidatePath('/administrator/contacts', 'layout')
+  revalidatePath('/administrator/dashboard')
+}
 
 export interface ContactRow {
   id: string
@@ -57,6 +64,7 @@ export async function updateContactStatus(
   const supabase = createServiceClient()
   const { error } = await supabase.from('contacts').update({ status }).eq('id', id)
   if (error) return { error: error.message }
+  revalidateContacts()
   return {}
 }
 
@@ -64,5 +72,6 @@ export async function deleteContact(id: string): Promise<{ error?: string }> {
   const supabase = createServiceClient()
   const { error } = await supabase.from('contacts').delete().eq('id', id)
   if (error) return { error: error.message }
+  revalidateContacts()
   return {}
 }

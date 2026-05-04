@@ -3,6 +3,16 @@
 import { revalidatePath, unstable_noStore } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 
+const PUBLIC_LOCALES = ['es', 'en', 'de', 'fr', 'it', 'nl', 'pt'] as const
+
+/** Invalida admin (lista + editor) y blog público en todos los locales. */
+function revalidateBlog() {
+  revalidatePath('/administrator/blog', 'layout')
+  for (const locale of PUBLIC_LOCALES) {
+    revalidatePath(`/${locale}/blog`, 'layout')
+  }
+}
+
 export interface AdminBlogPost {
   id: string
   slug: string
@@ -102,6 +112,7 @@ export async function createBlogPost(input: Record<string, unknown>): Promise<{ 
   }).select('id').single()
 
   if (error) return { error: error.message }
+  revalidateBlog()
   return { id: data?.id }
 }
 
@@ -125,6 +136,7 @@ export async function updateBlogPost(id: string, input: Record<string, unknown>)
   }).eq('id', id)
 
   if (error) return { error: error.message }
+  revalidateBlog()
   return {}
 }
 
@@ -132,6 +144,7 @@ export async function deleteBlogPost(id: string): Promise<{ error?: string }> {
   const supabase = await createClient()
   const { error } = await supabase.from('blog_posts').delete().eq('id', id)
   if (error) return { error: error.message }
+  revalidateBlog()
   return {}
 }
 
@@ -142,7 +155,7 @@ export async function updateBlogPostStatus(
   const supabase = await createClient()
   const { error } = await supabase.from('blog_posts').update({ status }).eq('id', id)
   if (error) return { error: error.message }
-  revalidatePath('/administrator/blog')
+  revalidateBlog()
   return {}
 }
 

@@ -363,11 +363,17 @@ export function OrderDetailClient({ order: initialOrder, items: initialItems, pr
                     <label className={labelClass}>Producto</label>
                     <select value={newProductId} onChange={(e) => setNewProductId(e.target.value)} className={fieldClass}>
                       <option value="">Seleccionar...</option>
-                      {products.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name} ({p.sku}) — {(p.price_cents / 100).toFixed(2)} €
-                        </option>
-                      ))}
+                      {products.map((p) => {
+                        const statusTag =
+                          p.status === 'draft' ? ' [BORRADOR]'
+                          : p.status === 'out_of_stock' ? ' [SIN STOCK]'
+                          : ''
+                        return (
+                          <option key={p.id} value={p.id}>
+                            {p.name} ({p.sku}) — {(p.price_cents / 100).toFixed(2)} €{statusTag}
+                          </option>
+                        )
+                      })}
                     </select>
                   </div>
                   <div>

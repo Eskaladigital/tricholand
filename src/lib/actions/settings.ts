@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 
 export interface SettingsMap {
@@ -51,5 +52,7 @@ export async function updateSettings(updates: Partial<SettingsMap>): Promise<{ e
     const { error } = await supabase.from('settings').upsert({ key, value: jsonValue }, { onConflict: 'key' })
     if (error) return { error: error.message }
   }
+  revalidatePath('/administrator/settings', 'layout')
+  revalidatePath('/administrator/dashboard')
   return {}
 }

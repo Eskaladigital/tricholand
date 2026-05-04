@@ -39,7 +39,7 @@ npm run dev
 - **Emails en idioma del cliente**: confirmación pedido, validación, pago confirmado, datos bancarios
 - **Página pública de pedido multiidioma**: `/pedido/[order_number]` — standalone, detecta el locale del pedido
 - **Sistema de traducciones** con Supabase + OpenAI
-- **SEO**: sitemap con hreflang (blog incluido), robots, meta alternates por idioma
+- **SEO**: sitemap con hreflang (blog incluido), robots, canonical y hreflang por página; `<html lang>` correcto en SSR por idioma; Open Graph con `locale` / `alternateLocale` sin forzar `og:url` global en layout
 - **Blog multiidioma**: slugs traducidos por idioma (94 posts × 7 locales), fallback por `source_slug` para URLs antiguas
 - **Google Analytics** (GA4)
 - **Favicon** con logo sobre fondo blanco
@@ -275,7 +275,7 @@ NEXT_PUBLIC_SITE_URL=https://www.tricholand.com
 | **Variedades** (`/variedades`) | `public/images/` | `/images/varieties/...`, `/images/vivero/...` | `unoptimized` |
 | **Sobre nosotros** (7 idiomas) | `public/images/` | `/images/vivero/productores_cactus_*.webp` | `unoptimized` |
 | **Logo** (Header, Footer) | `public/images/` | `/images/icons/logo_tricho_yellow_200_200.webp` | `unoptimized` |
-| **OG image** (layouts) | `public/images/` | `https://www.tricholand.com/images/og-image.webp` | — |
+| **OG image** (default) | `public/images/` | Definida en `src/lib/metadata.ts` (`defaultMetadata.openGraph.images`) → `https://www.tricholand.com/images/og-image.webp` | — |
 | **Tienda** (productos) | **Supabase Storage** (bucket `plants`) | URL completa `https://xxx.supabase.co/...` vía BD | **`unoptimized` siempre** |
 | **Blog** (artículos) | **Supabase Storage** (bucket `blog`) | `getBlogImageUrl()` en `storage.ts` | **`unoptimized` siempre** |
 
@@ -341,12 +341,14 @@ Convierte in situ en `images/` (no mueve nada a `public/`).
 tricholand-web/
 ├── src/
 │   ├── app/                    # App Router (Next.js 15)
-│   │   ├── es/, en/, nl/, fr/, de/, it/, pt/   # 7 idiomas (variedades, tienda, blog, landings, contacto...)
-│   │   ├── administrator/      # Panel admin (protegido)
-│   │   ├── pedido/[order_number]  # Página pública del pedido (standalone, multiidioma, pago, factura)
+│   │   ├── (root)/             # Redirect raíz → /es, not-found (cada segmento con su propio root layout)
+│   │   ├── es/, en/, nl/, fr/, de/, it/, pt/   # 7 idiomas: RootHtml + Header/Footer (variedades, tienda, blog…)
+│   │   ├── administrator/      # Panel admin (protegido, RootHtml lang=es)
+│   │   ├── pedido/[order_number]  # Página pública del pedido (layout RootHtml lang=es, noindex)
+│   │   ├── sitemap/            # Página HTML del sitemap (layout propio)
 │   │   └── api/                # API routes (contact, orders, payments, webhooks, transfer, variety-alternate-slugs)
 │   ├── components/
-│   │   ├── layout/             # Header, Footer
+│   │   ├── layout/             # Header, Footer, RootHtml (html/body, fuentes, GA)
 │   │   ├── home/               # Hero, StatsBar, CatalogPreview, etc.
 │   │   ├── shop/               # ShopGrid, CartButton, OrderForm
 │   │   ├── contact/            # ContactFormWizard
@@ -355,7 +357,8 @@ tricholand-web/
 │   │   └── admin/              # AdminSidebar, ProductForm
 │   ├── content/                # Datos estáticos (variedades, productos)
 │   ├── lib/
-│   │   ├── i18n/               # Diccionarios por idioma
+│   │   ├── i18n/               # Diccionarios por idioma; paths.ts (getAlternateUrls, getHomeAlternates, …)
+│   │   ├── metadata.ts         # metadataBase, viewport, robots, OG base compartidos entre root layouts
 │   │   ├── landings.ts         # Lectura landings B2B desde Supabase
 │   │   ├── shop/               # Cart context
 │   │   ├── email/              # Templates y i18n de emails
@@ -471,13 +474,30 @@ Configura las mismas variables de entorno en el panel de tu proveedor.
 
 ## SEO
 
+### Arquitectura multi-idioma (importante para crawlers)
+
+- **No hay un único `src/app/layout.tsx`**: cada segmento con HTML propio tiene su root layout (`es/layout.tsx`, `en/layout.tsx`, `(root)/layout.tsx`, `administrator/layout.tsx`, `pedido/layout.tsx`, `sitemap/layout.tsx`). Así el atributo `<html lang="…">` coincide con el idioma de la URL en el HTML servido (evita avisos tipo “hreflang vs html lang mismatch” en Ahrefs u otras herramientas).
+- **`RootHtml`** (`src/components/layout/RootHtml.tsx`): envuelve `<html>` y `<body>`, fuentes, Google Analytics. Recibe `lang` por layout.
+- **`src/lib/metadata.ts`**: `defaultMetadata` y `defaultViewport` compartidos (metadataBase, iconos, robots, Twitter, imagen OG por defecto). Los layouts de idioma extienden esto y solo añaden título/descripción/Open Graph `locale` + `alternateLocale` (sin fijar `openGraph.url` ni título OG en el layout, para que cada página use su canonical y título).
+
+### Canonical y hreflang
+
+- **Home** (`/{locale}`): `getHomeAlternates(locale)` en `src/lib/i18n/paths.ts` — canonical de la home + `languages` con todas las homes.
+- **Resto de páginas**: `getAlternatesMetadata(locale, key, slug?)` en el mismo fichero, o helpers específicos (blog, landings). **No** poner canonical de la home en `layout.tsx` de idioma: heredaría a todas las rutas hijas y generaría duplicados.
 - **Sitemap**: `/sitemap.xml` (generado automáticamente con hreflang)
-  - Páginas estáticas: alternates por idioma vía `getAlternateUrls()`
-  - Blog: alternates con slugs traducidos por idioma vía `getAllBlogAlternates()`
-  - Productos y variedades: alternates por idioma
+  - Páginas estáticas: alternates vía `getAlternateUrls()` / entradas en `sitemap-urls.ts`
+  - Blog: alternates con slugs traducidos vía `getAllBlogAlternates()`
+  - Productos, variedades y landings: alternates por idioma
 - **Robots**: `/robots.txt` (permite todo excepto `/administrator/` y `/api/`)
-- **Meta alternates** en `<head>` de todas las páginas (via `generateMetadata`)
-- **Blog**: cada artículo tiene slug propio por idioma (ej: `/es/blog/guia-cultivo-trichocereus` → `/de/blog/leitfaden-anbau-trichocereus`). Fallback por `source_slug` para URLs antiguas con redirect automático
+- **Meta en `<head>`**: `generateMetadata` en cada `page.tsx` donde aplique; layouts solo metadatos “globales” del idioma (título por defecto, descripción, OG locale).
+
+### Blog
+
+- Cada artículo tiene slug propio por idioma (ej: `/es/blog/guia-cultivo-trichocereus` → `/de/blog/leitfaden-anbau-trichocereus`). Fallback por `source_slug` para URLs antiguas con redirect automático.
+
+### Regenerar páginas por idioma
+
+- `node scripts/generate-locales.mjs` genera layouts con `RootHtml`, metadata base y home con `getHomeAlternates`. Los scripts `fix-*.mjs` en `scripts/` fueron auxiliares de migración; el flujo oficial es el generador + el código ya commiteado.
 
 ---
 

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { getOrdersList, deleteOrder } from '@/lib/actions/orders'
 import { formatPrice } from '@/types/shop'
 import { TableActions } from '@/components/admin/TableActions'
@@ -21,13 +22,21 @@ export default async function OrdersListPage() {
 
   return (
     <>
-        <div className="mb-8">
-          <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
-            Pedidos
-          </h1>
-          <p className="text-sm text-marron-claro mt-1">
-            {orders.length} pedidos · {pendingCount} pendientes de revisión
-          </p>
+        <div className="mb-8 flex flex-wrap justify-between items-start gap-4">
+          <div>
+            <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
+              Pedidos
+            </h1>
+            <p className="text-sm text-marron-claro mt-1">
+              {orders.length} pedidos · {pendingCount} pendientes de revisión
+            </p>
+          </div>
+          <Link
+            href="/administrator/orders/new"
+            className="bg-naranja text-blanco px-5 py-2.5 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-marron transition-colors"
+          >
+            + Nuevo pedido
+          </Link>
         </div>
 
         <div className="bg-blanco border border-linea overflow-hidden">
@@ -49,7 +58,11 @@ export default async function OrdersListPage() {
                 {orders.length === 0 ? (
                   <tr>
                     <td colSpan={8} className="px-4 py-8 text-center text-marron-claro">
-                      No hay pedidos. Los pedidos aparecerán aquí cuando los clientes envíen solicitudes desde la tienda.
+                      No hay pedidos. Los pedidos aparecerán aquí cuando los clientes envíen solicitudes desde la tienda, o puedes{' '}
+                      <Link href="/administrator/orders/new" className="text-naranja font-semibold hover:underline">
+                        crear uno manualmente
+                      </Link>
+                      .
                     </td>
                   </tr>
                 ) : (

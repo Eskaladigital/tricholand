@@ -1,6 +1,8 @@
 # Sistema de Lotes B2B - Tricholand
 
 > **Referencias**: Las landings B2B Pachanoi (UK, Europe, España, Francia, etc.) en `/varieties/` mencionan estos valores (750 uds mínimo, 150 uds incremento) en sus FAQs y beneficios. Contenido en Supabase (`landing_pages`).
+>
+> **Otra documentación**: internacionalización, SEO y estructura de layouts → [README.md](../README.md) (secciones *SEO* y *Estructura del proyecto*); checklist de contenido por idioma → [CHECKLIST-I18N-EN.md](../CHECKLIST-I18N-EN.md).
 
 ## Concepto
 

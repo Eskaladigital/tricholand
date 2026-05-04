@@ -21,7 +21,7 @@ Estas secciones usan imágenes estáticas servidas desde `public/images/`:
 - **Variedades** → `src/content/varieties/es/data.ts` (paths `/images/varieties/...`, `/images/vivero/...`, `/images/products/...`)
 - **Sobre nosotros** → 7 páginas de idioma (`sobre-nosotros`, `about-us`, `uber-uns`, etc.)
 - **Logo** → Header.tsx y Footer.tsx (`/images/icons/logo_tricho_yellow_200_200.webp`)
-- **OG Image** → layouts (`/images/og-image.webp`)
+- **OG Image (por defecto)** → `src/lib/metadata.ts` (`defaultMetadata.openGraph.images`) apunta a `/images/og-image.webp` en `public/`
 
 **NO mover estas imágenes a Supabase.**
 

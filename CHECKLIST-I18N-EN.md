@@ -75,3 +75,18 @@ Revisión de contenido hardcodeado en español en páginas de otros idiomas. Cob
 5. **Blog — nuevos artículos**: Al crear un artículo nuevo en español y traducirlo, verificar que el slug generado en cada idioma sea correcto (no mezcla de idiomas). Si hay problemas, ejecutar `node scripts/translate-blog-posts.mjs --retranslate-all --locale XX`.
 6. **Sitemap**: Blog y landings incluyen hreflang. Si se añaden nuevas secciones dinámicas, añadir alternates en `src/lib/sitemap-urls.ts`.
 7. **Landings B2B**: Contenido en Supabase (`landing_pages`). Para nuevas landings: `seed-landings.mjs` o `translate-landings.mjs`.
+
+---
+
+## SEO y layouts multi-idioma (2026-03)
+
+Referencia rápida para no romper canonical / hreflang / `lang`:
+
+| Regla | Detalle |
+|-------|---------|
+| **Root layout por segmento** | No existe un único `app/layout.tsx`. Cada idioma (`es/`, `en/`, …), `(root)/`, `administrator/`, `pedido/`, `sitemap/` tiene su layout con `<RootHtml lang="…">`. |
+| **Canonical de la home** | Solo en `src/app/{locale}/page.tsx` vía `getHomeAlternates('{locale}')`. **No** volver a poner `alternates.canonical` de la home en `layout.tsx` del idioma. |
+| **Páginas interiores** | Usar `getAlternatesMetadata(locale, key, slug?)`, `getBlogIndexAlternates`, landings helpers, etc., en el `page.tsx` correspondiente. |
+| **Open Graph en layout de idioma** | OK: extender `defaultMetadata`, `openGraph.locale`, `openGraph.alternateLocale`. Evitar `openGraph.url` / `title` / `description` fijos en layout (duplican la home en redes). |
+| **Metadatos compartidos** | `src/lib/metadata.ts` — cambios en favicon, robots por defecto, imagen OG base. |
+| **Regenerar rutas** | `node scripts/generate-locales.mjs` debe generar `RootHtml` + home con `getHomeAlternates` (ya actualizado en repo). |

@@ -12,11 +12,27 @@
  * silenciosamente en build time (cookies() no existe) → devuelve [] → 0 páginas
  * de producto generadas → ERROR 500 en producción.
  */
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { createApiClient } from '@/lib/supabase/api'
 import type { Product } from '@/types/shop'
 import { PRODUCT_TRANSLATIONS } from '@/content/shop/product-translations'
 import { resolveProductImageUrl } from '@/lib/storage'
+
+const PUBLIC_LOCALES = ['es', 'en', 'de', 'fr', 'it', 'nl', 'pt'] as const
+
+/** Invalida admin (lista + detalle + dashboard) y también la tienda pública en todos los locales. */
+function revalidateProducts() {
+  revalidatePath('/administrator/products', 'layout')
+  revalidatePath('/administrator/dashboard')
+  for (const locale of PUBLIC_LOCALES) {
+    revalidatePath(`/${locale}/shop`, 'layout')
+    revalidatePath(`/${locale}/tienda`, 'layout')
+    revalidatePath(`/${locale}/boutique`, 'layout')
+    revalidatePath(`/${locale}/winkel`, 'layout')
+    revalidatePath(`/${locale}/loja`, 'layout')
+  }
+}
 
 export interface ProductOption {
   id: string
@@ -24,6 +40,7 @@ export interface ProductOption {
   sku: string
   price_cents: number
   units_per_lot?: number
+  status?: string
 }
 
 function mapDbProductToProduct(row: Record<string, unknown>): Product {
@@ -169,17 +186,26 @@ export async function getProductsForSelect(): Promise<ProductOption[]> {
   const supabase = await createClient()
   const { data } = await supabase
     .from('products')
-    .select('id, name, sku, price_cents, units_per_lot')
-    .eq('status', 'active')
+    .select('id, name, sku, price_cents, units_per_lot, status')
+    .neq('status', 'archived')
     .order('name')
 
-  return (data ?? []).map((p) => ({
-    id: p.id,
-    name: p.name,
-    sku: p.sku,
-    price_cents: p.price_cents ?? 0,
-    units_per_lot: (p.units_per_lot as number) ?? 100,
-  }))
+  const statusOrder: Record<string, number> = { active: 0, draft: 1, out_of_stock: 2 }
+  return (data ?? [])
+    .map((p) => ({
+      id: p.id,
+      name: p.name,
+      sku: p.sku,
+      price_cents: p.price_cents ?? 0,
+      units_per_lot: (p.units_per_lot as number) ?? 100,
+      status: (p.status as string) ?? 'active',
+    }))
+    .sort((a, b) => {
+      const sa = statusOrder[a.status] ?? 99
+      const sb = statusOrder[b.status] ?? 99
+      if (sa !== sb) return sa - sb
+      return a.name.localeCompare(b.name)
+    })
 }
 
 export async function createProduct(data: Record<string, unknown>): Promise<{ error?: string; id?: string }> {
@@ -209,6 +235,7 @@ export async function createProduct(data: Record<string, unknown>): Promise<{ er
     sort_order: data.sort_order ?? 0,
   }).select('id').single()
   if (error) return { error: error.message }
+  revalidateProducts()
   return { id: inserted?.id }
 }
 
@@ -239,6 +266,7 @@ export async function updateProduct(id: string, data: Record<string, unknown>): 
     sort_order: data.sort_order ?? 0,
   }).eq('id', id)
   if (error) return { error: error.message }
+  revalidateProducts()
   return {}
 }
 
@@ -251,6 +279,7 @@ export async function toggleProductStatus(id: string, currentStatus: string): Pr
     .update({ status: newStatus })
     .eq('id', id)
   if (error) return { error: error.message }
+  revalidateProducts()
   return {}
 }
 
@@ -262,5 +291,6 @@ export async function deleteProduct(id: string): Promise<{ error?: string }> {
     .delete()
     .eq('id', id)
   if (error) return { error: error.message }
+  revalidateProducts()
   return {}
 }

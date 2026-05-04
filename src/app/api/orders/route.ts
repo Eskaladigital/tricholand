@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { createServiceClient } from '@/lib/supabase/api'
 import { sendMailPair } from '@/lib/email/transporter'
 import { orderAdminEmail, orderClientEmail } from '@/lib/email/templates'
@@ -175,6 +176,10 @@ export async function POST(request: NextRequest) {
     } catch (err) {
       addError(`Error general enviando emails: ${err instanceof Error ? err.message : err}`)
     }
+
+    revalidatePath('/administrator/orders', 'layout')
+    revalidatePath('/administrator/dashboard')
+    revalidatePath('/administrator/customers', 'layout')
 
     // --- Respuesta ---
     addLog(`Pedido ${order_number} completado. Items: ${itemsSaved}, Email admin: ${emailAdmin}, Email cliente: ${emailClient}`)

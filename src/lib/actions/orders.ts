@@ -1,8 +1,17 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { createServiceClient } from '@/lib/supabase/api'
 import type { OrderStatus, PaymentMethod } from '@/types/shop'
+
+/** Invalida admin (lista + detalle de pedido + dashboard + clientes, ya que mutan customers vía trigger). */
+function revalidateOrders(orderId?: string) {
+  revalidatePath('/administrator/orders', 'layout')
+  if (orderId) revalidatePath(`/administrator/orders/${orderId}`)
+  revalidatePath('/administrator/dashboard')
+  revalidatePath('/administrator/customers', 'layout')
+}
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
@@ -147,6 +156,7 @@ export async function updateOrder(
   const supabase = await createClient()
   const { error } = await supabase.from('orders').update(data).eq('id', id)
   if (error) return { error: error.message }
+  revalidateOrders(id)
   return {}
 }
 
@@ -172,6 +182,7 @@ export async function addOrderItem(
     .select('id')
     .single()
   if (error) return { error: error.message }
+  revalidateOrders(orderId)
   return { id: data?.id }
 }
 
@@ -185,6 +196,7 @@ export async function updateOrderItem(
   }
   const { error } = await supabase.from('order_items').update(data).eq('id', itemId)
   if (error) return { error: error.message }
+  revalidateOrders()
   return {}
 }
 
@@ -192,6 +204,7 @@ export async function deleteOrderItem(itemId: string): Promise<{ error?: string 
   const supabase = await createClient()
   const { error } = await supabase.from('order_items').delete().eq('id', itemId)
   if (error) return { error: error.message }
+  revalidateOrders()
   return {}
 }
 
@@ -200,7 +213,81 @@ export async function deleteOrder(id: string): Promise<{ error?: string }> {
   const supabase = await createClient()
   const { error } = await supabase.from('orders').delete().eq('id', id)
   if (error) return { error: error.message }
+  revalidateOrders(id)
   return {}
+}
+
+// ============================================
+// Crear pedido manual desde el admin
+// ============================================
+
+export interface CreateAdminOrderInput {
+  customer_name: string
+  customer_company?: string | null
+  customer_email: string
+  customer_phone?: string | null
+  customer_country: string
+  customer_city?: string | null
+  customer_vat_id?: string | null
+  customer_address?: string | null
+  customer_notes?: string | null
+  admin_notes?: string | null
+  locale?: string
+}
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+export async function createAdminOrder(
+  input: CreateAdminOrderInput
+): Promise<{ error?: string; id?: string; order_number?: string }> {
+  const name = input.customer_name?.trim()
+  const email = input.customer_email?.trim().toLowerCase()
+  const country = input.customer_country?.trim()
+
+  if (!name) return { error: 'El nombre del cliente es obligatorio' }
+  if (!email) return { error: 'El email del cliente es obligatorio' }
+  if (!EMAIL_RE.test(email)) return { error: 'El formato del email no es válido' }
+  if (!country) return { error: 'El país es obligatorio' }
+
+  const supabase = await createClient()
+
+  let order_number: string
+  try {
+    const { data: rpcNum } = await supabase.rpc('get_next_order_number')
+    order_number = rpcNum ?? `TRI-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`
+  } catch {
+    order_number = `TRI-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`
+  }
+
+  const { data, error } = await supabase
+    .from('orders')
+    .insert({
+      order_number,
+      status: 'reviewing' as OrderStatus,
+      customer_name: name,
+      customer_company: input.customer_company?.trim() || null,
+      customer_email: email,
+      customer_phone: input.customer_phone?.trim() || null,
+      customer_country: country,
+      customer_city: input.customer_city?.trim() || null,
+      customer_vat_id: input.customer_vat_id?.trim() || null,
+      customer_address: input.customer_address?.trim() || null,
+      customer_notes: input.customer_notes?.trim() || null,
+      admin_notes: input.admin_notes?.trim() || null,
+      subtotal_cents: 0,
+      discount_cents: 0,
+      shipping_cents: 0,
+      tax_cents: 0,
+      total_cents: 0,
+      currency: 'EUR',
+      locale: input.locale || 'es',
+    })
+    .select('id, order_number')
+    .single()
+
+  if (error || !data) return { error: error?.message ?? 'Error al crear el pedido' }
+  revalidateOrders(data.id)
+  return { id: data.id, order_number: data.order_number }
 }
 
 const DEFAULT_TAX_RATE = 21
@@ -228,6 +315,7 @@ export async function recalcOrderTotals(orderId: string): Promise<{ error?: stri
     .update({ subtotal_cents, tax_cents, total_cents })
     .eq('id', orderId)
   if (error) return { error: error.message }
+  revalidateOrders(orderId)
   return {}
 }
 
@@ -434,6 +522,7 @@ export async function validateOrder(orderId: string): Promise<ValidateOrderResul
   }
 
   log.push('Pipeline de validación completado')
+  revalidateOrders(orderId)
   return result
 }
 
@@ -603,5 +692,6 @@ export async function confirmPayment(
   }
 
   log.push('Pipeline de confirmación de pago completado')
+  revalidateOrders(orderId)
   return result
 }
