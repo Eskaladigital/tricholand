@@ -31,7 +31,7 @@ export const viewport: Viewport = {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <RootHtml lang="es">
+    <RootHtml lang="es" skipAnalytics>
       <div className="min-h-screen bg-[#f5f5f0]">
         <AdminLayoutShell>{children}</AdminLayoutShell>
         <PwaInstallPrompt />
