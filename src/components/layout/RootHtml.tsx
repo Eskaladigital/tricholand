@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import { Archivo, Archivo_Narrow } from 'next/font/google'
 import { HtmlLangSetter } from '@/components/layout/HtmlLangSetter'
 import { CookieConsentBar } from '@/components/layout/CookieConsentBar'
@@ -61,23 +62,12 @@ export function RootHtml({
       </head>
       <body className={`${archivo.className} antialiased`}>
         {/* <HtmlLangSetter /> */}
-        {loadAnalytics && (
+        {loadAnalytics && GA_ID ? (
           <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="google-analytics" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${GA_ID}');
-              `}
-            </Script>
+            <GoogleAnalytics gaId={GA_ID} />
             <CookieConsentBar />
           </>
-        )}
+        ) : null}
         {children}
       </body>
     </html>
