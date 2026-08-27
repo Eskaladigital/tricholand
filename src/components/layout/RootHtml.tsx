@@ -63,11 +63,9 @@ export function RootHtml({
       <body className={`${archivo.className} antialiased`}>
         {/* <HtmlLangSetter /> */}
         {loadAnalytics && GA_ID ? (
-          <>
-            <GoogleAnalytics gaId={GA_ID} />
-            <CookieConsentBar />
-          </>
+          <GoogleAnalytics gaId={GA_ID} />
         ) : null}
+        <CookieConsentBar />
         {children}
       </body>
     </html>

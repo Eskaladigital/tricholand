@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { Dictionary } from '@/lib/i18n/types'
 import { getFullPath } from '@/lib/i18n/paths'
+import { CookieSettingsButton } from '@/components/layout/CookieConsentBar'
 
 function BackToTop() {
   return (
@@ -152,6 +153,7 @@ export function Footer({ locale, dict }: FooterProps) {
           <Link href={getFullPath(locale, 'privacy')} className="hover:opacity-100 transition-opacity">
             Política de privacidad
           </Link>
+          <CookieSettingsButton locale={locale} className="hover:opacity-100 transition-opacity bg-transparent border-0 p-0 cursor-pointer text-inherit font-[inherit]" />
           <Link href={getFullPath(locale, 'legal')} className="hover:opacity-100 transition-opacity">
             Aviso legal
           </Link>
