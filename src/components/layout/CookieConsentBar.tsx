@@ -13,25 +13,31 @@ const PREFS_KEY = 'tricholand_cookie_preferences'
 type Prefs = {
   necessary: true
   analytics: boolean
+  functional: boolean
+  marketing: boolean
 }
 
-const ALL_ON: Prefs = { necessary: true, analytics: true }
-const ONLY_NECESSARY: Prefs = { necessary: true, analytics: false }
+const ALL_ON: Prefs = { necessary: true, analytics: true, functional: true, marketing: true }
+const ONLY_NECESSARY: Prefs = { necessary: true, analytics: false, functional: false, marketing: false }
 
 const COPY: Record<string, Record<string, string>> = {
   es: {
     bannerLabel: 'Banner de consentimiento de cookies',
     title: 'Utilizamos cookies',
-    text: 'Usamos cookies de analítica para medir visitas y mejorar Tricholand. Puedes aceptar todas o configurar tus preferencias.',
+    text: 'Usamos cookies propias y de terceros para mejorar tu experiencia, analizar el tráfico y mostrarte contenido personalizado. Puedes aceptar todas o configurar tus preferencias.',
     policy: 'Política de privacidad',
     configure: 'Configurar',
     acceptAll: 'Aceptar todas',
     settingsTitle: 'Configuración de cookies',
-    settingsIntro: 'Elige qué tipos de cookies deseas aceptar. Las cookies necesarias no se pueden desactivar.',
+    settingsIntro: 'Elige qué tipos de cookies deseas aceptar. Las cookies necesarias no se pueden desactivar ya que son imprescindibles para el funcionamiento del sitio.',
     necessary: 'Cookies necesarias',
-    necessaryDesc: 'Esenciales para el funcionamiento del sitio y recordar tu consentimiento.',
+    necessaryDesc: 'Estas cookies son esenciales para el funcionamiento del sitio web. Sin ellas, el sitio no funcionaría correctamente.',
     analytics: 'Cookies analíticas',
-    analyticsDesc: 'Nos permiten contar visitas y mejorar Tricholand (Google Analytics).',
+    analyticsDesc: 'Nos permiten contar las visitas y analizar cómo los usuarios navegan por el sitio para mejorarlo.',
+    functional: 'Cookies funcionales',
+    functionalDesc: 'Permiten recordar tus preferencias para una experiencia más personalizada.',
+    marketing: 'Cookies de marketing',
+    marketingDesc: 'Se utilizan para mostrarte anuncios relevantes y medir la efectividad de las campañas publicitarias.',
     alwaysOn: 'Siempre activas',
     more: 'Más información en la',
     reject: 'Rechazar todas',
@@ -42,16 +48,20 @@ const COPY: Record<string, Record<string, string>> = {
   en: {
     bannerLabel: 'Cookie consent banner',
     title: 'We use cookies',
-    text: 'We use analytics cookies to measure visits and improve Tricholand. You can accept all or set your preferences.',
+    text: 'We use our own and third-party cookies to improve your experience, analyse traffic and show you personalised content. You can accept all or set your preferences.',
     policy: 'Privacy policy',
     configure: 'Settings',
     acceptAll: 'Accept all',
     settingsTitle: 'Cookie settings',
-    settingsIntro: 'Choose which cookies to accept. Necessary cookies cannot be turned off.',
+    settingsIntro: 'Choose which cookies to accept. Necessary cookies cannot be turned off because they are essential for the site to work.',
     necessary: 'Necessary cookies',
-    necessaryDesc: 'Essential for the site to work and to remember your consent.',
+    necessaryDesc: 'These cookies are essential for the website to work. Without them, the site would not function correctly.',
     analytics: 'Analytics cookies',
-    analyticsDesc: 'Help us measure visits and improve Tricholand (Google Analytics).',
+    analyticsDesc: 'Allow us to count visits and analyse how users browse the site in order to improve it.',
+    functional: 'Functional cookies',
+    functionalDesc: 'Remember your preferences for a more personalised experience.',
+    marketing: 'Marketing cookies',
+    marketingDesc: 'Used to show you relevant ads and measure the effectiveness of advertising campaigns.',
     alwaysOn: 'Always on',
     more: 'More information in our',
     reject: 'Reject all',
@@ -67,12 +77,13 @@ function t(locale: string, key: string) {
 
 function updateGtag(prefs: Prefs) {
   if (typeof window === 'undefined' || !(window as any).gtag) return
-  const v = prefs.analytics ? 'granted' : 'denied'
+  const analytics = prefs.analytics ? 'granted' : 'denied'
+  const ads = prefs.marketing ? 'granted' : 'denied'
   ;(window as any).gtag('consent', 'update', {
-    analytics_storage: v,
-    ad_storage: 'denied',
-    ad_user_data: 'denied',
-    ad_personalization: 'denied',
+    analytics_storage: analytics,
+    ad_storage: ads,
+    ad_user_data: ads,
+    ad_personalization: ads,
   })
 }
 
@@ -87,7 +98,12 @@ function readPrefs(): Prefs | null {
     const raw = localStorage.getItem(PREFS_KEY)
     if (raw) {
       const parsed = JSON.parse(raw) as Partial<Prefs>
-      return { necessary: true, analytics: Boolean(parsed.analytics) }
+      return {
+        necessary: true,
+        analytics: Boolean(parsed.analytics),
+        functional: Boolean(parsed.functional),
+        marketing: Boolean(parsed.marketing),
+      }
     }
     const legacy = localStorage.getItem(KEY)
     if (legacy === 'granted') return ALL_ON
@@ -188,27 +204,36 @@ export function CookieConsentBar() {
           </div>
           <div className="flex-1 overflow-y-auto p-6">
             <p className="opacity-70 mb-6">{t(locale, 'settingsIntro')}</p>
-            <div className={`p-4 rounded-xl border-2 mb-4 ${prefs.necessary ? 'border-naranja bg-naranja/10' : 'border-negro/10'}`}>
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <h3 className="font-semibold">{t(locale, 'necessary')}</h3>
-                  <p className="text-sm opacity-65 mt-1">{t(locale, 'necessaryDesc')}</p>
-                </div>
-                <span className="text-xs bg-negro/10 px-2 py-1 rounded-full whitespace-nowrap">{t(locale, 'alwaysOn')}</span>
-              </div>
-            </div>
-            <div className={`p-4 rounded-xl border-2 mb-4 ${prefs.analytics ? 'border-naranja bg-naranja/10' : 'border-negro/10 bg-negro/5'}`}>
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <h3 className="font-semibold">{t(locale, 'analytics')}</h3>
-                  <p className="text-sm opacity-65 mt-1">{t(locale, 'analyticsDesc')}</p>
-                </div>
-                <label className="relative inline-flex items-center cursor-pointer shrink-0">
-                  <input type="checkbox" className="sr-only peer" checked={prefs.analytics} onChange={(e) => setPrefs((p) => ({ ...p, analytics: e.target.checked }))} aria-label={t(locale, 'analytics')} />
-                  <span className="w-10 h-6 bg-negro/20 rounded-full peer-checked:bg-naranja transition-colors" />
-                  <span className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-4" />
-                </label>
-              </div>
+            <div className="space-y-4">
+              <TriCategory
+                title={t(locale, 'necessary')}
+                description={t(locale, 'necessaryDesc')}
+                enabled
+                required
+                alwaysOn={t(locale, 'alwaysOn')}
+                icon="shield"
+              />
+              <TriCategory
+                title={t(locale, 'analytics')}
+                description={t(locale, 'analyticsDesc')}
+                enabled={prefs.analytics}
+                onChange={(v) => setPrefs((p) => ({ ...p, analytics: v }))}
+                icon="chart"
+              />
+              <TriCategory
+                title={t(locale, 'functional')}
+                description={t(locale, 'functionalDesc')}
+                enabled={prefs.functional}
+                onChange={(v) => setPrefs((p) => ({ ...p, functional: v }))}
+                icon="cog"
+              />
+              <TriCategory
+                title={t(locale, 'marketing')}
+                description={t(locale, 'marketingDesc')}
+                enabled={prefs.marketing}
+                onChange={(v) => setPrefs((p) => ({ ...p, marketing: v }))}
+                icon="megaphone"
+              />
             </div>
             <p className="text-sm opacity-55 mt-6">
               {t(locale, 'more')}{' '}
@@ -244,6 +269,65 @@ export function CookieConsentBar() {
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 flex-shrink-0">
           <button type="button" onClick={() => setView('settings')} className="px-4 py-2 bg-negro/10 rounded-lg font-medium text-sm hover:bg-negro/15">{t(locale, 'configure')}</button>
           <button type="button" onClick={acceptAll} className="px-4 py-2 bg-naranja text-white rounded-lg font-medium text-sm">{t(locale, 'acceptAll')}</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function CategoryGlyph({ icon }: { icon: 'shield' | 'chart' | 'cog' | 'megaphone' }) {
+  const d =
+    icon === 'shield'
+      ? 'M12 3 4 6v6c0 5 3.4 8.4 8 9.5C16.6 20.4 20 17 20 12V6l-8-3Z'
+      : icon === 'chart'
+        ? 'M4 19h16M7 16v-5m5 5V8m5 8V5'
+        : icon === 'cog'
+          ? 'M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm8.2 3.1-.9-.5.2-1-1.7-1.7-1 .2-.5-.9.2-1.9h-2.4l.2 1.9-.5.9-1-.2-1.7 1.7.2 1-.9.5-1.8.6v2.4l1.8.6.9.5-.2 1 1.7 1.7 1-.2.5.9-.2 1.9h2.4l-.2-1.9.5-.9 1 .2 1.7-1.7-.2-1 .9-.5 1.8-.6v-2.4l-1.8-.6Z'
+          : 'M4 10v4h3l5 4V6L7 10H4Zm14.5 2a5.5 5.5 0 0 0-1.6-3.9l-1.1 1.1A4 4 0 0 1 17 12a4 4 0 0 1-1.2 2.8l1.1 1.1A5.5 5.5 0 0 0 18.5 12Z'
+  return (
+    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <path d={d} strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function TriCategory({
+  title,
+  description,
+  enabled,
+  required,
+  alwaysOn,
+  onChange,
+  icon,
+}: {
+  title: string
+  description: string
+  enabled: boolean
+  required?: boolean
+  alwaysOn?: string
+  onChange?: (v: boolean) => void
+  icon: 'shield' | 'chart' | 'cog' | 'megaphone'
+}) {
+  return (
+    <div className={`p-4 rounded-xl border-2 ${enabled ? 'border-naranja bg-naranja/10' : 'border-negro/10 bg-negro/5'}`}>
+      <div className="flex items-start gap-4">
+        <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${enabled ? 'bg-naranja text-white' : 'bg-negro/10 text-negro/50'}`} aria-hidden="true">
+          <CategoryGlyph icon={icon} />
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center justify-between gap-3 mb-1">
+            <h3 className="font-semibold">{title}</h3>
+            {required ? (
+              <span className="text-xs bg-negro/10 px-2 py-1 rounded-full whitespace-nowrap">{alwaysOn}</span>
+            ) : (
+              <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                <input type="checkbox" className="sr-only peer" checked={enabled} onChange={(e) => onChange?.(e.target.checked)} aria-label={title} />
+                <span className="w-10 h-6 bg-negro/20 rounded-full peer-checked:bg-naranja transition-colors" />
+                <span className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-4" />
+              </label>
+            )}
+          </div>
+          <p className="text-sm opacity-65">{description}</p>
         </div>
       </div>
     </div>

@@ -68,7 +68,7 @@ export default function PoliticaPrivacidadPage() {
           tratamiento y portabilidad de datos dirigiéndote a info@tricholand.com.
         </p>
 
-        <h2 className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
+        <h2 id="cookies" className="font-[family-name:var(--font-archivo-narrow)] text-lg font-bold text-negro uppercase mt-8">
           7. Cookies
         </h2>
         <p>

@@ -38,7 +38,7 @@ export function Footer({ locale, dict }: FooterProps) {
     <>
     <footer className="bg-negro text-crudo pt-12 pb-6 px-5 lg:px-8">
       {/* Main grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-10">
         {/* Brand */}
         <div>
           <Link href={`/${locale}`} className="flex items-center gap-3 mb-4">
@@ -141,25 +141,65 @@ export function Footer({ locale, dict }: FooterProps) {
             <li className="text-sm opacity-65">Murcia, España</li>
           </ul>
         </div>
+
+        {/* Legal */}
+        <div>
+          <h4 className="font-[family-name:var(--font-archivo-narrow)] text-[0.68rem] uppercase tracking-[0.15em] text-naranja mb-5">
+            Legal
+          </h4>
+          <ul className="space-y-2">
+            <li>
+              <Link
+                href={getFullPath(locale, 'legal')}
+                className="text-sm opacity-65 hover:opacity-100 transition-opacity"
+              >
+                {locale === 'es' ? 'Aviso legal' : locale === 'en' ? 'Legal notice' : 'Aviso legal'}
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={getFullPath(locale, 'privacy')}
+                className="text-sm opacity-65 hover:opacity-100 transition-opacity"
+              >
+                {locale === 'es' ? 'Política de privacidad' : locale === 'en' ? 'Privacy policy' : 'Política de privacidad'}
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={`${getFullPath(locale, 'privacy')}#cookies`}
+                className="text-sm opacity-65 hover:opacity-100 transition-opacity"
+              >
+                {locale === 'es' ? 'Política de cookies' : locale === 'en' ? 'Cookie policy' : 'Política de cookies'}
+              </Link>
+            </li>
+            <li>
+              <CookieSettingsButton
+                locale={locale}
+                className="text-sm opacity-65 hover:opacity-100 transition-opacity bg-transparent border-0 p-0 cursor-pointer text-inherit font-[inherit]"
+              />
+            </li>
+          </ul>
+        </div>
       </div>
 
       {/* Bottom */}
       <div className="pt-5 border-t border-white/[0.08] flex flex-col sm:flex-row justify-between items-center gap-2 font-[family-name:var(--font-archivo-narrow)] text-[0.75rem] opacity-45">
         <span>{dict.footer.copyright}</span>
-        <div className="flex gap-4">
-          <Link href="/sitemap" className="hover:opacity-100 transition-opacity">
-            Mapa del sitio
-          </Link>
-          <Link href={getFullPath(locale, 'privacy')} className="hover:opacity-100 transition-opacity">
-            Política de privacidad
-          </Link>
-          <CookieSettingsButton locale={locale} className="hover:opacity-100 transition-opacity bg-transparent border-0 p-0 cursor-pointer text-inherit font-[inherit]" />
-          <Link href={getFullPath(locale, 'legal')} className="hover:opacity-100 transition-opacity">
-            Aviso legal
-          </Link>
-        </div>
+        <Link href="/sitemap" className="hover:opacity-100 transition-opacity">
+          Mapa del sitio
+        </Link>
         <span>{dict.footer.b2b_note}</span>
       </div>
+      <p className="pt-4 text-center font-[family-name:var(--font-archivo-narrow)] text-[0.75rem] opacity-45 leading-relaxed">
+        <span className="block sm:inline">Hecho con <span className="text-naranja inline-block animate-pulse">❤️</span> en Murcia</span>
+        <span className="hidden sm:inline"> · </span>
+        <span className="block sm:inline mt-1 sm:mt-0">
+          Web desarrollada por{' '}
+          <a href="https://www.eskaladigital.com" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 font-medium whitespace-nowrap">
+            ESKALA Agencia de Marketing Digital
+          </a>
+        </span>
+      </p>
     </footer>
     <BackToTop />
     </>
