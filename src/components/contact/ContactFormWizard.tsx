@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ContactType, ProfessionalSubtype, InquiryType, ReferralSource } from '@/types/contact'
 import type { Dictionary } from '@/lib/i18n/types'
 import { getFullPath } from '@/lib/i18n/paths'
@@ -26,6 +26,7 @@ interface FormState {
   message: string
   referral_source: ReferralSource | null
   gdpr_consent: boolean
+  website: string
 }
 
 const initialState: FormState = {
@@ -42,6 +43,7 @@ const initialState: FormState = {
   message: '',
   referral_source: null,
   gdpr_consent: false,
+  website: '',
 }
 
 export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
@@ -51,6 +53,11 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [formStartedAt, setFormStartedAt] = useState(0)
+
+  useEffect(() => {
+    setFormStartedAt(Date.now())
+  }, [])
 
   const update = (partial: Partial<FormState>) => {
     setForm((prev) => ({ ...prev, ...partial }))
@@ -95,6 +102,8 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
           referral_source: form.referral_source || undefined,
           locale,
           gdpr_consent: form.gdpr_consent,
+          website: form.website,
+          form_started_at: formStartedAt,
         }),
       })
 
@@ -134,7 +143,19 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
   }
 
   return (
-    <div className="bg-blanco border border-linea">
+    <div className="relative bg-blanco border border-linea">
+      <div className="absolute left-[-9999px] h-px w-px overflow-hidden" aria-hidden="true">
+        <label htmlFor="website">Website</label>
+        <input
+          type="text"
+          id="website"
+          name="website"
+          value={form.website}
+          onChange={(e) => update({ website: e.target.value })}
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
       {/* Progress bar */}
       <div className="flex border-b border-linea">
         {[1, 2, 3, 4].map((s) => (
