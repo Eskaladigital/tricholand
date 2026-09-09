@@ -34,6 +34,7 @@ npm run dev
 - **Landings B2B Pachanoi** por país/idioma (UK, Europe, España, Francia, Alemania, Países Bajos, Italia, Portugal) — contenido en Supabase, slugs traducidos
 - **Blog** con artículos técnicos
 - **Panel de administración** (productos, pedidos, clientes, contactos, blog, media, configuración)
+- **Formulario de contacto:** wizard 4 pasos → `contacts` + SMTP. Anti-spam 9 sep (`2a9b597`): honeypot `website`, tiempo mínimo 2,5 s y pitch de venta B2B (Calendly, demos, `/pricing`, 2+ enlaces). El bot recibe `{ success: true }` y no hay mail.
 - **Pipeline automatizado de pedidos**: validación → proforma PDF → email al cliente → pago → factura
 - **Pagos**: transferencia bancaria, TPV Redsys, Stripe (infraestructura lista)
 - **Emails en idioma del cliente**: confirmación pedido, validación, pago confirmado, datos bancarios
