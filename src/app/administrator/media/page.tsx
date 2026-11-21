@@ -35,6 +35,9 @@ export default function MediaPage() {
   const [creatingFolder, setCreatingFolder] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [copied, setCopied] = useState<string | null>(null)
+  const [notice, setNotice] = useState<string | null>(null)
+  const [query, setQuery] = useState('')
+  const [folderName, setFolderName] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const fetchFiles = useCallback(async () => {
@@ -47,7 +50,7 @@ export default function MediaPage() {
         sortBy: { column: 'created_at', order: 'desc' },
       })
       if (error) {
-        alert(error.message)
+        setNotice(error.message)
         setFiles([])
       } else {
         const mapped = (data ?? []).map((f) => {
@@ -66,7 +69,7 @@ export default function MediaPage() {
         setFiles(mapped)
       }
     } catch {
-      alert('Error cargando archivos')
+      setNotice('No se han podido cargar los archivos')
       setFiles([])
     }
     setLoading(false)
@@ -92,7 +95,7 @@ export default function MediaPage() {
         cacheControl: '31536000',
         upsert: false,
       })
-      if (error) alert(`Error subiendo ${file.name}: ${error.message}`)
+      if (error) setNotice(`No se ha podido subir ${file.name}: ${error.message}`)
     }
 
     setUploading(false)
@@ -102,11 +105,12 @@ export default function MediaPage() {
 
   async function handleDelete() {
     if (selected.size === 0) return
-    if (!confirm(`¿Eliminar ${selected.size} archivo(s)?`)) return
+    const n = selected.size
+    if (!confirm(n === 1 ? '¿Eliminar este archivo?' : `¿Eliminar ${n} archivos?`)) return
 
     const supabase = createClient()
     const { error } = await supabase.storage.from(bucket).remove(Array.from(selected))
-    if (error) alert(error.message)
+    if (error) setNotice(error.message)
     fetchFiles()
   }
 
@@ -138,15 +142,16 @@ export default function MediaPage() {
   }
 
   async function handleCreateFolder() {
-    const name = prompt('Nombre de la carpeta:')
+    const name = folderName
     if (!name?.trim()) return
     setCreatingFolder(true)
+    setNotice(null)
     try {
       const safeName = name.trim()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
         .replace(/[^a-zA-Z0-9._-]/g, '_')
-      if (!safeName) { alert('Nombre no válido'); setCreatingFolder(false); return }
+      if (!safeName) { setNotice('Ese nombre no vale para una carpeta'); setCreatingFolder(false); return }
       const filePath = folder ? `${folder}/${safeName}/.keep` : `${safeName}/.keep`
       const png1x1 = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='), c => c.charCodeAt(0))
       const blob = new Blob([png1x1], { type: 'image/png' })
@@ -156,15 +161,21 @@ export default function MediaPage() {
         cacheControl: '0',
         upsert: false,
       })
-      if (error) alert(error.message)
-      else fetchFiles()
+      if (error) setNotice(error.message)
+      else {
+        setFolderName(null)
+        fetchFiles()
+      }
     } catch {
-      alert('Error creando carpeta')
+      setNotice('No se ha podido crear la carpeta')
     }
     setCreatingFolder(false)
   }
 
   const imageFiles = files.filter((f) => !f.isFolder && f.name !== '.keep')
+  const q = query.trim().toLowerCase()
+  const shownFiles = q ? imageFiles.filter((f) => f.name.toLowerCase().includes(q)) : imageFiles
+  const bucketInfo = BUCKETS.find((b) => b.id === bucket)
   const folders = files.filter((f) => f.isFolder)
 
   return (
@@ -172,10 +183,11 @@ export default function MediaPage() {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
-            Media
+            Imágenes
           </h1>
           <p className="text-sm text-marron-claro mt-1">
-            Gestión de imágenes en Supabase Storage
+            {bucketInfo?.description ?? 'Archivos del panel'}
+            {imageFiles.length > 0 ? ` · ${imageFiles.length} en esta carpeta` : ''}
           </p>
         </div>
       </div>
@@ -186,7 +198,7 @@ export default function MediaPage() {
           <button
             key={b.id}
             type="button"
-            onClick={() => { setBucket(b.id); setFolder('') }}
+            onClick={() => { setBucket(b.id); setFolder(''); setQuery(''); setNotice(null) }}
             className={`px-5 py-2.5 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide border transition-colors ${
               bucket === b.id
                 ? 'bg-negro text-crudo border-negro'
@@ -230,17 +242,49 @@ export default function MediaPage() {
               onClick={handleDelete}
               className="px-4 py-2 border border-red-300 text-red-600 text-xs font-bold uppercase hover:bg-red-50 transition-colors"
             >
-              Eliminar ({selected.size})
+              Eliminar {selected.size}
             </button>
           )}
-          <button
-            type="button"
-            onClick={handleCreateFolder}
-            disabled={creatingFolder}
-            className="px-5 py-2.5 border border-linea font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:border-naranja transition-colors disabled:opacity-50"
-          >
-            {creatingFolder ? 'Creando...' : '+ Nueva carpeta'}
-          </button>
+          {folderName === null ? (
+            <button
+              type="button"
+              onClick={() => setFolderName('')}
+              className="px-5 py-2.5 border border-linea font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:border-naranja transition-colors"
+            >
+              + Nueva carpeta
+            </button>
+          ) : (
+            <form
+              className="flex gap-2"
+              onSubmit={(e) => {
+                e.preventDefault()
+                void handleCreateFolder()
+              }}
+            >
+              <input
+                type="text"
+                value={folderName}
+                onChange={(e) => setFolderName(e.target.value)}
+                placeholder="Nombre"
+                autoFocus
+                className="px-3 py-2 border border-linea text-sm focus:outline-none focus:border-naranja"
+              />
+              <button
+                type="submit"
+                disabled={creatingFolder || !folderName.trim()}
+                className="px-4 py-2 bg-negro text-crudo text-xs font-bold uppercase disabled:opacity-40"
+              >
+                {creatingFolder ? 'Creando…' : 'Crear'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setFolderName(null)}
+                className="px-3 py-2 text-xs text-marron-claro hover:text-negro"
+              >
+                Cancelar
+              </button>
+            </form>
+          )}
           <label className={`px-5 py-2.5 bg-naranja text-blanco font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide hover:bg-verde transition-colors cursor-pointer ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
             {uploading ? 'Subiendo...' : '+ Subir archivo'}
             <input
@@ -254,6 +298,23 @@ export default function MediaPage() {
           </label>
         </div>
       </div>
+
+      {notice && (
+        <p className="mb-4 px-4 py-2 text-sm bg-red-50 border border-red-200 text-red-800" role="alert">
+          {notice}
+        </p>
+      )}
+
+      <label className="block mb-4">
+        <span className="sr-only">Buscar archivo</span>
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Buscar por nombre de archivo"
+          className="w-full max-w-xl px-3 py-2.5 border border-linea bg-blanco text-sm focus:outline-none focus:border-naranja"
+        />
+      </label>
 
       {/* Content */}
       {loading ? (
@@ -280,11 +341,15 @@ export default function MediaPage() {
           {/* Files grid */}
           {imageFiles.length === 0 && folders.length === 0 ? (
             <div className="py-12 text-center text-marron-claro bg-blanco border border-linea">
-              No hay archivos en esta carpeta. Sube el primero.
+              Esta carpeta está vacía. Sube el primer archivo.
+            </div>
+          ) : shownFiles.length === 0 ? (
+            <div className="py-12 text-center text-marron-claro bg-blanco border border-linea">
+              Ningún archivo con ese nombre.
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              {imageFiles.map((f) => {
+              {shownFiles.map((f) => {
                 const isSelected = selected.has(f.path)
                 const isImage = f.type?.startsWith('image/') || /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(f.name)
                 return (
@@ -305,13 +370,19 @@ export default function MediaPage() {
                     </label>
 
                     {/* Preview */}
-                    <div className="aspect-square bg-crudo flex items-center justify-center overflow-hidden">
+                    <a
+                      href={f.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="aspect-square bg-crudo flex items-center justify-center overflow-hidden"
+                      title="Abrir archivo"
+                    >
                       {isImage ? (
                         <img src={f.url} alt={f.name} className="w-full h-full object-cover" loading="lazy" />
                       ) : (
                         <span className="text-4xl">📄</span>
                       )}
-                    </div>
+                    </a>
 
                     {/* Info */}
                     <div className="p-2">

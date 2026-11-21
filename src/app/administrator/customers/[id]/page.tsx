@@ -11,21 +11,22 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
 
   return (
     <>
-      <div className="flex justify-between items-start mb-8">
-        <div>
-          <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
-            {customer.name}
-          </h1>
-          <p className="text-sm text-marron-claro mt-1">
-            Cliente desde {new Date(customer.first_contact_at).toLocaleDateString('es-ES')}
-          </p>
-        </div>
+      <div className="mb-8">
         <Link
           href="/administrator/customers"
-          className="text-sm text-naranja font-semibold hover:underline"
+          className="inline-block mb-4 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro hover:text-naranja"
         >
-          ← Volver a clientes
+          ← Clientes
         </Link>
+        <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
+          {customer.name}
+        </h1>
+        {customer.company && <p className="text-marron mt-1">{customer.company}</p>}
+        <p className="text-sm text-marron-claro mt-1">
+          Cliente desde {new Date(customer.first_contact_at).toLocaleDateString('es-ES')}
+          <span className="mx-1.5">·</span>
+          último contacto {new Date(customer.last_contact_at).toLocaleDateString('es-ES')}
+        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
@@ -42,12 +43,14 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
                   {customer.email}
                 </a>
               </div>
-              {customer.phone && (
-                <div>
-                  <span className="block text-xs font-bold uppercase text-marron-claro mb-0.5">Teléfono</span>
-                  <a href={`tel:${customer.phone}`} className="hover:underline">{customer.phone}</a>
-                </div>
-              )}
+              <div>
+                <span className="block text-xs font-bold uppercase text-marron-claro mb-0.5">Teléfono</span>
+                {customer.phone ? (
+                  <a href={`tel:${customer.phone.replace(/[^\d+]/g, '')}`} className="hover:underline">{customer.phone}</a>
+                ) : (
+                  <span className="text-marron-claro">Sin teléfono</span>
+                )}
+              </div>
               <div>
                 <span className="block text-xs font-bold uppercase text-marron-claro mb-0.5">País</span>
                 <p>{customer.country}</p>
@@ -79,15 +82,6 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
             </div>
           </section>
 
-          {/* Notas admin */}
-          {customer.admin_notes && (
-            <section className="bg-yellow-50 border border-yellow-200 p-6">
-              <h2 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide text-yellow-700 mb-2">
-                Notas del admin
-              </h2>
-              <p className="text-sm text-yellow-800 whitespace-pre-wrap">{customer.admin_notes}</p>
-            </section>
-          )}
         </div>
 
         <div className="space-y-6">
@@ -105,7 +99,7 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
                 <span className="text-marron-claro">Pedidos</span>
                 <span className="font-bold">
                   {customer.order_count > 0 ? (
-                    <Link href="/administrator/orders" className="text-naranja hover:underline">
+                    <Link href={`/administrator/orders?q=${encodeURIComponent(customer.email)}`} className="text-naranja hover:underline">
                       {customer.order_count}
                     </Link>
                   ) : (
@@ -143,6 +137,8 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
             customerId={customer.id}
             customerName={customer.name}
             customerEmail={customer.email}
+            customerPhone={customer.phone}
+            adminNotes={customer.admin_notes}
           />
         </div>
       </div>

@@ -3,7 +3,8 @@
 import { useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import type { OrderStatus, PaymentMethod } from '@/types/shop'
+import { ORDER_STATUS_CLASS, ORDER_STATUS_LABELS, type OrderStatus, type PaymentMethod } from '@/types/shop'
+import { formatContactWhen } from '@/types/contact'
 import type { OrderRow, OrderItemRow } from '@/lib/actions/orders'
 import type { ProductOption } from '@/lib/actions/products'
 import {
@@ -16,18 +17,12 @@ import {
   validateOrder,
 } from '@/lib/actions/orders'
 
-const statusFlow: OrderStatus[] = ['pending', 'reviewing', 'quoted', 'payment_pending', 'paid', 'preparing', 'shipped', 'delivered']
-const statusLabels: Record<string, string> = {
-  pending: 'Pendiente',
-  reviewing: 'Revisando',
-  quoted: 'Presupuestado',
-  payment_pending: 'Esperando pago',
-  paid: 'Pagado',
-  preparing: 'Preparando',
-  shipped: 'Enviado',
-  delivered: 'Entregado',
-  cancelled: 'Cancelado',
-  refunded: 'Reembolsado',
+const statusFlow: OrderStatus[] = ['pending', 'reviewing', 'quoted', 'payment_pending', 'paid', 'preparing', 'shipped', 'delivered', 'cancelled', 'refunded']
+
+function initialTaxRate(order: OrderRow): number {
+  const base = order.subtotal_cents - (order.discount_cents ?? 0) + (order.shipping_cents ?? 0)
+  if (base > 0) return Math.round((order.tax_cents / base) * 1000) / 10
+  return 21
 }
 
 interface OrderDetailClientProps {
@@ -43,7 +38,7 @@ export function OrderDetailClient({ order: initialOrder, items: initialItems, pr
   const [status, setStatus] = useState<OrderStatus>(order.status)
   const [discount, setDiscount] = useState((order.discount_cents ?? 0) / 100)
   const [shipping, setShipping] = useState((order.shipping_cents ?? 0) / 100)
-  const [taxRate, setTaxRate] = useState(21)
+  const [taxRate, setTaxRate] = useState(() => initialTaxRate(initialOrder))
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(order.payment_method ?? 'stripe')
   const [adminNotes, setAdminNotes] = useState(order.admin_notes ?? '')
   const [trackingNumber, setTrackingNumber] = useState(order.shipping_tracking ?? '')
@@ -327,16 +322,24 @@ export function OrderDetailClient({ order: initialOrder, items: initialItems, pr
         </div>
       )}
 
-      <div className="flex justify-between items-start mb-8">
-        <div>
-          <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">{order.order_number}</h1>
-          <p className="text-sm text-marron-claro mt-1">
-            {new Date(order.created_at).toLocaleString('es-ES')} · ID: {order.id}
-          </p>
-        </div>
-        <Link href="/administrator/orders" className="text-sm text-naranja font-semibold hover:underline">
-          ← Volver a pedidos
+      <div className="mb-8">
+        <Link
+          href="/administrator/orders"
+          className="inline-block mb-4 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro hover:text-naranja"
+        >
+          ← Pedidos
         </Link>
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <span className={`px-2 py-0.5 text-[10px] font-bold uppercase ${ORDER_STATUS_CLASS[order.status]}`}>
+            {ORDER_STATUS_LABELS[order.status]}
+          </span>
+        </div>
+        <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">{order.order_number}</h1>
+        <p className="text-sm text-marron-claro mt-1">
+          {formatContactWhen(order.created_at).absolute}
+          <span className="mx-1.5">·</span>
+          {order.customer_company || order.customer_name}
+        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
@@ -601,15 +604,14 @@ export function OrderDetailClient({ order: initialOrder, items: initialItems, pr
         {/* Sidebar */}
         <div className="space-y-6">
           <section className="bg-blanco border border-linea p-6">
-            <h3 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide mb-3">Estado del pedido</h3>
+            <h3 className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide mb-1">Estado del pedido</h3>
+            <p className="text-xs text-marron-claro mb-3">Se guarda junto con el IVA, el descuento y el envío.</p>
             <select value={status} onChange={(e) => setStatus(e.target.value as OrderStatus)} className={`${fieldClass} mb-3`}>
               {statusFlow.map((s) => (
                 <option key={s} value={s}>
-                  {statusLabels[s]}
+                  {ORDER_STATUS_LABELS[s]}
                 </option>
               ))}
-              <option value="cancelled">Cancelado</option>
-              <option value="refunded">Reembolsado</option>
             </select>
             <button
               onClick={handleSaveOrder}
@@ -630,7 +632,15 @@ export function OrderDetailClient({ order: initialOrder, items: initialItems, pr
                   {order.customer_email}
                 </a>
               </p>
-              {order.customer_phone && <p>{order.customer_phone}</p>}
+              {order.customer_phone ? (
+                <p>
+                  <a href={`tel:${order.customer_phone.replace(/[^\d+]/g, '')}`} className="hover:underline">
+                    {order.customer_phone}
+                  </a>
+                </p>
+              ) : (
+                <p className="text-marron-claro">Sin teléfono</p>
+              )}
               {order.customer_vat_id && <p className="font-mono text-xs">VAT: {order.customer_vat_id}</p>}
               <p className="text-marron-claro">
                 {[order.customer_city, order.customer_country].filter(Boolean).join(', ')}

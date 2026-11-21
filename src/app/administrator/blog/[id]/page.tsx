@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, use } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { notFound } from 'next/navigation'
 import { BlogPostForm } from '@/components/admin/BlogPostForm'
@@ -14,6 +15,7 @@ export default function EditBlogPostPage({ params }: { params: Promise<{ id: str
   const [loading, setLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     getBlogPostById(id).then((p) => {
@@ -31,10 +33,11 @@ export default function EditBlogPostPage({ params }: { params: Promise<{ id: str
   async function handleSave(data: Record<string, unknown>) {
     setIsSaving(true)
     setSaveSuccess(false)
-    const { error } = await updateBlogPost(id, data)
+    setError(null)
+    const { error: saveError } = await updateBlogPost(id, data)
     setIsSaving(false)
-    if (error) {
-      alert(error)
+    if (saveError) {
+      setError(saveError)
       return
     }
     // Refrescar el post con los nuevos datos y quedarnos en la página
@@ -49,7 +52,7 @@ export default function EditBlogPostPage({ params }: { params: Promise<{ id: str
     const { error } = await deleteBlogPost(id)
     setIsSaving(false)
     if (error) {
-      alert(error)
+      setError(error)
       return
     }
     router.push('/administrator/blog')
@@ -58,6 +61,9 @@ export default function EditBlogPostPage({ params }: { params: Promise<{ id: str
   return (
     <>
       <div className="mb-8">
+        <Link href="/administrator/blog" className="inline-block mb-4 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro hover:text-naranja">
+          ← Blog
+        </Link>
         <div className="flex items-center gap-4">
           <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
             Editar artículo
@@ -72,6 +78,9 @@ export default function EditBlogPostPage({ params }: { params: Promise<{ id: str
           {post.title} · {post.locale.toUpperCase()}
         </p>
       </div>
+      {error && (
+        <p className="mb-4 px-4 py-2 text-sm bg-red-50 border border-red-200 text-red-800" role="alert">{error}</p>
+      )}
       <BlogPostForm post={post} onSave={handleSave} onDelete={handleDelete} isSaving={isSaving} />
     </>
   )

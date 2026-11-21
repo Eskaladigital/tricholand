@@ -6,20 +6,24 @@ import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 const navItems = [
-  { label: 'Dashboard', href: '/administrator/dashboard', icon: '📊' },
-  { label: 'Productos', href: '/administrator/products', icon: '🌵' },
-  { label: 'Clientes', href: '/administrator/customers', icon: '👥' },
-  { label: 'Pedidos', href: '/administrator/orders', icon: '📦' },
-  { label: 'Contactos', href: '/administrator/contacts', icon: '📨' },
-  { label: 'Blog', href: '/administrator/blog', icon: '📝' },
-  { label: 'Media', href: '/administrator/media', icon: '🖼️' },
-  { label: 'Configuración', href: '/administrator/settings', icon: '⚙️' },
+  { label: 'Inicio', href: '/administrator/dashboard' },
+  { label: 'Productos', href: '/administrator/products' },
+  { label: 'Clientes', href: '/administrator/customers' },
+  { label: 'Pedidos', href: '/administrator/orders' },
+  { label: 'Contactos', href: '/administrator/contacts' },
+  { label: 'Blog', href: '/administrator/blog' },
+  { label: 'Imágenes', href: '/administrator/media' },
+  { label: 'Ajustes', href: '/administrator/settings' },
 ]
 
 export function AdminLayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
+
+  if (pathname === '/administrator/login') {
+    return <>{children}</>
+  }
 
   async function handleLogout() {
     const supabase = createClient()
@@ -104,13 +108,12 @@ export function AdminLayoutShell({ children }: { children: React.ReactNode }) {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 px-5 py-3 font-[family-name:var(--font-archivo-narrow)] text-sm font-semibold uppercase tracking-wide transition-colors ${
+                className={`flex items-center px-5 py-3 font-[family-name:var(--font-archivo-narrow)] text-sm font-semibold uppercase tracking-wide transition-colors ${
                   isActive
                     ? 'bg-white/10 text-naranja border-r-2 border-naranja'
-                    : 'opacity-60 hover:opacity-100 hover:bg-white/5'
+                    : 'text-crudo/70 hover:text-crudo hover:bg-white/5'
                 }`}
               >
-                <span className="text-base">{item.icon}</span>
                 {item.label}
               </Link>
             )

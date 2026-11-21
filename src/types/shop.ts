@@ -151,6 +151,35 @@ export type OrderStatus =
   | 'cancelled'         // Cancelado
   | 'refunded'          // Reembolsado
 
+export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
+  pending: 'Pendiente',
+  reviewing: 'Revisando',
+  quoted: 'Presupuestado',
+  payment_pending: 'Esperando pago',
+  paid: 'Pagado',
+  preparing: 'Preparando',
+  shipped: 'Enviado',
+  delivered: 'Entregado',
+  cancelled: 'Cancelado',
+  refunded: 'Reembolsado',
+}
+
+export const ORDER_STATUS_CLASS: Record<OrderStatus, string> = {
+  pending: 'bg-amber-100 text-amber-900',
+  reviewing: 'bg-orange-100 text-orange-800',
+  quoted: 'bg-sky-100 text-sky-800',
+  payment_pending: 'bg-purple-100 text-purple-800',
+  paid: 'bg-green-100 text-green-800',
+  preparing: 'bg-teal-100 text-teal-800',
+  shipped: 'bg-cyan-100 text-cyan-800',
+  delivered: 'bg-gray-100 text-gray-600',
+  cancelled: 'bg-red-100 text-red-700',
+  refunded: 'bg-red-50 text-red-600',
+}
+
+/** Pedidos que aún hay que mirar antes de cobrar o preparar. */
+export const ORDER_REVIEW_STATUSES: OrderStatus[] = ['pending', 'reviewing']
+
 export type PaymentMethod = 'stripe' | 'redsys' | 'transfer' | 'other'
 
 export interface OrderItem {

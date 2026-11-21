@@ -30,22 +30,36 @@ function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
   )
 }
 
+type StatusFilter = 'all' | 'published' | 'draft' | 'archived'
+
 export function BlogTable({ posts }: { posts: AdminBlogPost[] }) {
   const [search, setSearch] = useState('')
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
   const [sortKey, setSortKey] = useState<SortKey>('date')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
 
+  const counts = useMemo(() => {
+    return {
+      all: posts.length,
+      published: posts.filter((p) => p.status === 'published').length,
+      draft: posts.filter((p) => p.status === 'draft').length,
+      archived: posts.filter((p) => p.status === 'archived').length,
+    }
+  }, [posts])
+
   const filtered = useMemo(() => {
-    if (!search.trim()) return posts
     const q = search.toLowerCase().trim()
-    return posts.filter(
-      (p) =>
+    return posts.filter((p) => {
+      if (statusFilter !== 'all' && p.status !== statusFilter) return false
+      if (!q) return true
+      return (
         p.title.toLowerCase().includes(q) ||
         (p.description ?? '').toLowerCase().includes(q) ||
         p.slug.toLowerCase().includes(q) ||
         (p.tags ?? []).some((t) => t.toLowerCase().includes(q))
-    )
-  }, [posts, search])
+      )
+    })
+  }, [posts, search, statusFilter])
 
   const sorted = useMemo(() => {
     if (!sortKey) return filtered
@@ -81,8 +95,38 @@ export function BlogTable({ posts }: { posts: AdminBlogPost[] }) {
     }
   }
 
+  const statusChips: { id: StatusFilter; label: string }[] = [
+    { id: 'all', label: 'Todos' },
+    { id: 'published', label: 'Publicados' },
+    { id: 'draft', label: 'Borradores' },
+    { id: 'archived', label: 'Archivados' },
+  ]
+
   return (
     <div className="space-y-4">
+      <div className="flex flex-wrap gap-2">
+        {statusChips.filter((c) => c.id === 'all' || c.id === 'published' || c.id === 'draft' || counts[c.id] > 0).map((chip) => {
+          const active = statusFilter === chip.id
+          return (
+            <button
+              key={chip.id}
+              type="button"
+              aria-pressed={active}
+              onClick={() => setStatusFilter(chip.id)}
+              className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide border transition-colors ${
+                active
+                  ? 'bg-negro text-crudo border-negro'
+                  : chip.id === 'draft' && counts.draft > 0
+                    ? 'bg-blanco text-naranja border-naranja hover:bg-naranja/5'
+                    : 'bg-blanco text-marron border-linea hover:border-marron-claro'
+              }`}
+            >
+              {chip.label}
+              <span className={`ml-1.5 tabular-nums ${active ? 'text-crudo/70' : 'text-marron-claro'}`}>{counts[chip.id]}</span>
+            </button>
+          )
+        })}
+      </div>
       <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
         <div className="relative flex-1 max-w-md">
           <input
@@ -171,7 +215,7 @@ export function BlogTable({ posts }: { posts: AdminBlogPost[] }) {
               {sorted.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="px-4 py-8 text-center text-marron-claro">
-                    {search.trim() ? 'No hay artículos que coincidan con la búsqueda.' : 'No hay artículos. Crea el primero para empezar.'}
+                    {search.trim() || statusFilter !== 'all' ? 'Ningún artículo con este filtro.' : 'No hay artículos. Crea el primero para empezar.'}
                   </td>
                 </tr>
               ) : (
@@ -199,7 +243,9 @@ export function BlogTable({ posts }: { posts: AdminBlogPost[] }) {
                       </td>
                       <td className="px-4 py-3">
                         <div>
-                          <span className="font-bold block">{post.title}</span>
+                          <Link href={`/administrator/blog/${post.id}`} className="font-bold block hover:text-naranja">
+                            {post.title}
+                          </Link>
                           <span className="text-xs text-marron-claro">/es/blog/{post.slug}</span>
                         </div>
                       </td>

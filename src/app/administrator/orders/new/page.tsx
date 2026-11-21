@@ -84,21 +84,19 @@ export default function NewOrderPage() {
 
   return (
     <>
-      <div className="flex justify-between items-start mb-8">
-        <div>
-          <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
-            Nuevo pedido
-          </h1>
-          <p className="text-sm text-marron-claro mt-1">
-            Crea un pedido manualmente para un cliente. Después podrás añadirle productos y enviarle el link de pago.
-          </p>
-        </div>
+      <div className="mb-8">
         <Link
           href="/administrator/orders"
-          className="text-sm text-naranja font-semibold hover:underline"
+          className="inline-block mb-4 font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro hover:text-naranja"
         >
-          ← Volver a pedidos
+          ← Pedidos
         </Link>
+        <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
+          Nuevo pedido
+        </h1>
+        <p className="text-sm text-marron-claro mt-1">
+          Primero los datos del cliente. En la ficha del pedido añades los productos y el enlace de pago.
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">

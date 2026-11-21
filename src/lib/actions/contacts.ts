@@ -27,6 +27,9 @@ export interface ContactRow {
   status: 'new' | 'read' | 'replied' | 'archived' | 'spam'
   priority: string | null
   locale: string | null
+  admin_notes: string | null
+  gdpr_consent: boolean | null
+  gdpr_consent_date: string | null
 }
 
 export async function getContactById(id: string): Promise<ContactRow | null> {
@@ -48,8 +51,20 @@ export async function getContacts(): Promise<ContactRow[]> {
     .select('*')
     .order('created_at', { ascending: false })
 
-  if (error) return []
+  if (error) throw new Error(error.message)
   return (data ?? []) as ContactRow[]
+}
+
+export async function updateContactNotes(
+  id: string,
+  notes: string
+): Promise<{ error?: string }> {
+  const supabase = createServiceClient()
+  const value = notes.trim() ? notes.trim() : null
+  const { error } = await supabase.from('contacts').update({ admin_notes: value }).eq('id', id)
+  if (error) return { error: error.message }
+  revalidateContacts()
+  return {}
 }
 
 export type ContactStatusValue = 'new' | 'read' | 'replied' | 'archived' | 'spam'

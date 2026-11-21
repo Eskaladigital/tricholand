@@ -65,6 +65,8 @@ function LoginForm() {
               required
               className="w-full px-4 py-2.5 border border-linea text-sm focus:outline-none focus:border-naranja transition-colors"
               placeholder="tu@email.com"
+              autoFocus
+              autoComplete="username"
             />
           </div>
 
@@ -79,6 +81,7 @@ function LoginForm() {
               required
               className="w-full px-4 py-2.5 border border-linea text-sm focus:outline-none focus:border-naranja transition-colors"
               placeholder="••••••••"
+              autoComplete="current-password"
             />
           </div>
 

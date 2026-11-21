@@ -13,6 +13,7 @@ export default function SettingsPage() {
   const [autoReply, setAutoReply] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -31,7 +32,9 @@ export default function SettingsPage() {
   async function handleSave(e: React.FormEvent) {
     e.preventDefault()
     setSaving(true)
-    const { error } = await updateSettings({
+    setError(null)
+    setSaved(false)
+    const { error: saveError } = await updateSettings({
       company_name: companyName,
       company_email: companyEmail,
       company_phone: companyPhone,
@@ -41,8 +44,8 @@ export default function SettingsPage() {
       auto_reply: autoReply,
     })
     setSaving(false)
-    if (error) {
-      alert(error)
+    if (saveError) {
+      setError(saveError)
       return
     }
     setSaved(true)
@@ -60,18 +63,19 @@ export default function SettingsPage() {
     <>
         <div className="mb-8">
           <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
-            Configuración
+            Ajustes
           </h1>
           <p className="text-sm text-marron-claro mt-1">
-            Ajustes generales de la tienda B2B (desde Supabase)
+            Datos de la empresa y avisos. Las claves de pago no se escriben aquí.
           </p>
         </div>
 
         <form onSubmit={handleSave} className="space-y-6 max-w-3xl">
           <section className="bg-blanco border border-linea p-6">
-            <h2 className="font-[family-name:var(--font-archivo-narrow)] text-base font-bold uppercase mb-4 pb-2 border-b border-linea">
+            <h2 className="font-[family-name:var(--font-archivo-narrow)] text-base font-bold uppercase mb-1">
               Datos de empresa
             </h2>
+            <p className="text-xs text-marron-claro mb-4">Nombre, correo y teléfono que identifican a Tricholand.</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={labelClass}>Nombre empresa</label>
@@ -89,9 +93,12 @@ export default function SettingsPage() {
           </section>
 
           <section className="bg-blanco border border-linea p-6">
-            <h2 className="font-[family-name:var(--font-archivo-narrow)] text-base font-bold uppercase mb-4 pb-2 border-b border-linea">
-              Configuración de tienda
+            <h2 className="font-[family-name:var(--font-archivo-narrow)] text-base font-bold uppercase mb-1">
+              Tienda
             </h2>
+            <p className="text-xs text-marron-claro mb-4">
+              El pedido mínimo de cada producto se fija en su ficha. El IVA de un pedido ya creado se calcula en esa ficha, no se cambia desde aquí al guardarlo.
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={labelClass}>Pedido mínimo (unidades)</label>
@@ -105,9 +112,12 @@ export default function SettingsPage() {
           </section>
 
           <section className="bg-blanco border border-linea p-6">
-            <h2 className="font-[family-name:var(--font-archivo-narrow)] text-base font-bold uppercase mb-4 pb-2 border-b border-linea">
-              Notificaciones
+            <h2 className="font-[family-name:var(--font-archivo-narrow)] text-base font-bold uppercase mb-1">
+              Avisos
             </h2>
+            <p className="text-xs text-marron-claro mb-4">
+              Correo que recibe los pedidos nuevos. La respuesta automática es el acuse que sale hacia quien escribe.
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={labelClass}>Email notificaciones pedidos</label>
@@ -125,42 +135,12 @@ export default function SettingsPage() {
           </section>
 
           <section className="bg-blanco border border-linea p-6">
-            <h2 className="font-[family-name:var(--font-archivo-narrow)] text-base font-bold uppercase mb-4 pb-2 border-b border-linea">
-              Pasarelas de pago
+            <h2 className="font-[family-name:var(--font-archivo-narrow)] text-base font-bold uppercase mb-1">
+              Pagos
             </h2>
-            <p className="text-sm text-marron-claro mb-4">
-              Configura las claves de Stripe y Redsys en las variables de entorno (.env.local) por seguridad.
+            <p className="text-sm text-marron-claro">
+              Stripe y Redsys se configuran en el servidor, no en este formulario. Desde aquí no se pegan claves.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="w-8 h-8 bg-[#635BFF] text-white flex items-center justify-center text-xs font-bold rounded">S</span>
-                  <span className="font-bold">Stripe</span>
-                </div>
-                <div>
-                  <label className={labelClass}>Stripe Secret Key</label>
-                  <input type="password" className={fieldClass} placeholder="sk_live_..." disabled />
-                </div>
-                <div>
-                  <label className={labelClass}>Stripe Publishable Key</label>
-                  <input type="text" className={fieldClass} placeholder="pk_live_..." disabled />
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="w-8 h-8 bg-[#CC0000] text-white flex items-center justify-center text-xs font-bold rounded">R</span>
-                  <span className="font-bold">Redsys</span>
-                </div>
-                <div>
-                  <label className={labelClass}>Código de comercio</label>
-                  <input type="text" className={fieldClass} placeholder="999008881" disabled />
-                </div>
-                <div>
-                  <label className={labelClass}>Clave secreta</label>
-                  <input type="password" className={fieldClass} placeholder="Clave SHA-256..." disabled />
-                </div>
-              </div>
-            </div>
           </section>
 
           <div className="flex items-center gap-4">
@@ -172,7 +152,10 @@ export default function SettingsPage() {
               {saving ? 'Guardando...' : 'Guardar configuración'}
             </button>
             {saved && (
-              <span className="text-verde font-bold text-sm">✓ Guardado correctamente</span>
+              <span className="text-verde font-bold text-sm">Guardado</span>
+            )}
+            {error && (
+              <span className="text-sm text-red-700" role="alert">{error}</span>
             )}
           </div>
         </form>

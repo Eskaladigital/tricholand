@@ -7,7 +7,7 @@ export default async function ProductsListPage() {
 
   return (
     <>
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-wrap justify-between items-end gap-4 mb-6">
           <div>
             <h1 className="font-[family-name:var(--font-archivo-narrow)] text-3xl font-bold uppercase">
               Productos

@@ -37,6 +37,20 @@ export async function getCustomers(): Promise<CustomerRow[]> {
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
+export async function getCustomerByEmail(
+  email: string
+): Promise<{ id: string; name: string } | null> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('customers')
+    .select('id, name')
+    .ilike('email', email)
+    .limit(1)
+
+  if (error || !data?.length) return null
+  return data[0]
+}
+
 export async function getCustomerById(id: string): Promise<CustomerRow | null> {
   if (!UUID_REGEX.test(id)) return null
   const supabase = await createClient()
@@ -48,6 +62,16 @@ export async function getCustomerById(id: string): Promise<CustomerRow | null> {
 
   if (error || !data) return null
   return data as CustomerRow
+}
+
+export async function updateCustomerNotes(id: string, notes: string): Promise<{ error?: string }> {
+  if (!UUID_REGEX.test(id)) return { error: 'ID inválido' }
+  const supabase = await createClient()
+  const value = notes.trim() ? notes.trim() : null
+  const { error } = await supabase.from('customers').update({ admin_notes: value }).eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath('/administrator/customers', 'layout')
+  return {}
 }
 
 export async function deleteCustomer(id: string): Promise<{ error?: string }> {
