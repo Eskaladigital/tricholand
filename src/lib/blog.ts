@@ -16,6 +16,10 @@ function getEffectiveLocale(locale: string): (typeof BLOG_LOCALES)[number] {
   return 'en'
 }
 
+function todayIso(): string {
+  return new Date().toISOString().slice(0, 10)
+}
+
 /** Solo usa image si es de Supabase Storage; si no, null */
 function isSupabaseImage(url: string | null): boolean {
   if (!url || typeof url !== 'string') return false
@@ -63,12 +67,14 @@ function rowToPost(row: {
 
 export async function getPostsMeta(locale: string): Promise<BlogPostMeta[]> {
   const effectiveLocale = getEffectiveLocale(locale)
+  const today = todayIso()
 
   const { data, error } = await supabase
     .from('blog_posts')
     .select('slug, title, description, date, image, image_alt, tags, reading_time, source_slug')
     .eq('locale', effectiveLocale)
     .eq('status', 'published')
+    .lte('date', today)
     .order('date', { ascending: false })
 
   if (error) {
@@ -103,7 +109,7 @@ export async function getPostsMeta(locale: string): Promise<BlogPostMeta[]> {
         if ((!row.image || !isSupabaseImage(row.image)) && row.source_slug && imageBySource[row.source_slug]) {
           const fallback = imageBySource[row.source_slug]
           row.image = fallback.image
-          row.image_alt = row.image_alt || fallback.image_alt || null
+          row.image_alt = row.image_alt || row.title || fallback.image_alt || null
         }
       }
     }
@@ -114,6 +120,7 @@ export async function getPostsMeta(locale: string): Promise<BlogPostMeta[]> {
 
 export async function getPostBySlug(slug: string, locale: string): Promise<BlogPost | null> {
   const effectiveLocale = getEffectiveLocale(locale)
+  const today = todayIso()
 
   const { data, error } = await supabase
     .from('blog_posts')
@@ -121,6 +128,7 @@ export async function getPostBySlug(slug: string, locale: string): Promise<BlogP
     .eq('slug', slug)
     .eq('locale', effectiveLocale)
     .eq('status', 'published')
+    .lte('date', today)
     .single()
 
   if (!error && data) {
@@ -133,10 +141,11 @@ export async function getPostBySlug(slug: string, locale: string): Promise<BlogP
         .eq('source_slug', (data as { source_slug: string }).source_slug)
         .eq('locale', 'es')
         .eq('status', 'published')
+        .lte('date', today)
         .single()
       if (esPost?.image && isSupabaseImage(esPost.image)) {
         post.image = esPost.image
-        post.imageAlt = esPost.image_alt || post.imageAlt
+        post.imageAlt = post.imageAlt || post.title
       }
     }
     return post
@@ -153,6 +162,7 @@ export async function getPostBySlug(slug: string, locale: string): Promise<BlogP
       .eq('source_slug', slug)
       .eq('locale', effectiveLocale)
       .eq('status', 'published')
+      .lte('date', today)
       .single()
     bySource = exact
 
@@ -168,6 +178,7 @@ export async function getPostBySlug(slug: string, locale: string): Promise<BlogP
           .eq('source_slug', candidate)
           .eq('locale', effectiveLocale)
           .eq('status', 'published')
+          .lte('date', today)
           .single()
         if (byPrefix) {
           bySource = byPrefix
@@ -185,10 +196,11 @@ export async function getPostBySlug(slug: string, locale: string): Promise<BlogP
           .eq('source_slug', bySource.source_slug)
           .eq('locale', 'es')
           .eq('status', 'published')
+          .lte('date', today)
           .single()
         if (esPost?.image && isSupabaseImage(esPost.image)) {
           post.image = esPost.image
-          post.imageAlt = esPost.image_alt || post.imageAlt
+          post.imageAlt = post.imageAlt || post.title
         }
       }
       return post
@@ -202,6 +214,7 @@ export async function getPostBySlug(slug: string, locale: string): Promise<BlogP
 /** Devuelve el slug de este artículo en cada idioma (para hreflang y selector de idiomas) */
 export async function getSlugsByLocaleForArticle(slug: string, locale: string): Promise<Record<string, string> | null> {
   const effectiveLocale = getEffectiveLocale(locale)
+  const today = todayIso()
 
   let sourceSlug: string | null = null
 
@@ -212,6 +225,7 @@ export async function getSlugsByLocaleForArticle(slug: string, locale: string): 
     .eq('slug', slug)
     .eq('locale', effectiveLocale)
     .eq('status', 'published')
+    .lte('date', today)
     .single()
   sourceSlug = bySlug?.source_slug ?? null
 
@@ -222,6 +236,7 @@ export async function getSlugsByLocaleForArticle(slug: string, locale: string): 
       .select('source_slug')
       .eq('source_slug', slug)
       .eq('status', 'published')
+      .lte('date', today)
       .limit(1)
       .single()
     sourceSlug = bySource?.source_slug ?? null
@@ -234,6 +249,7 @@ export async function getSlugsByLocaleForArticle(slug: string, locale: string): 
       .select('source_slug')
       .eq('slug', slug)
       .eq('status', 'published')
+      .lte('date', today)
       .limit(1)
       .single()
     sourceSlug = anyLocale?.source_slug ?? null
@@ -246,6 +262,7 @@ export async function getSlugsByLocaleForArticle(slug: string, locale: string): 
     .select('locale, slug')
     .eq('source_slug', sourceSlug)
     .eq('status', 'published')
+    .lte('date', today)
 
   if (!all?.length) return null
   const result = Object.fromEntries(all.map((r) => [r.locale, r.slug]))
@@ -260,10 +277,12 @@ export async function getSlugsByLocaleForArticle(slug: string, locale: string): 
 
 /** Devuelve un mapa source_slug → { locale: slug } para generar hreflang en el sitemap */
 export async function getAllBlogAlternates(): Promise<Map<string, Record<string, string>>> {
+  const today = todayIso()
   const { data } = await supabase
     .from('blog_posts')
     .select('source_slug, locale, slug')
     .eq('status', 'published')
+    .lte('date', today)
 
   const map = new Map<string, Record<string, string>>()
   for (const row of data || []) {
@@ -275,13 +294,45 @@ export async function getAllBlogAlternates(): Promise<Map<string, Record<string,
 
 export async function getAllPostSlugs(locale: string): Promise<string[]> {
   const effectiveLocale = getEffectiveLocale(locale)
+  const today = todayIso()
 
   const { data, error } = await supabase
     .from('blog_posts')
     .select('slug')
     .eq('locale', effectiveLocale)
     .eq('status', 'published')
+    .lte('date', today)
 
   if (error) return []
   return (data || []).map((r) => r.slug)
+}
+
+export function buildBlogPostingJsonLd(post: BlogPost, locale: string) {
+  const url = `https://www.tricholand.com/${locale}/blog/${post.slug}`
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date,
+    inLanguage: locale,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': url,
+    },
+    image: post.image || 'https://www.tricholand.com/images/og-image.webp',
+    author: {
+      '@type': 'Organization',
+      name: 'Tricholand',
+      url: 'https://www.tricholand.com',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Tricholand',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.tricholand.com/images/og-image.webp',
+      },
+    },
+  }
 }

@@ -32,10 +32,13 @@ export function truncateDescription(text: string, max = 155): string {
  * Mantiene las palabras clave más relevantes al inicio.
  */
 export function truncateTitle(text: string, max = 60): string {
-  if (!text || text.length <= max) return text
-  const truncated = text.slice(0, max)
+  if (!text) return text
+  const clean = text.replace(/\s*\|\s*Tricholand\s*$/i, '').trim()
+  if (clean.length <= max) return clean.replace(/[\s|—–:-]+$/, '').trim()
+  const truncated = clean.slice(0, max)
   const lastSpace = truncated.lastIndexOf(' ')
-  return lastSpace > 30 ? truncated.slice(0, lastSpace) : truncated
+  const cut = lastSpace > 30 ? truncated.slice(0, lastSpace) : truncated
+  return cut.replace(/[\s|—–:-]+$/, '').trim()
 }
 
 /**

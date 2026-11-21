@@ -24,8 +24,41 @@ export function ProductDetailActions({ product, locale = 'es' }: ProductDetailAc
     setTimeout(() => setAdded(false), 2000)
   }
 
+  const productJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: product.description || product.short_description || product.name,
+    sku: product.sku,
+    image: (product.images || []).map((img) =>
+      img.url.startsWith('http') ? img.url : `https://www.tricholand.com${img.url}`
+    ),
+    brand: {
+      '@type': 'Brand',
+      name: 'Tricholand',
+    },
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'EUR',
+      price: (product.price_cents / 100).toFixed(2),
+      availability:
+        product.status === 'active'
+          ? 'https://schema.org/InStock'
+          : 'https://schema.org/OutOfStock',
+      seller: {
+        '@type': 'Organization',
+        name: 'Tricholand',
+        url: 'https://www.tricholand.com',
+      },
+    },
+  }
+
   return (
     <div className="space-y-4">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
       {/* Quantity selector */}
       <div>
         <label className="font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro block mb-2">

@@ -89,9 +89,12 @@ export async function getSitemapEntries() {
     blogIndexAlternates[loc] = `${BASE_URL}/${loc}/blog`
   }
 
+const XML_EXCLUDED_STATIC_KEYS = new Set<string>(['shopOrder', 'privacy', 'legal'])
+
   for (const locale of LOCALES) {
     const blogSlugs = blogSlugsByLocale[locale] || []
     for (const { key } of STATIC_PATH_KEYS) {
+      if (XML_EXCLUDED_STATIC_KEYS.has(key)) continue
       const path = key === '' ? '' : key === 'blog' ? '/blog' : `/${getPath(locale, key)}`
       if (key === '') {
         entries.push({

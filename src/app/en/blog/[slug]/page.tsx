@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
-import { getPostBySlug, getAllPostSlugs, getPostsMeta, getSlugsByLocaleForArticle } from '@/lib/blog'
+import { getPostBySlug, getAllPostSlugs, getPostsMeta, getSlugsByLocaleForArticle, buildBlogPostingJsonLd } from '@/lib/blog'
 import { renderBlogContent } from '@/lib/blog-content'
 import { formatDate, truncateDescription, truncateTitle } from '@/lib/utils'
 
@@ -65,9 +65,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     .slice(0, 2)
 
   const htmlContent = renderBlogContent(post.content)
+  const jsonLd = buildBlogPostingJsonLd(post, LOCALE)
 
   return (
     <article className="pb-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Hero image */}
       <div className="relative h-[35vh] min-h-[280px] bg-crudo">
         {post.image ? (

@@ -22,6 +22,28 @@ const archivoNarrow = Archivo_Narrow({
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
+const ORGANIZATION_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'WholesaleStore',
+  name: 'Tricholand',
+  url: 'https://www.tricholand.com',
+  logo: 'https://www.tricholand.com/images/og-image.webp',
+  email: 'info@tricholand.com',
+  description:
+    'Vivero productor mayorista B2B de Trichocereus y cactáceas columnares en Murcia, España. Envíos a toda Europa y Reino Unido con Pasaporte Fitosanitario UE.',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Murcia',
+    addressRegion: 'Región de Murcia',
+    addressCountry: 'ES',
+  },
+  areaServed: ['ES', 'GB', 'DE', 'FR', 'NL', 'IT', 'PT', 'BE', 'AT', 'CH', 'EU'],
+  sameAs: [
+    'https://www.facebook.com/tricholand/',
+    'https://www.instagram.com/tricholand/',
+  ],
+}
+
 export function RootHtml({
   children,
   lang = 'es',
@@ -36,6 +58,12 @@ export function RootHtml({
   return (
     <html lang={lang} className={`${archivo.variable} ${archivoNarrow.variable}`}>
       <head>
+        {!skipAnalytics ? (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSON_LD) }}
+          />
+        ) : null}
         {loadAnalytics ? (
           <Script
             id="gtag-consent-default"

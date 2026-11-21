@@ -213,12 +213,12 @@ const nextConfig: NextConfig = {
       // === JOOMLA LEGACY ===
       {
         source: '/index.php',
-        destination: '/',
+        destination: '/es',
         permanent: true,
       },
       {
         source: '/component/:path*',
-        destination: '/',
+        destination: '/es',
         permanent: true,
       },
     ]

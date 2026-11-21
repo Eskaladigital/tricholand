@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { getAlternatesMetadata } from '@/lib/i18n/paths'
 
 export const metadata: Metadata = {
-  title: 'Legal Notice — Tricholand Terms of Use',
+  title: 'Legal Notice',
   description: 'Tricholand legal notice and website terms of use.',
   robots: 'index, follow',
   alternates: getAlternatesMetadata('en', 'legal'),
