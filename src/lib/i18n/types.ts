@@ -126,6 +126,10 @@ export interface Dictionary {
     back: string
     inquiry_purchase: string
     inquiry_purchase_desc: string
+    inquiry_retailer: string
+    inquiry_retailer_desc: string
+    inquiry_wholesale: string
+    inquiry_wholesale_desc: string
     inquiry_care: string
     inquiry_care_desc: string
     inquiry_other_part: string
@@ -149,6 +153,12 @@ export interface Dictionary {
     label_country: string
     label_city: string
     label_message: string
+    label_volume: string
+    volume_750_1500: string
+    volume_1500_5000: string
+    volume_5000_plus: string
+    volume_unknown: string
+    country_other: string
     placeholder_name: string
     placeholder_company: string
     placeholder_vat: string
@@ -167,6 +177,7 @@ export interface Dictionary {
     step4_title: string
     summary_type: string
     summary_inquiry: string
+    summary_volume: string
     summary_name: string
     summary_company: string
     summary_vat: string
@@ -184,6 +195,20 @@ export interface Dictionary {
     success_text: string
     error_send: string
     error_unknown: string
+    error_message_thin: string
+    min_order_stop: string
+    min_order_wholesale_btn: string
+    min_order_retailer_btn: string
+    q_intent: string
+    q_intent_order: string
+    q_intent_order_desc: string
+    q_intent_other: string
+    q_intent_other_desc: string
+    q_units: string
+    q_units_under: string
+    q_confirm: string
+    q_confirm_yes: string
+    q_confirm_no: string
   }
   blog: {
     title: string

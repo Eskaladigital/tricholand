@@ -4,11 +4,24 @@ import { createServiceClient } from '@/lib/supabase/api'
 import { sendMailPair } from '@/lib/email/transporter'
 import { contactAdminEmail, contactClientEmail } from '@/lib/email/templates'
 import { resolveLocale, t } from '@/lib/email/i18n'
+import {
+  COUNTRY_LABELS,
+  formatContactCountry,
+  RETAIL_VOLUMES,
+  contactMessageProblem,
+  particularOrderOk,
+  inquiryNeedsVolume,
+  isEstimatedVolume,
+  wrapContactMessage,
+  type EstimatedVolume,
+  type InquiryType,
+} from '@/types/contact'
 
 interface ContactPayload {
   contact_type: string
   professional_subtype?: string
   inquiry_type: string
+  estimated_volume?: string
   name: string
   company?: string
   vat_number?: string
@@ -91,12 +104,42 @@ export async function POST(request: NextRequest) {
     const body: ContactPayload = await request.json()
 
     // --- Validación ---
-    if (!body.name || !body.email || !body.country || !body.message) {
+    if (!body.name || !body.email || !body.country || !String(body.message || '').trim()) {
       return NextResponse.json({ error: 'Faltan campos obligatorios: nombre, email, país y mensaje' }, { status: 400 })
+    }
+    if (contactMessageProblem(body.message)) {
+      return NextResponse.json({
+        error: 'El mensaje no dice qué necesitas. Indica variedad, tamaño o la duda concreta. Un saludo no basta.',
+      }, { status: 400 })
     }
     if (!body.gdpr_consent) {
       return NextResponse.json({ error: 'Debes aceptar la política de privacidad' }, { status: 400 })
     }
+    if (body.contact_type === 'professional' && !String(body.company || '').trim()) {
+      return NextResponse.json({ error: 'La empresa es obligatoria para consultas profesionales' }, { status: 400 })
+    }
+    const volume: EstimatedVolume | null = isEstimatedVolume(body.estimated_volume)
+      ? body.estimated_volume
+      : null
+    if (inquiryNeedsVolume(body.inquiry_type as InquiryType) && !volume) {
+      return NextResponse.json({ error: 'Indica la cantidad aproximada' }, { status: 400 })
+    }
+    if (
+      body.inquiry_type === 'purchase' ||
+      (volume && RETAIL_VOLUMES.includes(volume)) ||
+      !particularOrderOk({
+        contact_type: body.contact_type,
+        inquiry_type: body.inquiry_type,
+        estimated_volume: volume,
+      })
+    ) {
+      return NextResponse.json({
+        error: 'Lo sentimos. Tricholand no vende al detalle. El pedido mínimo es de 750 unidades. Con esta respuesta no puedes escribirnos.',
+      }, { status: 400 })
+    }
+    const countryCode = String(body.country || '').trim()
+    const country = COUNTRY_LABELS[countryCode.toUpperCase()] ? countryCode.toUpperCase() : countryCode
+    const storedMessage = wrapContactMessage(body.message, volume)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(body.email)) {
       return NextResponse.json({ error: 'El formato del email no es válido' }, { status: 400 })
@@ -125,9 +168,9 @@ export async function POST(request: NextRequest) {
       vat_number: body.vat_number || null,
       email: body.email,
       phone: body.phone || null,
-      country: body.country,
+      country,
       city: body.city || null,
-      message: body.message,
+      message: storedMessage,
       referral_source: body.referral_source || null,
       locale: body.locale || 'es',
       status: 'new',
@@ -158,11 +201,12 @@ export async function POST(request: NextRequest) {
         vat_number: body.vat_number || null,
         email: body.email,
         phone: body.phone || null,
-        country: body.country,
+        country: formatContactCountry(country),
         city: body.city || null,
         contact_type: body.contact_type || 'particular',
         professional_subtype: body.professional_subtype || null,
         inquiry_type: body.inquiry_type || null,
+        estimated_volume: volume,
         message: body.message,
         referral_source: body.referral_source || null,
         locale: body.locale || 'es',
@@ -171,7 +215,7 @@ export async function POST(request: NextRequest) {
       const isPro = body.contact_type === 'professional'
       const tr = t(locale)
       const emailResult = await sendMailPair(
-        `[Web] Nueva consulta de ${body.name}${isPro ? ' (Profesional)' : ''} — ${body.country}`,
+        `[Web] Nueva consulta de ${body.name}${isPro ? ' (Profesional)' : ''} — ${formatContactCountry(country)}`,
         contactAdminEmail(emailData),
         body.email,
         tr.subjectContactReceived,

@@ -74,7 +74,7 @@ export default function ContactoPage() {
                 <div>
                   <h4 className="font-bold mb-0.5">¿Hacéis envíos a particulares?</h4>
                   <p className="text-marron-claro">
-                    Somos un vivero mayorista B2B. Para compras pequeñas, podemos orientarte a distribuidores en tu zona.
+                    Somos un vivero mayorista B2B. No enviamos compras de menos de 750 unidades.
                   </p>
                 </div>
                 <div>

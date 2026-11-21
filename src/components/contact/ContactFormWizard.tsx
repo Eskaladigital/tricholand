@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import type { ContactType, ProfessionalSubtype, InquiryType, ReferralSource } from '@/types/contact'
+import { useEffect, useMemo, useState } from 'react'
+import type { ContactType, ProfessionalSubtype, InquiryType, ReferralSource, EstimatedVolume } from '@/types/contact'
+import { contactMessageProblem, inquiryNeedsVolume, particularOrderOk } from '@/types/contact'
 import type { Dictionary } from '@/lib/i18n/types'
 import { getFullPath } from '@/lib/i18n/paths'
 
@@ -11,11 +12,19 @@ interface ContactFormWizardProps {
 }
 
 type Step = 1 | 2 | 3 | 4
+type ParticularUnits = 'under' | '750_1500' | '1500_5000' | '5000_plus'
+interface ParticularGate {
+  intent: 'order' | 'other' | null
+  units: ParticularUnits | null
+  confirm: 'yes' | 'no' | null
+}
+const emptyGate: ParticularGate = { intent: null, units: null, confirm: null }
 
 interface FormState {
   contact_type: ContactType | null
   professional_subtype: ProfessionalSubtype | null
   inquiry_type: InquiryType | null
+  estimated_volume: EstimatedVolume | null
   name: string
   company: string
   vat_number: string
@@ -33,6 +42,7 @@ const initialState: FormState = {
   contact_type: null,
   professional_subtype: null,
   inquiry_type: null,
+  estimated_volume: null,
   name: '',
   company: '',
   vat_number: '',
@@ -54,6 +64,7 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [formStartedAt, setFormStartedAt] = useState(0)
+  const [gate, setGate] = useState<ParticularGate>(emptyGate)
 
   useEffect(() => {
     setFormStartedAt(Date.now())
@@ -67,17 +78,88 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
     form.contact_type === 'particular' || form.professional_subtype !== null
   )
 
-  const canAdvanceStep3 = form.inquiry_type !== null
+  const particularBlocked =
+    form.contact_type === 'particular' &&
+    (gate.intent === 'other' || gate.units === 'under' || gate.confirm === 'no')
 
-  const canSubmit =
+  const canAdvanceStep3 =
+    form.contact_type === 'particular'
+      ? particularOrderOk({
+          contact_type: 'particular',
+          inquiry_type: form.inquiry_type,
+          estimated_volume: form.estimated_volume,
+        }) && gate.confirm === 'yes'
+      : form.inquiry_type !== null &&
+        (!inquiryNeedsVolume(form.inquiry_type) || form.estimated_volume !== null)
+
+  const messageThin = form.message.trim() !== '' && contactMessageProblem(form.message) === 'thin'
+
+  const canAdvanceStep4 =
     form.name.trim() !== '' &&
     form.email.trim() !== '' &&
     form.country.trim() !== '' &&
-    form.message.trim() !== '' &&
-    form.gdpr_consent
+    !contactMessageProblem(form.message) &&
+    (form.contact_type !== 'professional' || form.company.trim() !== '')
+
+  const canSubmit = canAdvanceStep4 && form.gdpr_consent
+
+  const countryOptions = useMemo(() => {
+    const shop = dict.orderForm.countries
+    const seen = new Set(shop.map((c) => c.code))
+    const display = new Intl.DisplayNames([locale], { type: 'region' })
+    const extras = ['CH', 'NO', 'US', 'CA']
+      .filter((code) => !seen.has(code))
+      .map((code) => ({ code, name: display.of(code) || code }))
+    return [...shop, ...extras, { code: 'OTHER', name: cf.country_other }].sort((a, b) =>
+      a.name.localeCompare(b.name, locale)
+    )
+  }, [cf.country_other, dict.orderForm.countries, locale])
+
+  const inquiryLabel = (value: InquiryType | null) => {
+    if (!value) return ''
+    const map: Partial<Record<InquiryType, string>> = {
+      find_retailer: cf.inquiry_retailer,
+      wholesale: cf.inquiry_wholesale,
+      care_consultation: cf.inquiry_care,
+      other_particular: cf.inquiry_other_part,
+      quote_catalog: cf.inquiry_quote,
+      recurring_order: cf.inquiry_recurring,
+      shipping_info: cf.inquiry_shipping,
+      certifications: cf.inquiry_certs,
+      other_professional: cf.inquiry_other_pro,
+      purchase: cf.inquiry_purchase,
+    }
+    return map[value] ?? value
+  }
+
+  const volumeLabel = (value: EstimatedVolume | null) => {
+    if (!value) return ''
+    const map: Record<EstimatedVolume, string> = {
+      under_50: '–50',
+      '50_749': '50–749',
+      '750_1500': cf.volume_750_1500,
+      '1500_5000': cf.volume_1500_5000,
+      '5000_plus': cf.volume_5000_plus,
+      unknown: cf.volume_unknown,
+    }
+    return map[value]
+  }
+
+  const countryName = countryOptions.find((c) => c.code === form.country)?.name ?? form.country
 
   async function handleSubmit() {
     if (!canSubmit) return
+    if (
+      form.contact_type === 'particular' &&
+      !particularOrderOk({
+        contact_type: 'particular',
+        inquiry_type: form.inquiry_type,
+        estimated_volume: form.estimated_volume,
+      })
+    ) {
+      setError(cf.min_order_stop)
+      return
+    }
     setIsSubmitting(true)
     setError(null)
 
@@ -91,6 +173,7 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
           contact_type: form.contact_type,
           professional_subtype: form.professional_subtype,
           inquiry_type: form.inquiry_type,
+          estimated_volume: form.estimated_volume || undefined,
           name: form.name,
           company: form.company || undefined,
           vat_number: form.vat_number || undefined,
@@ -187,7 +270,16 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               <button
-                onClick={() => update({ contact_type: 'particular', professional_subtype: null })}
+                onClick={() => {
+                  if (form.contact_type === 'particular') return
+                  setGate(emptyGate)
+                  update({
+                    contact_type: 'particular',
+                    professional_subtype: null,
+                    inquiry_type: null,
+                    estimated_volume: null,
+                  })
+                }}
                 className={`p-5 border-2 text-left transition-all ${
                   form.contact_type === 'particular'
                     ? 'border-naranja bg-naranja/5'
@@ -203,7 +295,11 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
               </button>
 
               <button
-                onClick={() => update({ contact_type: 'professional' })}
+                onClick={() => {
+                  if (form.contact_type === 'professional') return
+                  setGate(emptyGate)
+                  update({ contact_type: 'professional', inquiry_type: null, estimated_volume: null })
+                }}
                 className={`p-5 border-2 text-left transition-all ${
                   form.contact_type === 'professional'
                     ? 'border-naranja bg-naranja/5'
@@ -264,14 +360,134 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
               {cf.step2_title}
             </h2>
 
+            {form.contact_type === 'particular' ? (
+              <div className="mb-6 space-y-6">
+                <div>
+                  <p className="font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-2">
+                    {cf.q_intent}
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setGate({ intent: 'order', units: null, confirm: null })
+                        update({ inquiry_type: null, estimated_volume: null })
+                      }}
+                      className={`p-4 border text-left transition-all ${
+                        gate.intent === 'order' ? 'border-naranja bg-naranja/5' : 'border-linea hover:border-marron-claro'
+                      }`}
+                    >
+                      <span className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold block">
+                        {cf.q_intent_order}
+                      </span>
+                      <span className="text-xs text-marron-claro">{cf.q_intent_order_desc}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setGate({ intent: 'other', units: null, confirm: null })
+                        update({ inquiry_type: null, estimated_volume: null })
+                      }}
+                      className={`p-4 border text-left transition-all ${
+                        gate.intent === 'other' ? 'border-naranja bg-naranja/5' : 'border-linea hover:border-marron-claro'
+                      }`}
+                    >
+                      <span className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold block">
+                        {cf.q_intent_other}
+                      </span>
+                      <span className="text-xs text-marron-claro">{cf.q_intent_other_desc}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {gate.intent === 'order' && (
+                  <div>
+                    <p className="font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-2">
+                      {cf.q_units}
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {([
+                        { value: 'under' as ParticularUnits, label: cf.q_units_under },
+                        { value: '750_1500' as ParticularUnits, label: cf.volume_750_1500 },
+                        { value: '1500_5000' as ParticularUnits, label: cf.volume_1500_5000 },
+                        { value: '5000_plus' as ParticularUnits, label: cf.volume_5000_plus },
+                      ]).map((opt) => (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => {
+                            setGate((prev) => ({ ...prev, units: opt.value, confirm: null }))
+                            update({
+                              inquiry_type: null,
+                              estimated_volume: opt.value === 'under' ? null : opt.value,
+                            })
+                          }}
+                          className={`p-4 border text-left transition-all ${
+                            gate.units === opt.value
+                              ? 'border-naranja bg-naranja/5'
+                              : 'border-linea hover:border-marron-claro'
+                          }`}
+                        >
+                          <span className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold block">
+                            {opt.label}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {gate.intent === 'order' && gate.units && gate.units !== 'under' && (
+                  <div>
+                    <p className="font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-2">
+                      {cf.q_confirm}
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const units = gate.units
+                          setGate((prev) => ({ ...prev, confirm: 'yes' }))
+                          update({
+                            inquiry_type: 'wholesale',
+                            estimated_volume: units && units !== 'under' ? units : null,
+                          })
+                        }}
+                        className={`p-4 border text-left transition-all ${
+                          gate.confirm === 'yes' ? 'border-naranja bg-naranja/5' : 'border-linea hover:border-marron-claro'
+                        }`}
+                      >
+                        <span className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold block">
+                          {cf.q_confirm_yes}
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setGate((prev) => ({ ...prev, confirm: 'no' }))
+                          update({ inquiry_type: null })
+                        }}
+                        className={`p-4 border text-left transition-all ${
+                          gate.confirm === 'no' ? 'border-naranja bg-naranja/5' : 'border-linea hover:border-marron-claro'
+                        }`}
+                      >
+                        <span className="font-[family-name:var(--font-archivo-narrow)] text-sm font-bold block">
+                          {cf.q_confirm_no}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {particularBlocked && (
+                  <div className="border border-naranja bg-naranja/5 p-4">
+                    <p className="text-sm leading-relaxed">{cf.min_order_stop}</p>
+                  </div>
+                )}
+              </div>
+            ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-              {(form.contact_type === 'particular'
-                ? [
-                    { value: 'purchase' as InquiryType, label: cf.inquiry_purchase, desc: cf.inquiry_purchase_desc },
-                    { value: 'care_consultation' as InquiryType, label: cf.inquiry_care, desc: cf.inquiry_care_desc },
-                    { value: 'other_particular' as InquiryType, label: cf.inquiry_other_part, desc: cf.inquiry_other_part_desc },
-                  ]
-                : [
+              {([
                     { value: 'quote_catalog' as InquiryType, label: cf.inquiry_quote, desc: cf.inquiry_quote_desc },
                     { value: 'recurring_order' as InquiryType, label: cf.inquiry_recurring, desc: cf.inquiry_recurring_desc },
                     { value: 'shipping_info' as InquiryType, label: cf.inquiry_shipping, desc: cf.inquiry_shipping_desc },
@@ -281,7 +497,7 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
               ).map((opt) => (
                 <button
                   key={opt.value}
-                  onClick={() => update({ inquiry_type: opt.value })}
+                  onClick={() => update({ inquiry_type: opt.value, estimated_volume: null })}
                   className={`p-4 border text-left transition-all ${
                     form.inquiry_type === opt.value
                       ? 'border-naranja bg-naranja/5'
@@ -295,6 +511,38 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
                 </button>
               ))}
             </div>
+            )}
+
+            {form.contact_type === 'professional' && inquiryNeedsVolume(form.inquiry_type) && (
+              <div className="mb-6">
+                <p className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-2">
+                  {cf.label_volume}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {([
+                    { value: '750_1500' as EstimatedVolume, label: cf.volume_750_1500 },
+                    { value: '1500_5000' as EstimatedVolume, label: cf.volume_1500_5000 },
+                    { value: '5000_plus' as EstimatedVolume, label: cf.volume_5000_plus },
+                    ...(form.contact_type === 'professional'
+                      ? [{ value: 'unknown' as EstimatedVolume, label: cf.volume_unknown }]
+                      : []),
+                  ]).map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => update({ estimated_volume: opt.value })}
+                      className={`px-3 py-1.5 text-xs border transition-all ${
+                        form.estimated_volume === opt.value
+                          ? 'border-naranja bg-naranja/5 font-semibold'
+                          : 'border-linea hover:border-marron-claro'
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="flex gap-3">
               <button
@@ -398,13 +646,18 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
                 <label className="block font-[family-name:var(--font-archivo-narrow)] text-xs font-bold uppercase tracking-wide text-marron-claro mb-1">
                   {cf.label_country}
                 </label>
-                <input
-                  type="text"
+                <select
                   value={form.country}
                   onChange={(e) => update({ country: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja transition-colors"
-                  placeholder={cf.placeholder_country}
-                />
+                  className={`w-full px-4 py-2.5 border border-linea bg-crudo text-sm focus:outline-none focus:border-naranja transition-colors ${!form.country ? 'text-marron-claro' : ''}`}
+                >
+                  <option value="">{dict.orderForm.selectCountry}</option>
+                  {countryOptions.map((c) => (
+                    <option key={c.code} value={c.code}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
@@ -436,6 +689,9 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
                     : cf.placeholder_message
                 }
               />
+              {messageThin && (
+                <p className="text-sm text-terracota mt-2" role="alert">{cf.error_message_thin}</p>
+              )}
             </div>
 
             <div className="mb-4">
@@ -474,9 +730,9 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
               </button>
               <button
                 onClick={() => setStep(4)}
-                disabled={!form.name || !form.email || !form.country || !form.message}
+                disabled={!canAdvanceStep4}
                 className={`flex-1 py-3 font-[family-name:var(--font-archivo-narrow)] text-sm font-bold uppercase tracking-wide transition-colors ${
-                  form.name && form.email && form.country && form.message
+                  canAdvanceStep4
                     ? 'bg-negro text-crudo hover:bg-marron'
                     : 'bg-linea text-marron-claro cursor-not-allowed'
                 }`}
@@ -505,8 +761,14 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
               </div>
               <div className="flex justify-between">
                 <span className="text-marron-claro">{cf.summary_inquiry}</span>
-                <span className="font-semibold">{form.inquiry_type?.replace(/_/g, ' ')}</span>
+                <span className="font-semibold">{inquiryLabel(form.inquiry_type)}</span>
               </div>
+              {form.estimated_volume && (
+                <div className="flex justify-between">
+                  <span className="text-marron-claro">{cf.summary_volume}</span>
+                  <span className="font-semibold">{volumeLabel(form.estimated_volume)}</span>
+                </div>
+              )}
               <div className="border-t border-linea pt-3 flex justify-between">
                 <span className="text-marron-claro">{cf.summary_name}</span>
                 <span className="font-semibold">{form.name}</span>
@@ -535,7 +797,7 @@ export function ContactFormWizard({ locale, dict }: ContactFormWizardProps) {
               )}
               <div className="flex justify-between">
                 <span className="text-marron-claro">{cf.summary_location}</span>
-                <span className="font-semibold">{form.city ? `${form.city}, ` : ''}{form.country}</span>
+                <span className="font-semibold">{form.city ? `${form.city}, ` : ''}{countryName}</span>
               </div>
               <div className="border-t border-linea pt-3">
                 <span className="text-marron-claro block mb-1">{cf.summary_message}</span>

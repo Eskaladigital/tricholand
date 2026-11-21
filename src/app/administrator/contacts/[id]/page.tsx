@@ -9,10 +9,14 @@ import {
   LOCALE_LABELS,
   PROFESSIONAL_SUBTYPE_LABELS,
   REFERRAL_LABELS,
+  VOLUME_LABELS,
   contactLabel,
   contactMailto,
+  formatContactCountry,
   formatContactWhen,
   inquiryLabel,
+  isRetailLead,
+  unwrapContactMessage,
   type ContactStatus,
 } from '@/types/contact'
 
@@ -42,11 +46,13 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
 
   const customer = await getCustomerByEmail(contact.email)
   const when = formatContactWhen(contact.created_at)
-  const place = [contact.city, contact.country].filter(Boolean).join(', ')
+  const { volume, message: rawMessage } = unwrapContactMessage(contact.message)
+  const place = [contact.city, formatContactCountry(contact.country)].filter(Boolean).join(', ')
   const isPro = contact.contact_type === 'professional'
+  const retail = isRetailLead({ ...contact, estimated_volume: volume })
   const status = (CONTACT_STATUS_LABELS[contact.status as ContactStatus] ? contact.status : 'new') as ContactStatus
   const mail = contactMailto(contact.email, contact.name, contact.inquiry_type)
-  const message = contact.message?.trim()
+  const message = rawMessage.trim()
 
   return (
     <>
@@ -69,6 +75,13 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
                 }`}
               >
                 {isPro ? 'Profesional' : 'Particular'}
+              </span>
+              <span
+                className={`px-2 py-0.5 text-[10px] font-bold uppercase ${
+                  retail ? 'bg-gray-100 text-gray-600' : 'bg-verde-claro text-verde-oscuro'
+                }`}
+              >
+                {retail ? 'Retail' : 'Mayorista'}
               </span>
               {contact.professional_subtype && (
                 <span className="text-xs text-marron-claro">
@@ -111,6 +124,7 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
             </h2>
             <p className="text-xs font-bold uppercase tracking-wide text-naranja">
               {inquiryLabel(contact.inquiry_type)}
+              {volume ? ` · ${VOLUME_LABELS[volume]}` : ''}
             </p>
           </div>
           {message ? (
@@ -143,6 +157,9 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
               <Field label="Ubicación">
                 {place || <span className="text-marron-claro">Sin ubicación</span>}
               </Field>
+              {volume && (
+                <Field label="Cantidad aproximada">{VOLUME_LABELS[volume]}</Field>
+              )}
               {isPro && (
                 <>
                   <Field label="Empresa">

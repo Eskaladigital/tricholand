@@ -7,6 +7,13 @@
 // ============================================
 
 import { type EmailLocale, resolveLocale, formatCentsLocalized, formatDateTimeLocalized, t } from './i18n'
+import {
+  inquiryLabel,
+  isEstimatedVolume,
+  PROFESSIONAL_SUBTYPE_LABELS,
+  VOLUME_LABELS,
+  contactLabel,
+} from '@/types/contact'
 
 const COLORS = {
   crudo: '#f5f2eb',
@@ -288,6 +295,7 @@ interface ContactEmailData {
   contact_type: string
   professional_subtype: string | null
   inquiry_type: string | null
+  estimated_volume?: string | null
   message: string
   referral_source: string | null
   locale?: string
@@ -324,11 +332,15 @@ ${data.phone ? `<p style="margin:2px 0 0;font-size:13px;">${data.phone}</p>` : '
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:8px;">
 <tr>
 <td style="font-size:12px;color:${COLORS.marronClaro};padding-right:8px;">Tipo:</td>
-<td style="font-size:13px;font-weight:bold;">${isPro ? 'Profesional' : 'Particular'}${data.professional_subtype ? ` — ${data.professional_subtype}` : ''}</td>
+<td style="font-size:13px;font-weight:bold;">${isPro ? 'Profesional' : 'Particular'}${data.professional_subtype ? ` — ${contactLabel(PROFESSIONAL_SUBTYPE_LABELS, data.professional_subtype)}` : ''}</td>
 </tr>
 ${data.inquiry_type ? `<tr>
 <td style="font-size:12px;color:${COLORS.marronClaro};padding-right:8px;padding-top:4px;">Consulta:</td>
-<td style="font-size:13px;padding-top:4px;">${data.inquiry_type.replace(/_/g, ' ')}</td>
+<td style="font-size:13px;padding-top:4px;">${inquiryLabel(data.inquiry_type)}</td>
+</tr>` : ''}
+${isEstimatedVolume(data.estimated_volume) ? `<tr>
+<td style="font-size:12px;color:${COLORS.marronClaro};padding-right:8px;padding-top:4px;">Cantidad:</td>
+<td style="font-size:13px;padding-top:4px;">${VOLUME_LABELS[data.estimated_volume]}</td>
 </tr>` : ''}
 ${data.referral_source ? `<tr>
 <td style="font-size:12px;color:${COLORS.marronClaro};padding-right:8px;padding-top:4px;">Origen:</td>

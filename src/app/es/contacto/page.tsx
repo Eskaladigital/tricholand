@@ -75,7 +75,7 @@ export default function ContactoPage() {
                 <div>
                   <h4 className="font-bold mb-0.5">¿Hacéis envíos a particulares?</h4>
                   <p className="text-marron-claro">
-                    Somos un <Link href="/es/sobre-nosotros" className="text-naranja hover:underline">vivero mayorista B2B</Link>. Para compras pequeñas, podemos orientarte a distribuidores en tu zona.
+                    Somos un <Link href="/es/sobre-nosotros" className="text-naranja hover:underline">vivero mayorista B2B</Link>. No enviamos compras de menos de 750 unidades.
                   </p>
                 </div>
                 <div>
@@ -120,7 +120,7 @@ export default function ContactoPage() {
                 Información importante antes de contactar
               </h3>
               <p>
-                <strong className="text-negro">Venta exclusiva B2B:</strong> Solo atendemos pedidos de empresas y profesionales del sector viverístico. No realizamos ventas a particulares. Si buscas comprar en pequeñas cantidades, podemos orientarte a distribuidores en tu zona.
+                <strong className="text-negro">Venta exclusiva B2B:</strong> Solo atendemos pedidos de empresas y profesionales del sector viverístico, y particulares que pidan 750 unidades o más. No preparamos compras menores.
               </p>
               <p>
                 <strong className="text-negro">Pedido mínimo:</strong> El pedido mínimo es de 750 unidades por pedido total. Puedes combinar diferentes variedades y tamaños para alcanzar este mínimo.

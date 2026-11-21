@@ -9,10 +9,14 @@ import {
   CONTACT_STATUS_LABELS,
   PROFESSIONAL_SUBTYPE_LABELS,
   REFERRAL_LABELS,
+  VOLUME_LABELS,
   contactLabel,
   contactMailto,
+  formatContactCountry,
   formatContactWhen,
   inquiryLabel,
+  isRetailLead,
+  unwrapContactMessage,
   type ContactStatus,
 } from '@/types/contact'
 
@@ -44,6 +48,8 @@ function exportContacts(rows: ContactRow[]) {
     'Tipo',
     'Perfil',
     'Consulta',
+    'Volumen',
+    'Canal',
     'Origen',
     'Estado',
     'Mensaje',
@@ -56,14 +62,19 @@ function exportContacts(rows: ContactRow[]) {
       c.vat_number ?? '',
       c.email,
       c.phone ?? '',
-      c.country,
+      formatContactCountry(c.country),
       c.city ?? '',
       c.contact_type === 'professional' ? 'Profesional' : 'Particular',
       contactLabel(PROFESSIONAL_SUBTYPE_LABELS, c.professional_subtype, ''),
       inquiryLabel(c.inquiry_type),
+      (() => {
+        const vol = unwrapContactMessage(c.message).volume
+        return vol ? VOLUME_LABELS[vol] : ''
+      })(),
+      isRetailLead({ ...c, estimated_volume: unwrapContactMessage(c.message).volume }) ? 'Retail' : 'Mayorista',
       contactLabel(REFERRAL_LABELS, c.referral_source, ''),
       CONTACT_STATUS_LABELS[c.status] ?? c.status,
-      (c.message ?? '').replace(/\s+/g, ' ').trim(),
+      unwrapContactMessage(c.message).message.replace(/\s+/g, ' ').trim(),
     ]
       .map((v) => csvCell(String(v)))
       .join(';')
@@ -138,8 +149,10 @@ export function ContactsInbox({ contacts }: { contacts: ContactRow[] }) {
     : 'all'
   const tipoParam = searchParams.get('tipo')
   const tipo = tipoParam === 'particular' || tipoParam === 'professional' ? tipoParam : 'all'
+  const canalParam = searchParams.get('canal')
+  const canal = canalParam === 'retail' || canalParam === 'mayorista' ? canalParam : 'all'
 
-  function setParam(key: 'estado' | 'tipo', value: string) {
+  function setParam(key: 'estado' | 'tipo' | 'canal', value: string) {
     const params = new URLSearchParams(searchParams.toString())
     if (value === 'all') params.delete(key)
     else params.set(key, value)
@@ -151,12 +164,17 @@ export function ContactsInbox({ contacts }: { contacts: ContactRow[] }) {
     const byStatus = Object.fromEntries(STATUSES.map((s) => [s, 0])) as Record<ContactStatus, number>
     let particular = 0
     let professional = 0
+    let retail = 0
+    let mayorista = 0
     for (const c of contacts) {
       byStatus[c.status] = (byStatus[c.status] ?? 0) + 1
       if (c.contact_type === 'professional') professional += 1
       else particular += 1
+      const vol = unwrapContactMessage(c.message).volume
+      if (isRetailLead({ ...c, estimated_volume: vol })) retail += 1
+      else mayorista += 1
     }
-    return { byStatus, particular, professional }
+    return { byStatus, particular, professional, retail, mayorista }
   }, [contacts])
 
   const unread = counts.byStatus.new
@@ -167,15 +185,20 @@ export function ContactsInbox({ contacts }: { contacts: ContactRow[] }) {
     return contacts.filter((c) => {
       if (estado !== 'all' && c.status !== estado) return false
       if (tipo !== 'all' && c.contact_type !== tipo) return false
+      const vol = unwrapContactMessage(c.message).volume
+      const retail = isRetailLead({ ...c, estimated_volume: vol })
+      if (canal === 'retail' && !retail) return false
+      if (canal === 'mayorista' && retail) return false
       if (!q) return true
       const haystack = [
         c.name,
         c.company,
         c.email,
         c.phone,
+        formatContactCountry(c.country),
         c.country,
         c.city,
-        c.message,
+        unwrapContactMessage(c.message).message,
         inquiryLabel(c.inquiry_type),
         contactLabel(PROFESSIONAL_SUBTYPE_LABELS, c.professional_subtype, ''),
       ]
@@ -184,9 +207,9 @@ export function ContactsInbox({ contacts }: { contacts: ContactRow[] }) {
         .toLowerCase()
       return haystack.includes(q)
     })
-  }, [contacts, estado, tipo, query])
+  }, [contacts, estado, tipo, canal, query])
 
-  const filtering = estado !== 'all' || tipo !== 'all' || query.trim().length > 0
+  const filtering = estado !== 'all' || tipo !== 'all' || canal !== 'all' || query.trim().length > 0
 
   return (
     <>
@@ -260,6 +283,27 @@ export function ContactsInbox({ contacts }: { contacts: ContactRow[] }) {
             >
               {label}
               <span className={`ml-1.5 ${tipo === value ? 'text-crudo/70' : ''}`}>{n}</span>
+            </button>
+          ))}
+        </div>
+        <div className="inline-flex border border-linea self-start" role="group" aria-label="Canal">
+          {(
+            [
+              ['all', 'Canal', contacts.length],
+              ['retail', 'Retail', counts.retail],
+              ['mayorista', 'Mayorista', counts.mayorista],
+            ] as const
+          ).map(([value, label, n]) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setParam('canal', value)}
+              className={`px-3 py-2.5 text-xs font-bold uppercase tracking-wide transition-colors ${
+                canal === value ? 'bg-negro text-crudo' : 'bg-blanco text-marron-claro hover:text-negro'
+              }`}
+            >
+              {label}
+              <span className={`ml-1.5 ${canal === value ? 'text-crudo/70' : ''}`}>{n}</span>
             </button>
           ))}
         </div>
@@ -360,7 +404,21 @@ function FilterChip({
 }
 
 function preview(message: string | null): string {
-  return (message ?? '').replace(/\s+/g, ' ').trim()
+  return unwrapContactMessage(message).message.replace(/\s+/g, ' ').trim()
+}
+
+function ChannelBadge({ contact }: { contact: ContactRow }) {
+  const volume = unwrapContactMessage(contact.message).volume
+  const retail = isRetailLead({ ...contact, estimated_volume: volume })
+  return (
+    <span
+      className={`px-1.5 py-0.5 text-[10px] font-bold uppercase ${
+        retail ? 'bg-gray-100 text-gray-600' : 'bg-verde-claro text-verde-oscuro'
+      }`}
+    >
+      {retail ? 'Retail' : 'Mayorista'}
+    </span>
+  )
 }
 
 function ContactCard({ contact }: { contact: ContactRow }) {
@@ -379,7 +437,7 @@ function ContactCard({ contact }: { contact: ContactRow }) {
           </time>
         </div>
         <p className="text-xs text-marron-claro mt-0.5 truncate">
-          {[contact.company, contact.country].filter(Boolean).join(' · ') || contact.email}
+          {[contact.company, formatContactCountry(contact.country)].filter(Boolean).join(' · ') || contact.email}
         </p>
         <p className="text-sm mt-1.5 line-clamp-3">
           <span className="font-semibold">{inquiryLabel(contact.inquiry_type)}</span>
@@ -387,8 +445,11 @@ function ContactCard({ contact }: { contact: ContactRow }) {
             <span className="text-marron-claro"> — {preview(contact.message)}</span>
           )}
         </p>
-        <span className={`inline-block mt-2 px-2 py-0.5 text-[10px] font-bold uppercase ${statusClass[contact.status]}`}>
-          {CONTACT_STATUS_LABELS[contact.status]}
+        <span className="inline-flex flex-wrap items-center gap-1.5 mt-2">
+          <span className={`px-2 py-0.5 text-[10px] font-bold uppercase ${statusClass[contact.status]}`}>
+            {CONTACT_STATUS_LABELS[contact.status]}
+          </span>
+          <ChannelBadge contact={contact} />
         </span>
       </Link>
       <div className="absolute top-1.5 right-1 flex flex-col">
@@ -403,7 +464,8 @@ function ContactRowView({ contact, onOpen }: { contact: ContactRow; onOpen: () =
   const when = formatContactWhen(contact.created_at)
   const isNew = contact.status === 'new'
   const done = contact.status === 'replied' || contact.status === 'archived' || contact.status === 'spam'
-  const place = [contact.city, contact.country].filter(Boolean).join(', ')
+  const place = [contact.city, formatContactCountry(contact.country)].filter(Boolean).join(', ')
+  const volume = unwrapContactMessage(contact.message).volume
   const text = preview(contact.message)
 
   return (
@@ -438,7 +500,11 @@ function ContactRowView({ contact, onOpen }: { contact: ContactRow; onOpen: () =
           >
             {contact.contact_type === 'professional' ? 'Pro' : 'Part.'}
           </span>
+          <ChannelBadge contact={contact} />
         </span>
+        {volume && (
+          <span className="block text-[11px] text-marron-claro mt-0.5">{VOLUME_LABELS[volume]}</span>
+        )}
         {contact.professional_subtype && (
           <span className="block text-[11px] text-marron-claro mt-0.5">
             {contactLabel(PROFESSIONAL_SUBTYPE_LABELS, contact.professional_subtype)}

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { getDashboardStats } from '@/lib/actions/dashboard'
 import { formatPrice, ORDER_STATUS_CLASS, ORDER_STATUS_LABELS, type OrderStatus } from '@/types/shop'
 import { getCustomers } from '@/lib/actions/customers'
-import { inquiryLabel } from '@/types/contact'
+import { formatContactCountry, inquiryLabel } from '@/types/contact'
 
 export default async function DashboardPage() {
   const [{ stats, recentOrders, recentContacts }, customers] = await Promise.all([
@@ -121,7 +121,7 @@ export default async function DashboardPage() {
                   <div className="min-w-0">
                     <span className="font-bold">{contact.name}</span>
                     <span className="block text-xs text-marron-claro truncate">
-                      {inquiryLabel(contact.inquiry_type)} · {contact.country}
+                      {inquiryLabel(contact.inquiry_type)} · {formatContactCountry(contact.country)}
                     </span>
                   </div>
                   <span
